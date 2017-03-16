@@ -1,0 +1,79 @@
+
+Escouardes : 
+
+ - La flotte est divisable en 4 éscouades maximum (minimum : 1).
+
+
+D�placement : 
+
+ - Une éscouade peut se d�placer d'une case par tour.
+ - Une éscouade peut effecture une nouvelle action par tour.
+ - L'éscouade la plus rapide de la bataille peux se d�placer de deux cases / en contrepartie, l'éscouade la plus rapide de l'adversaire peut commencer en mode 
+   fortifier (-X% dmg).
+ - Le mode fortifier est bris� des que la flotte se d�place.
+
+
+D�fendre : 
+ - Une flotte qui d�fend (sans �tre entrain de faire une autre action) prend un bonus de 10% de r�sistance au d�gards.
+ - Une flotte A en d�fense peut attaquer une autre flotte B � proximit�, si cette flotte B l'attaquait d�ja, elle va �tre consid�rer comme �tant la flotte 
+   contre laquelle A d�fend (important pour les prises par le flanc). 
+
+Attaquer : 
+
+ - Une flotte peut attaquer une autre flotte si elle est a proximit� d'une case.
+ - On ne d�couvre le nombre de vaisseaux d'une flotte adverse, qu'apr�s l'avoir engag� une fois (attaque ou d�fense).
+ - Si deux flotte attaque une m�me flotte ennemis sur le m�me flanc : malus freidly fire, malus overdamage.
+ - Si deux floote attaque une m�me flotte sur deux flancs diff�rents : Bonus prise par le flanc pour la deuxieme flotte (c'elle qui attaque en second). 
+   Malus moral pour victime.
+ - Si une flotte attaque une flotte effecutant une autre tache : Bonus d�sorganisation : r�duis l'�fficacit� de la tache effectu� de X%, bonus de d�gards +X%.
+
+
+Soutiens (pas s�r): 
+
+ - Soutenir une flotte permet de la r�parer (tres l�ger). 
+ - Soutenir une flotte permet de luis transf�rer de l'energie a chaque tour.
+ - Soutenir une flotte am�liore le moral.
+ - Soutenir une flotte augment la vitesse de r�g�n�ration des boucliers.
+ - Soutenir une flotte qui attaque augment ses dmg, son moral et son �nergie.
+
+
+Ordres (cartes) : 
+
+ - Les joueurs tire un ordre par tour, jusqu'a une reserve de 10 ordres.
+ - Les joueurs peuvent utiliser autant d'ordre qu'ils veulent par tour.
+ - Futurs : les h�ros ont une chance de g�n�rer des ordres sp�ciaux a chaque tour quand il sont en combat.
+
+
+Combat :
+
+ - Les combat se d�roule � la fin de chaque tour entre les flottes engag� de mani�re automatique.
+
+ - Chaque tour de combat entre 2 flottes se passes ainsi :
+   - Bataille de chasseur => chaque chasseur tire al�atoirement sur un chasseur ennemis.
+     les chasseur restant vont attaquer la flotte ennemis. Leur d�gars est divis� par le nombre de vaisseaux adverse. d�gard +X% sur bouclier.
+     la flaq (anti-a�rien) ennemis affaiblis les chasseurs. la flaq ennemis fait du freindly fire. selon leur skill les chasseur peuvent d�sactiver certains �quipements au hasard.
+
+   - Chaque vaisseaux de la flotte A envoie ses tir sp�ciaux sur un vaisseaux al�atoire (modifiable par ordre : viser les gros, viser full life) de la flotte B. 
+     Idem pour la flotte B.
+     Les effets des tirs sp�ciaux s'applique au prochains tour.
+     La flotte A est divis� en groupe de 5 vaisseaux al�atoirement (modifiable par ordre : groupe de 1,2,3,4,5), chacun de ces groups va viser 1 vaisseaux actifs 
+     al�atoire de la flotte B jusqua sa destruction pour passer � un autre. 
+     Idem cot� flotte B.
+     Si un vaisseaux n'a plus de moral, il part en d�route et n'est plus actif dans la bataille et son niveaux de moral est retirer au global de l'éscouade, 
+     il afaiblit aussi le moral des autres vaisseaux de son éscouade.
+
+
+Replis : 
+
+ - Une flotte peut �tre replier par un joueur quand elle est attaquer, elle subira les d�gards de la flotte adverse sans r�pliquer avant de changer de case.
+ - Une flotte peut �tre replier quand elle attaque, elle subira les d�gards de la flotte adverse (60% => inciter � l'attaque) sans r�pliquer avant de changer de case. 
+ - Replis g�n�ral, le joueur abandonne le combat, certains vaisseaux d�truit peuvent �tre captur� si victoire (peu de chances). 
+
+Victoire / D�faite.
+
+ - Une flotte dont le moral tombe en dessous de 20 % de son maximum part en d�route recule d'une case dans la direction oppos� de l'attaque. Si elle rencontre une flotte
+   dans la case ou elle devait se replier, elle lui fait des d�gards et s'en prend et va dans la case suivante dans la m�me direction. Si la case est en dehors de la 
+   catre, elle est sortis de la partis, dans ce cas des vaisseaux d�truit peuvent �tre captur� si victoire (peu de chances).  
+ - La/Les flotte victorieuse prend un boost de moral.
+ - Si une flotte se replie dans une case ou il y a une flotte ennemis, des vaisseaux peuvent �tre captur� si victoire (beaucoups de chances).
+

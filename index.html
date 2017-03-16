@@ -1,0 +1,49 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+	<title>Phaser - Making your first game, part 1</title>
+	<script type="text/javascript" src="js/phaser.js"></script>
+
+    <script src="objects/squad.js"></script>
+    <script src="objects/player.js"></script>
+    <script src="objects/fleat.js"></script>
+    <script src="objects/case.js"></script>
+    <script src="objects/ship.js"></script>
+    <script src="objects/lifeBar.js"></script>
+    <script src="objects/turn.js"></script>
+    <script src="objects/action.js"></script>
+    <script src="objects/battles.js"></script>
+    <script src="objects/order.js"></script>
+    <script src="objects/attackModifier.js"></script>
+    <script src="objects/cardHandler.js"></script>
+    <script src="objects/pick.js"></script>
+    <script src="objects/cards.js"></script>
+    <script src="states/boot.js"></script>
+    <script src="states/preload.js"></script>
+    <script src="states/positionning.js"></script>
+    <script src="states/game.js"></script>
+    <script src="lib/utils.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+//var game = new Phaser.Game(850, 850, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(1000, 900, Phaser.AUTO, '');
+game.state.add("Boot",boot);
+game.state.add("Preload",preload);
+game.state.add("Positionning", positionning);
+game.state.add("TheGame", TheGame);
+game.state.start("Boot");
+
+
+</script>
+
+</body>
+</html>
