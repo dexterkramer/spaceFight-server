@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 var EurecaServer = require('eureca.io').EurecaServer;
  
 //create an instance of EurecaServer
-var eurecaServer = new EurecaServer({allow:['setId']});
+var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning']});
  
 //attach eureca.io to our http server
 eurecaServer.attach(server);
@@ -25,9 +25,10 @@ clients = [];
 
 eurecaServer.exports.handshake = function(id)
 {
+    clients[id].remote.unlockPositioning();
     //var remote = eurecaServer.getClient(id); 
 
-    console.log(clients[id]);
+    //console.log(clients[id]);
     //console.log(clients[id]);
 	//var conn = this.connection;
 	/*for (var c in clients)
@@ -46,12 +47,10 @@ eurecaServer.onConnect(function (conn) {
     var remote = eurecaServer.getClient(conn.id); 
 
     //register the client
-	clients[conn.id] = {id:conn.id, remote:remote}
+	clients[conn.id] = {id:conn.id, remote:remote, game:null}
 	
     //console.log(remote);
 
-	//here we call setId (defined in the client side)
-	remote.setId(conn.id);
     var pool = tryToMakeMatch();
     //console.log("icic" + pool);
     if(pool)
@@ -59,7 +58,13 @@ eurecaServer.onConnect(function (conn) {
         var game = launchGame(pool[0],pool[1]);
         pool[0].game = game;
         pool[1].game = game;
+        //here we call setId (defined in the client side)
+        pool[0].remote.setId(pool[0].id);
+        pool[1].remote.setId(pool[1].id);
     }
+
+
+
     console.log('New Client id=%s ', conn.id, conn.remoteAddress);
 });
 
@@ -74,14 +79,16 @@ eurecaServer.onDisconnect(function (conn) {
 function tryToMakeMatch()
 {
     var pool = [];
-    clients.forEach(function(client){
+    console.log(clients);
+    for(var c in clients)
+    {   
         if(pool.length > 1)
             return ;
-        if(!client.inGame)
+        if(clients[c].game == null)
         {
-            pool.push(client);
+            pool.push(clients[c]);
         }   
-    });
+    }
     if(pool.length == 2)
     {
         return pool;
@@ -94,10 +101,8 @@ function tryToMakeMatch()
 
 function launchGame(player1, player2)
 {
-    player1.inGame = true;
-    player2.inGame = true;
-    player1Json.conn = player1;
-    player2Json.conn = player2;
+    player1Json.conn = player1.remote;
+    player2Json.conn = player2.remote;
     var game = boot.newGame(player2Json, player1Json);
     game.launchGame();
     return game;

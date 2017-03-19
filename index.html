@@ -36,7 +36,7 @@
 <script type="text/javascript">
 
 //var game = new Phaser.Game(850, 850, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-var game = new Phaser.Game(1000, 900, Phaser.AUTO, '', { create: eurecaClientSetup });
+var game = new Phaser.Game(1000, 900, Phaser.AUTO, '', { create: eurecaClientSetup, update:update });
 game.state.add("Boot",boot);
 game.state.add("Preload",preload);
 game.state.add("Positionning", positionning);
@@ -47,9 +47,16 @@ function create(eurecaClient, eurecaServer)
     game.server = eurecaServer;
     game.client = eurecaClient;
     //console.log(eurecaClient.id);
-    game.server.handshake(eurecaClient.id);
-    game.state.start("Boot");
-    game.client
+    //game.server.handshake(eurecaClient.id);
+}
+
+function update()
+{
+    
+    if(typeof game.client != "undefined" && game.client != null && game.client.lock === 1)
+    {
+        game.state.start("Boot");
+    }
 }
 
 

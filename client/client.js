@@ -7,6 +7,7 @@ var eurecaClientSetup = function() {
 	var id;
 	//create an instance of eureca.io client
 	var eurecaClient = new Eureca.Client();
+	var lock = 0;
 	
 	eurecaClient.ready(function (proxy) {		
 		eurecaServer = proxy;
@@ -21,10 +22,17 @@ var eurecaClientSetup = function() {
 	{
 		//create() is moved here to make sure nothing is created before uniq id assignation
 		this.id = id;
-		console.log(this);
-		create(this, eurecaServer);
+
 		//create();
-		//eurecaServer.handshake();
+		eurecaServer.handshake(id);
 		ready = true;
-	}	
+	},
+
+	eurecaClient.exports.unlockPositioning = function() 
+	{
+		//create() is moved here to make sure nothing is created before uniq id assignation
+		this.lock = 1;
+		create(this, eurecaServer);
+	}
+
 }
