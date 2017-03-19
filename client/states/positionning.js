@@ -13,6 +13,8 @@ positionning.prototype = {
         button = game.add.button(600, 600, 'button', positioningNextTurn, this, 1, 0, 1);
       },
     update : function(){
+        //do not update if client not ready
+	    if (!ready) return;
         this.game.caseTable.forEach(function(oneCase){
             oneCase.NotOverLaped();
         });

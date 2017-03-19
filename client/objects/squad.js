@@ -211,7 +211,7 @@ oneSquad.prototype = {
         var ref = this;
         toFriendlyFire.forEach(function(squad){
             var modifiers = [];
-            modifiers.push(createDamageModifier(0.2,1));
+            modifiers.push(createDamageModifier(0.1,1));
             ref.attack(squad, modifiers);
             squad.applyDamages();
             squad.updateLifeBar();
