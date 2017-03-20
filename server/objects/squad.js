@@ -9,15 +9,54 @@ var oneSquad = function(name, fleat)
     this.case = null;
     this.action = null;
     this.defendAgainst = [];
-    this.overlapedCase = null;
     this.movesAllowed = 1;
     this.movedFrom = [];
     this.tempAction = null;
     this.attackModifiersArray = [];
-    this.isDragged = false;
+    this.lifeBar = null;
 };
 
 oneSquad.prototype = {
+    createSquadInfos : function(mask)
+    {
+        var squadInfos = {};
+        squadInfos.name = this.name;
+        if(mask.case)
+        {
+            if(this.case == null)
+            {
+                squadInfos.case = null;
+            }
+            else
+            {
+                squadInfos.case = this.case.createCaseInfos(mask.case);
+            }
+        }
+        if(mask.movesAllowed)
+        {
+            squadInfos.movesAllowed = this.movesAllowed;
+        }
+        if(mask.attackModifiersArray)
+        {
+            squadInfos.attackModifiersArray = [];
+            this.attackModifiersArray.forEach(function(attackModifier){
+                squadInfos.attackModifiersArray.push(attackModifier.createAttackModifierInfos(mask.attackModifiersArray));
+            });
+        }
+        if(mask.ships)
+        {
+            squadInfos.ships = [];
+            this.ships.forEach(function(ship){
+                squadInfos.ships.push(ship.createShipInfos(mask.ships));
+            });
+        }
+        if(mask.lifeBar)
+        {
+            squadInfos.lifeBar = this.lifeBar.createLifeBarInfos(mask.lifeBar);
+        }
+        
+        return squadInfos;
+    },
     buff : function(order)
     {
         var ref = this;

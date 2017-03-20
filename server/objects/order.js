@@ -4,6 +4,16 @@ var oneOrder = function(name, effects)
     this.effects = effects;
 };
 
+oneOrder.prototype = {
+    createOrderInfos : function()
+    {
+        var orderInfos = {};
+        orderInfos.name = this.name;
+        orderInfos.effects = this.effects;
+        return orderInfos;
+    }
+};
+
 module.exports = {
     createOrders : function(player, ordersJson)
     {

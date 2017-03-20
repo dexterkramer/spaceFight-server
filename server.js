@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 var EurecaServer = require('eureca.io').EurecaServer;
  
 //create an instance of EurecaServer
-var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning']});
+var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame']});
  
 //attach eureca.io to our http server
 eurecaServer.attach(server);
@@ -26,16 +26,12 @@ clients = [];
 eurecaServer.exports.handshake = function(id)
 {
     clients[id].remote.unlockPositioning();
-    //var remote = eurecaServer.getClient(id); 
+}
 
-    //console.log(clients[id]);
-    //console.log(clients[id]);
-	//var conn = this.connection;
-	/*for (var c in clients)
-	{
-        //console.log("bondour !! t kev adams !!");
-		//console.log(clients[c]);
-    }*/
+eurecaServer.exports.sendPositioningInfos = function(id, caseId)
+{
+    clients[id].player.fleat.capitalShip.case = clients[id].game.caseTable[caseId];
+    clients[id].remote.unlockGame();
 }
 
 
@@ -48,22 +44,18 @@ eurecaServer.onConnect(function (conn) {
 
     //register the client
 	clients[conn.id] = {id:conn.id, remote:remote, game:null}
-	
-    //console.log(remote);
 
     var pool = tryToMakeMatch();
-    //console.log("icic" + pool);
+
     if(pool)
     {
         var game = launchGame(pool[0],pool[1]);
         pool[0].game = game;
+        pool[0].player = game.players[0];
         pool[1].game = game;
+        pool[1].player = game.players[1];
         //here we call setId (defined in the client side)
-        pool[0].remote.setId(pool[0].id);
-        pool[1].remote.setId(pool[1].id);
     }
-
-
 
     console.log('New Client id=%s ', conn.id, conn.remoteAddress);
 });
@@ -79,7 +71,6 @@ eurecaServer.onDisconnect(function (conn) {
 function tryToMakeMatch()
 {
     var pool = [];
-    console.log(clients);
     for(var c in clients)
     {   
         if(pool.length > 1)
@@ -101,8 +92,10 @@ function tryToMakeMatch()
 
 function launchGame(player1, player2)
 {
-    player1Json.conn = player1.remote;
-    player2Json.conn = player2.remote;
+    player1Json.remote = player1.remote;
+    player2Json.remote = player2.remote;
+    player1Json.playerId = player1.id;
+    player2Json.playerId = player2.id;
     var game = boot.newGame(player2Json, player1Json);
     game.launchGame();
     return game;

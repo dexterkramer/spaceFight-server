@@ -46,6 +46,8 @@ function create(eurecaClient, eurecaServer)
 {
     game.server = eurecaServer;
     game.client = eurecaClient;
+    console.log("la");
+    game.client.game = game;
     //console.log(eurecaClient.id);
     //game.server.handshake(eurecaClient.id);
 }
@@ -53,7 +55,7 @@ function create(eurecaClient, eurecaServer)
 function update()
 {
     
-    if(typeof game.client != "undefined" && game.client != null && game.client.lock === 1)
+    if(typeof game.client != "undefined" && game.client != null && game.client.lock >= 1)
     {
         game.state.start("Boot");
     }

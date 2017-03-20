@@ -470,11 +470,34 @@ function clearGameCache (game) {
 
 function createFleat(player, fleatJson)
 {
+
     var fleat = new oneFleat(fleatJson.name, player);
     fleatJson.squads.forEach(function(squadJson){
         fleat.addSquad(createSquad(fleat, squadJson));
     });
     return fleat;
+}
+
+function createFleat2(player, fleatJson)
+{
+    var fleat = new oneFleat(fleatJson.name, player);
+    fleatJson.deployedSquad.forEach(function(squadJson){
+        fleat.deploySquad(createSquad2(fleat, squadJson));
+    });
+    return fleat;
+}
+
+function createSquad2(fleat, squadJson)
+{
+     var squad = new oneSquad(squadJson.name, fleat);
+     squadJson.ships.forEach(function(shipJson){
+        if(shipJson != null)
+        {
+            squad.addShip(new ship(shipJson));
+        }
+     });
+     squad.createLifeBar();
+     return squad;
 }
 
 function createSquad(fleat, squadJson)
@@ -493,6 +516,19 @@ function createPlayer(playerJson, number, availableCasePositioning, availableCas
     player.fleat = createFleat(player, playerJson.fleat );
     player.orders = createOrders(player, playerJson.orders);
     player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
+    player.createPick();
+    return player;
+}
+
+function createPlayer2(playerJson, number, availableCasePositioning, availableCaseDeploying)
+{
+    var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying);
+    player.fleat = createFleat2(player, playerJson.fleat );
+    if(playerJson.fleat.capitalShip != null && playerJson.fleat.capitalShip != false)
+    {
+        player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
+    }
+
     player.createPick();
     return player;
 }

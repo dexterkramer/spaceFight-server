@@ -4,21 +4,25 @@ var positionning = function(game){
 positionning.prototype = {
   	create: function(){
         this.game.add.tileSprite(0, 0, game.width, game.height, 'space');
-        squadsGroup = this.game.add.group();
-        cardsGroup = this.game.add.group();
         this.game.infos = { tourInfos : null};
         drawCases();
-        nextPlayer(false);
+        this.game.turn.player = this.game.me;
         positioningTurnInit(this.game.turn.player);
         button = game.add.button(600, 600, 'button', positioningNextTurn, this, 1, 0, 1);
       },
     update : function(){
         //do not update if client not ready
-	    if (!ready) return;
-        this.game.caseTable.forEach(function(oneCase){
-            oneCase.NotOverLaped();
-        });
-        checkOverLapSquad(this.game.turn.player,this.game.turn.player.availableCasePositioning, OverLapPositioningDraggingManagment);
+	    if(this.game.client.lock >= 2)
+        {
+            this.game.caseTable.forEach(function(oneCase){
+                oneCase.NotOverLaped();
+            });
+            checkOverLapSquad(this.game.turn.player,this.game.turn.player.availableCasePositioning, OverLapPositioningDraggingManagment);   
+            if(this.game.client.lock >= 3)
+            {
+                finish();
+            }
+        }
     }
 }
 
@@ -42,15 +46,17 @@ function positioningTurnInit(player)
 
 function finish()
 {
-    game.state.start("TheGame");
+    this.game.state.start("TheGame");
 }
 
 function positioningNextTurn()
 {
     if(this.game.turn.player.okToFinishPositioning())
     {
-        disableDragingFroPlayer(this.game.turn.player); 
-        nextPlayer(false);
+        disableDragingFroPlayer(this.game.turn.player);
+        console.log(this.game.client.id);
+        this.game.server.sendPositioningInfos(this.game.client.id, this.game.turn.player.fleat.capitalShip.case.number); 
+        /*nextPlayer(false);
         if(this.game.turn.player !== null)
         {
             positioningTurnInit(this.game.turn.player);
@@ -58,7 +64,7 @@ function positioningNextTurn()
         else
         {
             finish();
-        }
+        }*/
     }
 }
 

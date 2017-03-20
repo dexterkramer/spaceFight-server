@@ -3,6 +3,7 @@ var lifeBarFactory = require("./lifeBar.js");
 var ship = function(infos)
 {
     this.infos = infos;
+    this.lifeBar = null;
     this.createLifeBar();
 };
 
@@ -10,6 +11,18 @@ ship.prototype = {
     createLifeBar : function()
     {
         this.lifeBar = lifeBarFactory.create(this.infos.armor, this.infos.shield, this.infos.maxArmor);
+    },
+    createShipInfos : function(mask)
+    {
+        var shipInfos = {};
+        if(mask.infos)
+        {
+            shipInfos.infos = this.infos;
+        }
+        if(mask.lifeBar)
+        {
+            shipInfos.lifeBar = this.lifeBar.createLifeBarInfos(mask.lifeBar);
+        }
     },
     attack : function(target, attackModifiers)
     {

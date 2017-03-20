@@ -13,7 +13,6 @@ var onePlayer = function(name, number, availableCasePositioning, availableCaseDe
     this.availableCaseDeploying = availableCaseDeploying;
     this.movesAllowed = 1;
     this.orders = [];
-    this.availableOrders = [];
     this.cardHandlers = [];
     this.pick = [];
     this.conn = null;
@@ -33,7 +32,6 @@ onePlayer.prototype = {
             squad.tempAction = null;
             squad.action = null;
             squad.movedFrom = [];
-            //squad.defendAgainst = [];
         });
     },
     resetEffects : function()
@@ -67,8 +65,30 @@ onePlayer.prototype = {
     },
     createHandlers : function()
     {
-        //console.log(utils);
         this.cardHandlers = handlerFactory.createHandlers(this);
+    },
+    createPlayerInfos : function(mask)
+    {
+        var playerInfos = {};
+        playerInfos.name = this.name;
+        if(mask.fleat)
+            playerInfos.fleat = this.fleat.createFleatInfos(mask.fleat);
+        if(mask.cardHandlers)
+        {
+            playerInfos.cardHandlersInfos = [];
+            this.cardHandlers.forEach(function(cardHandler){
+                if(cardHandler != null)
+                {
+                    playerInfos.cardHandlersInfos.push(cardHandler.createHandlerinfos(mask.cardHandlers));
+                }
+            });
+        }
+
+        return playerInfos;
+    },
+    createEnnemyInfos : function()
+    {
+        
     }
 };
 
@@ -76,7 +96,8 @@ module.exports = {
     createPlayer : function(playerJson, number, availableCasePositioning, availableCaseDeploying)
     {
         var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying);
-        player.conn = playerJson.conn;
+        player.remote = playerJson.remote;
+        player.playerId = playerJson.playerId;
         player.fleat = fleatFactory.createFleat(player, playerJson.fleat );
         player.orders = orderFactory.createOrders(player, playerJson.orders);
         player.fleat.addCapitalShip(playerJson.fleat.capitalShip);

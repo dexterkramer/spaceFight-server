@@ -1,3 +1,6 @@
+var playerMask = require("./../infosMasks/playerInfosMask.js");
+var ennemyMask = require("./../infosMasks/ennemyInfosMask.js");
+
 var Game = function()
 {
     this.players = [];
@@ -7,11 +10,23 @@ var Game = function()
 Game.prototype = {
     launchGame : function()
     {
-        this.players.forEach(function(player){
-            //console.log(player.conn);
+        this.state = "positioning";
+        var playersInfos = this.createPlayersInfos();
+        var ennemyInfos = this.createEnnemyInfos();
+        this.players.forEach(function(player, index){
+            var toSendPlayersInfos = {};
+            toSendPlayersInfos.players = [];
+            toSendPlayersInfos.players[index] = playersInfos[index];
+            toSendPlayersInfos.index = index;
+            ennemyInfos.forEach(function(ennemy,indexEnnemy){
+                if(index != indexEnnemy)
+                {
+                    ennemy.index = indexEnnemy;
+                    toSendPlayersInfos.players[indexEnnemy] = ennemy;
+                }
+            });
+            player.remote.sendPlayersInfos(toSendPlayersInfos, player.playerId);
         });
-        //var positioning = new positionning(game);
-        //positioning.create();
     },
     nextPlayer : function(rewind)
     {
@@ -40,6 +55,26 @@ Game.prototype = {
         }
         return this.turn.player;
     },
+    createEnnemyInfos : function()
+    {
+        var ennemyInfos = [];
+        this.players.forEach(function(player, index){
+            var ennemyInfo = {};
+            ennemyInfo = player.createPlayerInfos(ennemyMask);
+            ennemyInfos.push(ennemyInfo);
+        });
+        return ennemyInfos;
+    },
+    createPlayersInfos : function()
+    {
+        var playersInfos = [];
+        this.players.forEach(function(player, index){
+            var playerInfos = {};
+            playerInfos = player.createPlayerInfos(playerMask);
+            playersInfos.push(playerInfos);
+        });
+        return playersInfos;
+    }
 };
 
 module.exports = Game;

@@ -9,6 +9,23 @@ AttackModifier.prototype = {
     setDamageModifier : function(damageModifier)
     {
         this.damageModifier = damageModifier;
+    },
+    createAttackModifierInfos : function(mask)
+    {
+        var attackModifierInfos = {};
+        if(mask.type)
+        {
+            attackModifierInfos.type = this.type;
+        }
+        if(mask.turns)
+        {
+            attackModifierInfos.turns = this.turns; 
+        }
+        if(mask.damageModifier)
+        {
+            attackModifierInfos.damageModifier = this.damageModifier;
+        }
+        return attackModifierInfos;
     }
 };
 

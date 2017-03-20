@@ -12,6 +12,21 @@ cardHandler.prototype = {
     addCard : function(card)
     {
         this.card = card;
+    },
+    createHandlerinfos : function(mask)
+    {
+        var cardHandlerInfos = {};
+        if(mask.card)
+        {
+            if(this.card == null)
+            {
+                cardHandlerInfos.card = null;
+            }
+            else
+            {
+                cardHandlerInfos.card = this.card.createCardInfos(mask.card);
+            }
+        }
     }
 };
 

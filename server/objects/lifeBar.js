@@ -2,10 +2,8 @@ var lifeBar = function(armor, shield, maxArmor)
 {
     //this.startArmor = armor;
     this.armor = armor;
-    this.startShielf = shield;
+    this.startShield = shield;
     this.shield = shield;
-    this.phaserObject = null;
-    this.textObject = null;
     this.tempArmor = armor;
     this.maxArmor = maxArmor;
     this.finalArmor = armor;
@@ -20,20 +18,25 @@ lifeBar.prototype = {
     {
         this.shield = shield;
     },
-    draw : function()
-    {
-        if(this.phaserObject !== null)
+    createLifeBarInfos : function(mask){
+        var lifeBarInfos = {};
+        if(mask.armor)
         {
-            this.phaserObject.destroy();
+            lifeBarInfos.armor = this.armor;
         }
-        if(this.textObject !== null)
+        if(mask.shield)
         {
-            this.textObject.destroy();
+            lifeBarInfos.shield = this.shield;
         }
-        var lifeBarPhaser = drawLifeBar(this);
-        this.phaserObject = lifeBarPhaser;
-        this.textObject = lifeBarPhaser.textObject;
-        return lifeBarPhaser;
+        if(mask.maxArmor)
+        {
+            lifeBarInfos.maxArmor = this.maxArmor;
+        }
+        if(mask.finalArmor)
+        {
+            lifeBarInfos.finalArmor = this.finalArmor;
+        }
+        return lifeBarInfos;
     }
 };
 

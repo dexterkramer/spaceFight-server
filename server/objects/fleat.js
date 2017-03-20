@@ -41,7 +41,25 @@ oneFleat.prototype = {
             x = squad.originalX;
             y = squad.originalY;
         }
-        
+    },
+    createFleatInfos : function(mask)
+    {
+        var fleatInfos = {};
+        fleatInfos.name = this.name;
+        if(mask.capitalShip)
+        {
+            fleatInfos.capitalShip = this.capitalShip.createSquadInfos(mask.capitalShip);
+        }
+
+        if(mask.deployedSquad)
+        {
+            fleatInfos.deployedSquad = [];
+            fleatInfos.deployedSquad.forEach(function(squad){
+                fleatInfos.deployedSquad.push(squad.createSquadInfos(mask.deployedSquad));
+            });
+        }
+
+        return fleatInfos;
     }
 };
 

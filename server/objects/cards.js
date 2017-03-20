@@ -31,9 +31,28 @@ oneCard.prototype = {
     {
         this.handler.card = null;
         this.handler = null;
-        this.phaserObject.destroy();
-        this.phaserObject = null;
         this.object = null;
+    },
+    createCardInfos : function(mask)
+    {
+        var cardInfos = {};
+        if(mask.type)
+        {
+            cardInfos.type = this.type;
+        }
+        if(object.object)
+        {
+            if(this.type == "order")
+            {
+                cardInfos.object = this.object.createOrderInfos();
+            }   
+            else if(this.type == "squad")
+            {
+                cardInfos.object = this.object.createSquadInfos();
+            }
+        }
+
+        return cardInfos;
     }
 }
 

@@ -1,7 +1,4 @@
 var oneCase = function(name,number,width,height){
-    this.position = {};
-    this.position.x = null;
-    this.position.y = null;
     this.number = number;
     this.name = name;
     this.squad = null;
@@ -9,14 +6,17 @@ var oneCase = function(name,number,width,height){
     this.right = null;
     this.top = null;
     this.bottom = null;
-    this.height = height;
-    this.width = width;
-    this.phaserObject = null;
-    this.overLapped = null;
 };
 
 oneCase.prototype = {
-
+    createCaseInfos : function(mask){
+        var caseInfos = {};
+        if(mask.number)
+        {
+            caseInfos.number = this.number;
+        }
+        return caseInfos;
+    }
 }
 
 module.exports = {
