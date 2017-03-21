@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 var EurecaServer = require('eureca.io').EurecaServer;
  
 //create an instance of EurecaServer
-var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame']});
+var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame', 'refreshPlayersInfos']});
  
 //attach eureca.io to our http server
 eurecaServer.attach(server);
@@ -30,8 +30,24 @@ eurecaServer.exports.handshake = function(id)
 
 eurecaServer.exports.sendPositioningInfos = function(id, caseId)
 {
-    clients[id].player.fleat.capitalShip.case = clients[id].game.caseTable[caseId];
-    clients[id].remote.unlockGame();
+    console.log(clients[id].playerIndex);
+    clients[id].game.players[clients[id].playerIndex].fleat.capitalShip.case = clients[id].game.caseTable[caseId];
+    clients[id].game.players[clients[id].playerIndex].fleat.deploySquad(clients[id].game.players[clients[id].playerIndex].fleat.capitalShip);
+    clients[id].positioned = true;
+    var allPositioned = true;
+    clients[id].game.players.forEach(function(player, index){
+        if(!clients[player.playerId].positioned)
+        {
+            allPositioned = false;
+        }
+    });
+    if(allPositioned)
+    {
+        clients[id].game.refreshPlayersInfos();
+        clients[id].game.players.forEach(function(player, index){
+            clients[player.playerId].remote.unlockGame();
+        });
+    }
 }
 
 
@@ -51,9 +67,9 @@ eurecaServer.onConnect(function (conn) {
     {
         var game = launchGame(pool[0],pool[1]);
         pool[0].game = game;
-        pool[0].player = game.players[0];
+        pool[0].playerIndex = 0;
         pool[1].game = game;
-        pool[1].player = game.players[1];
+        pool[1].playerIndex = 1;
         //here we call setId (defined in the client side)
     }
 
@@ -96,7 +112,7 @@ function launchGame(player1, player2)
     player2Json.remote = player2.remote;
     player1Json.playerId = player1.id;
     player2Json.playerId = player2.id;
-    var game = boot.newGame(player2Json, player1Json);
+    var game = boot.newGame(player1Json, player2Json);
     game.launchGame();
     return game;
 }

@@ -39,6 +39,14 @@ var eurecaClientSetup = function() {
 			eurecaClient.game.tempPlayerInfos = playersInfos;
 			eurecaClient.lock = 1;
 		}
+		return true;
+	}
+
+	eurecaClient.exports.refreshPlayersInfos = function(playersInfos)
+	{
+		eurecaClient.game.tempPlayerInfos = playersInfos;
+		refreshPlayers();
+		return true;
 	}
 
 }

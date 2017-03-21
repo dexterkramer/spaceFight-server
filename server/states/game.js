@@ -58,13 +58,12 @@ function checkLoosers()
 function finishGame()
 {
     refreshInfos();
-    //console.log("finish !!!");
     if(this.game.players.length == 1)
     {
-        //console.log(this.game.players[0].name + " win ! ");
+
     }
     this.game.eliminatedPlayers.forEach(function(player){
-        //console.log(player.name + " looose, booohoohoo !!!!");
+
     });
 }
 

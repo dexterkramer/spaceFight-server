@@ -12,7 +12,7 @@ TheGame.prototype = {
         this.game.battleInfos = null;
         drawCases();
         drawAllSquads();
-        nextTurn();
+        //nextTurn();
         button = this.game.add.button(600, 600, 'button', nextTurn, this, 1, 0, 1);
       },
     update : function(){
@@ -28,6 +28,28 @@ TheGame.prototype = {
 //////////////////////////////////////////////////////////////////
 ////////////////////////// GAME MECHANICS ////////////////////////
 //////////////////////////////////////////////////////////////////
+
+function refreshPlayers()
+{
+    this.game.players.forEach(function(player, index){
+        //console.log(this.game.tempPlayerInfos.players[index]);
+        //console.log(player);
+        this.game.tempPlayerInfos.players[index].fleat.deployedSquad.forEach(function(squadJson, indexTemp){
+            
+            if(typeof player.fleat.deployedSquad[indexTemp] != "undefined" && player.fleat.deployedSquad[indexTemp] != null)
+            {
+                player.fleat.deployedSquad[indexTemp].refreshDatas(squadJson);
+            }
+            else
+            {
+                var newSquad = createSquad2( player.fleat, squadJson);
+                newSquad.case = this.game.caseTable[squadJson.case.number];
+                //enableDragSquad(squad, dragSquad, stopDragSquadGaming);
+                player.fleat.deploySquad(newSquad);
+            }
+        });
+    });
+}
 
 function checkLoosers()
 {

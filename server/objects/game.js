@@ -28,6 +28,25 @@ Game.prototype = {
             player.remote.sendPlayersInfos(toSendPlayersInfos, player.playerId);
         });
     },
+    refreshPlayersInfos : function()
+    {
+        var playersInfos = this.createPlayersInfos();
+        var ennemyInfos = this.createEnnemyInfos();
+        this.players.forEach(function(player, index){
+            var toSendPlayersInfos = {};
+            toSendPlayersInfos.players = [];
+            toSendPlayersInfos.players[index] = playersInfos[index];
+            toSendPlayersInfos.index = index;
+            ennemyInfos.forEach(function(ennemy,indexEnnemy){
+                if(index != indexEnnemy)
+                {
+                    ennemy.index = indexEnnemy;
+                    toSendPlayersInfos.players[indexEnnemy] = ennemy;
+                }
+            });
+            player.remote.refreshPlayersInfos(toSendPlayersInfos);
+        });
+    },
     nextPlayer : function(rewind)
     {
         if(this.turn.player == null)

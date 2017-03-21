@@ -364,6 +364,9 @@ function drawCardSquad(card, x, y)
     oneCard.addChild(oneSquad);
 }
 
+var squadWidth = 100;
+var squadHeight = 100;
+
 function drawSquad(squad, x, y)
 {
     let oneSquad = this.game.add.sprite(x, y, 'squad');
@@ -374,9 +377,6 @@ function drawSquad(squad, x, y)
     squad.phaserObject = oneSquad;
     squad.drawLifeBar();
 }
-
-var squadWidth = 100;
-var squadHeight = 100;
 
 function drawPlayerSquads(player)
 {
@@ -467,7 +467,7 @@ function clearGameCache (game) {
     this.game.load.reset();
     this.game.load.removeAll();
 }
-
+/*
 function createFleat(player, fleatJson)
 {
 
@@ -476,7 +476,7 @@ function createFleat(player, fleatJson)
         fleat.addSquad(createSquad(fleat, squadJson));
     });
     return fleat;
-}
+}*/
 
 function createFleat2(player, fleatJson)
 {
@@ -499,7 +499,7 @@ function createSquad2(fleat, squadJson)
      squad.createLifeBar();
      return squad;
 }
-
+/*
 function createSquad(fleat, squadJson)
 {
     var squad = new oneSquad(squadJson.name, fleat);
@@ -518,7 +518,7 @@ function createPlayer(playerJson, number, availableCasePositioning, availableCas
     player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
     player.createPick();
     return player;
-}
+}*/
 
 function createPlayer2(playerJson, number, availableCasePositioning, availableCaseDeploying)
 {

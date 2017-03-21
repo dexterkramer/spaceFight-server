@@ -16,6 +16,10 @@ var oneSquad = function(name, fleat)
 };
 
 oneSquad.prototype = {
+    refreshDatas : function(squadJson)
+    {
+        //console.log(squadJson);
+    },
     applyMove : function()
     {
         if(this.case !== null)

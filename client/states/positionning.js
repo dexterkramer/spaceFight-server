@@ -54,7 +54,6 @@ function positioningNextTurn()
     if(this.game.turn.player.okToFinishPositioning())
     {
         disableDragingFroPlayer(this.game.turn.player);
-        console.log(this.game.client.id);
         this.game.server.sendPositioningInfos(this.game.client.id, this.game.turn.player.fleat.capitalShip.case.number); 
         /*nextPlayer(false);
         if(this.game.turn.player !== null)
@@ -70,7 +69,6 @@ function positioningNextTurn()
 
 function positioningPlayer(player)
 {
-    squadsGroup = this.game.add.group();
     var XposSquad = 100;
     var YposSquad = 700;
 

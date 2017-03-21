@@ -54,7 +54,6 @@ oneSquad.prototype = {
         {
             squadInfos.lifeBar = this.lifeBar.createLifeBarInfos(mask.lifeBar);
         }
-        
         return squadInfos;
     },
     buff : function(order)

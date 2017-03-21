@@ -24,6 +24,7 @@ preload.prototype = {
                 this.game.caseTable = createCases(this.game.cache.getJSON('casemap'));
                 this.game.players.push(createPlayer2(this.game.tempPlayerInfos.players[0], 0, this.game.caseTable.slice( 12 , 19), this.game.caseTable.slice( 16 , 19)));
                 this.game.players.push(createPlayer2(this.game.tempPlayerInfos.players[1], 1, this.game.caseTable.slice( 0 , 7 ), this.game.caseTable.slice( 0 , 3 )));
+                console.log(this.game.tempPlayerInfos.index);
                 this.game.me = this.game.players[this.game.tempPlayerInfos.index];
                 this.game.turn = new oneTurn();
                 this.game.state.start("Positionning");

@@ -1,13 +1,14 @@
 var ship = function(infos)
 {
-    this.infos = infos;
+    this.infos = infos.infos;
+    this.lifeBarInfos = infos.lifeBar;
     this.createLifeBar();
 };
 
 ship.prototype = {
     createLifeBar : function()
     {
-        this.lifeBar = new lifeBar(this.infos.armor, this.infos.shield, this.infos.maxArmor);
+        this.lifeBar = new lifeBar(this.lifeBarInfos.armor, this.lifeBarInfos.shield, this.lifeBarInfos.maxArmor);
     },
     attack : function(target, attackModifiers)
     {

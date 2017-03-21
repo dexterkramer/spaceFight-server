@@ -24,22 +24,16 @@ oneFleat.prototype = {
         this.deployedSquad.splice(this.deployedSquad.findIndex(function(elem){
             return elem == squad;
         }),1);
-        //removeSquad(squad);
     },
     deploySquad : function(squad)
     {
-        var x;
-        var y;
         if(squad.case !== null)
         {
-            x = squad.case.phaserObject.middleX;
-            y = squad.case.phaserObject.middleY;
             this.deployedSquad.push(squad);
         }
         else
         {
-            x = squad.originalX;
-            y = squad.originalY;
+            
         }
     },
     createFleatInfos : function(mask)
@@ -54,7 +48,7 @@ oneFleat.prototype = {
         if(mask.deployedSquad)
         {
             fleatInfos.deployedSquad = [];
-            fleatInfos.deployedSquad.forEach(function(squad){
+            this.deployedSquad.forEach(function(squad){
                 fleatInfos.deployedSquad.push(squad.createSquadInfos(mask.deployedSquad));
             });
         }

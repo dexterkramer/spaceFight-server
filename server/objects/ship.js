@@ -23,6 +23,7 @@ ship.prototype = {
         {
             shipInfos.lifeBar = this.lifeBar.createLifeBarInfos(mask.lifeBar);
         }
+        return shipInfos;
     },
     attack : function(target, attackModifiers)
     {
