@@ -304,8 +304,27 @@ function drawLifeBar(lifebarObject)
     return lifeBar;
 }
 
+function unlockMe()
+{
+    this.game.me.fleat.deployedSquad.forEach(function(squad){
+        enableDragSquad(squad, dragSquad, stopDragSquadGaming);
+    });
+}
+
+function lockMe()
+{
+    this.game.me.fleat.deployedSquad.forEach(function(squad){
+        disableDragSquad(squad);
+    });
+}
+
 function nextPlayer(rewind)
 {
+    if(this.game.me == this.game.turn.player)
+    {
+        this.game.server.nextTurn(this.game.client.id);
+    }
+    /*
     if(this.game.turn.player == null)
     {
         if(typeof this.game.players[0] !== "undefined" && this.game.players[0] !== null)
@@ -329,7 +348,7 @@ function nextPlayer(rewind)
             this.game.turn.player = null;
         }
     }
-    return this.game.turn.player;
+    return this.game.turn.player;*/
 }
 
 function drawCardOrder(card, x, y)

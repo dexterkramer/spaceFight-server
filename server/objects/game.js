@@ -5,6 +5,7 @@ var Game = function()
 {
     this.players = [];
     this.state = null;
+    this.turn = { number : 0, player : null};
 }
 
 Game.prototype = {
@@ -27,6 +28,33 @@ Game.prototype = {
             });
             player.remote.sendPlayersInfos(toSendPlayersInfos, player.playerId);
         });
+    },
+    nextTurn : function(id)
+    {
+        var indexChoose = 0;
+        var self = this;
+        var playerIndex = this.players.findIndex(function(elem){
+            return elem == self.turn.player;
+        });
+        if((playerIndex + 1) < this.players.length)
+        {
+            indexChoose = playerIndex + 1;
+        }
+        else
+        {
+            indexChoose = 0;
+        }
+        this.turn.player = this.players[indexChoose];
+        return indexChoose;
+    },
+    gamePhase : function()
+    {
+        this.state = "game";
+        if(this.turn.player == null)
+        {
+            this.turn.player = this.players[0];
+        }
+        return true;
     },
     refreshPlayersInfos : function()
     {

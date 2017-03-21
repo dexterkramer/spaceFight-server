@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 var EurecaServer = require('eureca.io').EurecaServer;
  
 //create an instance of EurecaServer
-var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame', 'refreshPlayersInfos']});
+var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame', 'refreshPlayersInfos', 'sendTurn', 'okToGame']});
  
 //attach eureca.io to our http server
 eurecaServer.attach(server);
@@ -26,11 +26,11 @@ clients = [];
 eurecaServer.exports.handshake = function(id)
 {
     clients[id].remote.unlockPositioning();
+    return true;
 }
 
 eurecaServer.exports.sendPositioningInfos = function(id, caseId)
 {
-    console.log(clients[id].playerIndex);
     clients[id].game.players[clients[id].playerIndex].fleat.capitalShip.case = clients[id].game.caseTable[caseId];
     clients[id].game.players[clients[id].playerIndex].fleat.deploySquad(clients[id].game.players[clients[id].playerIndex].fleat.capitalShip);
     clients[id].positioned = true;
@@ -48,8 +48,51 @@ eurecaServer.exports.sendPositioningInfos = function(id, caseId)
             clients[player.playerId].remote.unlockGame();
         });
     }
+    clients[id].game.gamePhase();
+    
+    return true;
 }
 
+eurecaServer.exports.nextTurn = function(id)
+{
+    if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
+    {
+        var indexChoosed = clients[id].game.nextTurn();
+        clients[id].game.players.forEach(function(player, index){
+            clients[player.playerId].remote.sendTurn(indexChoosed);
+        });
+        
+    }
+}
+
+
+eurecaServer.exports.okToGame = function(id)
+{
+    var self = this;
+    var playerIndex = clients[id].game.players.findIndex(function(elem){
+        return elem == clients[id].game.turn.player;
+    });
+    clients[id].remote.sendTurn(playerIndex);
+
+    /*this.players.forEach(function(player, index){
+        player.remote.sendTurn(playerIndex);
+    });
+
+
+    clients[id].inGame = true;
+    var allInGame = true;
+    clients[id].game.players.forEach(function(player, index){
+        if(!clients[player.playerId].inGame)
+        {
+            allInGame = false;
+        }
+    });
+    if(allInGame)
+    {
+        clients[id].game.gamePhase();
+    }*/
+    return true;
+}
 
 
 
