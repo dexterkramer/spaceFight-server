@@ -64,6 +64,32 @@ eurecaServer.exports.nextTurn = function(id)
         
     }
 }
+/*
+eurecaServer.exports.support = function(id, squadIndex, caseIndex)
+{
+    if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
+    {
+        //clients[id].
+    }
+}
+
+eurecaServer.exports.move = function(id, squadIndex, caseIndex)
+{
+    if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
+    {
+        //clients[id].
+    }
+}*/
+
+
+eurecaServer.exports.squadGo = function(id, currentDeployedIndex, caseIndex)
+{
+    if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
+    {
+        clients[id].game.move(currentDeployedIndex, clients[id].game.players[clients[id].playerIndex], caseIndex);
+    }
+    
+}
 
 
 eurecaServer.exports.okToGame = function(id)

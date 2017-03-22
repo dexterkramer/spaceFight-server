@@ -8,6 +8,7 @@ var oneFleat = function(name, player)
     this.player = player;
     player.fleat = this;
     this.capitalShip = null;
+    this.currentDeployedIndex = 0;
 };
 
 oneFleat.prototype = {
@@ -29,11 +30,9 @@ oneFleat.prototype = {
     {
         if(squad.case !== null)
         {
+            squad.currentDeployedIndex = this.currentDeployedIndex;
+            this.currentDeployedIndex++;
             this.deployedSquad.push(squad);
-        }
-        else
-        {
-            
         }
     },
     createFleatInfos : function(mask)

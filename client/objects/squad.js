@@ -13,12 +13,21 @@ var oneSquad = function(name, fleat)
     this.tempAction = null;
     this.attackModifiersArray = [];
     this.isDragged = false;
+    this.currentDeployedIndex = null;
 };
 
 oneSquad.prototype = {
-    refreshDatas : function(squadJson)
+    refreshDatas : function(squadJson, caseTable)
     {
-        //console.log(squadJson);
+        if(this.case !== null)
+        {
+            this.case.squad = null;
+        }
+        this.case = caseTable[squadJson.case.number];
+        this.case.squad = this;
+        // move the sprite of the esouade to his new position 
+        this.phaserObject.x = this.case.phaserObject.middleX;
+        this.phaserObject.y = this.case.phaserObject.middleY;
     },
     applyMove : function()
     {

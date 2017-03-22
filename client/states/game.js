@@ -33,18 +33,36 @@ TheGame.prototype = {
 function refreshPlayers()
 {
     this.game.players.forEach(function(player, index){
+        player.fleat.deployedSquad.forEach(function(squad){
+            squad.toClean = true;
+        });
         this.game.tempPlayerInfos.players[index].fleat.deployedSquad.forEach(function(squadJson, indexTemp){
-            if(typeof player.fleat.deployedSquad[indexTemp] != "undefined" && player.fleat.deployedSquad[indexTemp] != null)
+            let squadIndex = player.fleat.deployedSquad.findIndex(function(elem){
+                return elem.currentDeployedIndex == squadJson.currentDeployedIndex;
+            });
+            if(squadIndex != -1 )
             {
-                player.fleat.deployedSquad[indexTemp].refreshDatas(squadJson);
+                player.fleat.deployedSquad[squadIndex].toClean = false;
+                player.fleat.deployedSquad[squadIndex].refreshDatas(squadJson, this.game.caseTable);
             }
             else
             {
                 var newSquad = createSquad2( player.fleat, squadJson);
+                newSquad.toClean = false;
                 newSquad.case = this.game.caseTable[squadJson.case.number];
                 newSquad.case.squad = newSquad;
                 player.fleat.deploySquad(newSquad);
             }
+        });
+        var toCleanArray = [];
+        player.fleat.deployedSquad.forEach(function(squad, index){
+            if(squad.toClean)
+            {
+                toCleanArray.push(index);
+            }
+        });
+        toCleanArray.forEach(function(indexToRemove){
+            player.fleat.undeploySquad(player.fleat.deployedSquad[indexToRemove]);
         });
     });
 }
@@ -137,22 +155,22 @@ function refreshInfos()
 function nextTurn()
 {
     this.game.battles = [];
-    if(this.game.turn.player !== null)
+    /*if(this.game.turn.player !== null)
     {
         disableDragingFroPlayer(this.game.turn.player);
-    }
+    }*/
     this.game.turn.number++;
     if(this.game.turn.player != null)
     {
         this.game.turn.player.resetEffects();
-        this.game.turn.player.destroyCardView();
+        //this.game.turn.player.destroyCardView();
     }
     nextPlayer();
     refreshInfos();
     this.game.turn.player.resetSquadsActions();
-    this.game.turn.player.drawOneCard();
-    this.game.turn.player.showCards();
-    enableDrag(this.game.turn.player, dragSquad, stopDragSquadGaming);
+    //this.game.turn.player.drawOneCard();
+    //this.game.turn.player.showCards();
+    //enableDrag(this.game.turn.player, dragSquad, stopDragSquadGaming);
 }
 
 function loose(player)
@@ -451,8 +469,15 @@ function attack(squad, target)
     }
     squad.action = addBattle(squad, target);
     target.action = addBattle(target, squad);
+    
+    var caseIndex = this.game.caseTable.findIndex(function(elem){
+        return elem == target.case;
+    });
 
-    squad.initFinalArmor();
+    var attackResult = this.game.server.squadGo(this.game.client.id, squad.currentDeployedIndex, caseIndex);
+
+
+/*    squad.initFinalArmor();
     target.initFinalArmor();
     var modifiers = [];
     var toFriendlyFires = squad.getFriendlyFire(target);
@@ -481,7 +506,7 @@ function attack(squad, target)
     if(squad.lifeBar.armor <= 0)
     {
         squad.removeFromBattle();
-    }
+    }*/
     drawAttack(squad.action);
 }
 
@@ -589,6 +614,10 @@ function move(sprite)
         sprite.ref.movesAllowed = sprite.ref.movesAllowed + 1;
         sprite.ref.movedFrom.pop();
         sprite.ref.applyMove();
+        var caseIndex = this.game.caseTable.findIndex(function(elem){
+            return elem == sprite.ref.overlapedCase;
+        });
+        this.game.server.squadGo(this.game.client.id, sprite.ref.currentDeployedIndex, caseIndex);
         return true;
     }
     else if (sprite.ref.movesAllowed > 0)
@@ -597,6 +626,10 @@ function move(sprite)
         sprite.ref.movesAllowed--;
         sprite.ref.movedFrom.push(sprite.ref.case);
         sprite.ref.applyMove();
+        var caseIndex = this.game.caseTable.findIndex(function(elem){
+            return elem == sprite.ref.overlapedCase;
+        });
+        this.game.server.squadGo(this.game.client.id, sprite.ref.currentDeployedIndex, caseIndex);
         return true;
     }
     else

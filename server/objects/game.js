@@ -1,9 +1,13 @@
 var playerMask = require("./../infosMasks/playerInfosMask.js");
 var ennemyMask = require("./../infosMasks/ennemyInfosMask.js");
+var attackModifierFactory = require("./attackModifier.js");
+var battleFactory = require("./battles.js");
 
 var Game = function()
 {
+    this.caseTable = [];
     this.players = [];
+    this.battles = [];
     this.state = null;
     this.turn = { number : 0, player : null};
 }
@@ -28,6 +32,79 @@ Game.prototype = {
             });
             player.remote.sendPlayersInfos(toSendPlayersInfos, player.playerId);
         });
+    },
+    getDefendingAgainst : function(defendingSquad)
+    {
+        var defendingAgainst = [];
+        this.battles.forEach(function(battle){
+            if(battle.target == defendingSquad)
+            {
+                defendingAgainst.push(battle);
+            }
+        });
+        return defendingAgainst;
+    },
+    addBattle : function(squad, target)
+    {
+        var theBattle = battleFactory.createBattle(squad, target);
+        this.battles.push(theBattle);
+        return theBattle;
+    },
+    move : function(currentDeployedIndex, playerSquad, caseIndex)
+    {
+        var squadIndex = playerSquad.fleat.deployedSquad.findIndex(function(elem){
+            return elem.currentDeployedIndex == currentDeployedIndex;
+        });
+        var squad = playerSquad.fleat.deployedSquad[squadIndex];
+        if(squad.action == null)
+        {
+            if(squad.canGo(this.caseTable[caseIndex]))
+            {
+                var target = this.caseTable[caseIndex].squad;
+                if(typeof target != "undefined" && target != null)
+                {   
+                    if(target.fleat.player != squad.fleat.player)
+                    {
+                        squad.action = this.addBattle(squad, target);
+                        target.action = this.addBattle(target, squad);
+                        squad.initFinalArmor();
+                        target.initFinalArmor();
+                        var modifiers = [];
+                        var toFriendlyFires = squad.getFriendlyFire(target, this.getDefendingAgainst(target));
+                        squad.applyFriendlyFire(toFriendlyFires);
+                        if(toFriendlyFires.length > 0)
+                        {
+                            modifiers.push(attackModifierFactory.createDamageModifier(1-(toFriendlyFires.length/10),1));
+                        }
+                        var flankBonus = squad.calcultateFlankingBonus(target);
+                        if(flankBonus)
+                        {
+                            modifiers.push(flankBonus);
+                        }
+                        squad.attack(target, modifiers);
+                        target.attack(squad,  []);
+                        target.applyDamages();
+                        squad.applyDamages();
+                        squad.updateLifeBar();
+                        target.updateLifeBar();
+                        if(target.lifeBar.armor <= 0)
+                        {
+                            target.removeFromBattle();
+                        }
+                        if(squad.lifeBar.armor <= 0)
+                        {
+                            squad.removeFromBattle();
+                        }
+                    }
+                }
+                else
+                {
+                    squad.case = this.caseTable[caseIndex];
+                    squad.case.squad = squad;
+                }
+            }
+        }
+        this.refreshPlayersInfos();
     },
     nextTurn : function(id)
     {

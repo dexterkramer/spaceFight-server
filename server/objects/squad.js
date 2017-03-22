@@ -1,5 +1,6 @@
 var ShipFactory = require('./ship.js');
 var lifeBarFactory = require("./lifeBar.js");
+var attackModifierFactory = require("./attackModifier.js");
 
 var oneSquad = function(name, fleat)
 {
@@ -14,6 +15,7 @@ var oneSquad = function(name, fleat)
     this.tempAction = null;
     this.attackModifiersArray = [];
     this.lifeBar = null;
+    this.currentDeployedIndex = null;
 };
 
 oneSquad.prototype = {
@@ -32,6 +34,7 @@ oneSquad.prototype = {
                 squadInfos.case = this.case.createCaseInfos(mask.case);
             }
         }
+        squadInfos.currentDeployedIndex = this.currentDeployedIndex;
         if(mask.movesAllowed)
         {
             squadInfos.movesAllowed = this.movesAllowed;
@@ -62,7 +65,7 @@ oneSquad.prototype = {
         order.effects.forEach(function(effect){
             if(effect.type == "damage")
             {
-                ref.attackModifiersArray.push(createDamageModifier(effect.value, -1));
+                ref.attackModifiersArray.push(attackModifierFactory.createDamageModifier(effect.value, -1));
             }
         });
     },
@@ -167,13 +170,12 @@ oneSquad.prototype = {
             {
                 return 6;
             }
-
         }
         return false;
     },
-    calcultateFlankingBonus : function(defendingSquad)
+    calcultateFlankingBonus : function(defendingSquad, defendingAgainst)
     {
-        var defendingAgainst = getDefendingAgainst(defendingSquad);
+        //var defendingAgainst = getDefendingAgainst(defendingSquad);
 
         if(defendingAgainst.length > 0 && defendingAgainst[0].attackingSquad != this)
         {
@@ -189,20 +191,19 @@ oneSquad.prototype = {
             }
             else if(firstToAttackFromFlankNumber == plusThree)
             {
-                return createDamageModifier(2,1);
+                return attackModifierFactory.createDamageModifier(2,1);
             }
             else
             {
-                return createDamageModifier(1.5,1);
+                return attackModifierFactory.createDamageModifier(1.5,1);
             }
         }
         return false;
     },
-    getFriendlyFire : function(defendingSquad)
+    getFriendlyFire : function(defendingSquad, defendingAgainst)
     {
         var ref = this;
         var toFriendlyFire = [];
-        var defendingAgainst = getDefendingAgainst(defendingSquad);
         if(defendingAgainst.length > 0)
         {
             defendingAgainst.forEach(function(battle){
@@ -223,7 +224,7 @@ oneSquad.prototype = {
         var ref = this;
         toFriendlyFire.forEach(function(squad){
             var modifiers = [];
-            modifiers.push(createDamageModifier(0.1,1));
+            modifiers.push(attackModifierFactory.createDamageModifier(0.1,1));
             ref.attack(squad, modifiers);
             squad.applyDamages();
             squad.updateLifeBar();

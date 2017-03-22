@@ -509,6 +509,7 @@ function createFleat2(player, fleatJson)
 function createSquad2(fleat, squadJson)
 {
      var squad = new oneSquad(squadJson.name, fleat);
+     squad.currentDeployedIndex = squadJson.currentDeployedIndex;
      squadJson.ships.forEach(function(shipJson){
         if(shipJson != null)
         {
