@@ -99,8 +99,28 @@ Game.prototype = {
                 }
                 else
                 {
-                    squad.case = this.caseTable[caseIndex];
-                    squad.case.squad = squad;
+                    if(squad.movedFrom[squad.movedFrom.length - 1] == this.caseTable[caseIndex])
+                    {
+                        if(squad.case !== null)
+                        {
+                            squad.case.squad = null;
+                        }
+                        squad.movesAllowed = squad.movesAllowed + 1;
+                        squad.movedFrom.pop();
+                        squad.case = this.caseTable[caseIndex];
+                        squad.case.squad = squad;
+                    }
+                    else if (sprite.ref.movesAllowed > 0)
+                    {
+                        if(squad.case !== null)
+                        {
+                            squad.case.squad = null;
+                        }
+                        squad.movesAllowed--;
+                        squad.movedFrom.push(sprite.ref.case);
+                        squad.case = this.caseTable[caseIndex];
+                        squad.case.squad = squad;
+                    }
                 }
             }
         }
@@ -108,6 +128,7 @@ Game.prototype = {
     },
     nextTurn : function(id)
     {
+        this.turn.player.resetEffects();
         var indexChoose = 0;
         var self = this;
         var playerIndex = this.players.findIndex(function(elem){
@@ -122,6 +143,7 @@ Game.prototype = {
             indexChoose = 0;
         }
         this.turn.player = this.players[indexChoose];
+        this.turn.player.resetSquadsActions();
         return indexChoose;
     },
     gamePhase : function()
