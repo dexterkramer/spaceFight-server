@@ -44,6 +44,8 @@ var eurecaClientSetup = function() {
 
 	eurecaClient.exports.sendTurn = function(playerIndex)
 	{
+		
+		while(eurecaClient.game.refreshing);
 		eurecaClient.game.turn.player = eurecaClient.game.players[playerIndex];
 		if(eurecaClient.game.turn.player == eurecaClient.game.me)
 		{
@@ -59,7 +61,9 @@ var eurecaClientSetup = function() {
 	eurecaClient.exports.refreshPlayersInfos = function(playersInfos)
 	{
 		eurecaClient.game.tempPlayerInfos = playersInfos;
+		eurecaClient.game.refreshing = true;
 		refreshPlayers();
+		eurecaClient.game.refreshing = false;
 		return true;
 	}
 

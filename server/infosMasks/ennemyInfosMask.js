@@ -30,8 +30,8 @@ var ennemyInfosMask = {
     },
     cardHandlers : {
         card : {
-            type : true,
-            object : true
+            type : false,
+            object : false
         }
     }
 }

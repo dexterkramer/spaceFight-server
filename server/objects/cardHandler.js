@@ -27,6 +27,7 @@ cardHandler.prototype = {
                 cardHandlerInfos.card = this.card.createCardInfos(mask.card);
             }
         }
+        return cardHandlerInfos;
     }
 };
 

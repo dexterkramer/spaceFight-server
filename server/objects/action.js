@@ -13,4 +13,9 @@ action.prototype = {
     }
 };
 
-module.exports = action;
+module.exports = {
+    createAction : function(type, target)
+    {
+        return new action(type, target);
+    }
+};

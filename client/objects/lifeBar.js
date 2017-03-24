@@ -20,6 +20,13 @@ lifeBar.prototype = {
     {
         this.shield = shield;
     },
+    refreshDatas : function(infos)
+    {
+        this.armor = infos.armor;
+        this.shield = infos.shield;
+        this.maxArmor = infos.maxArmor;
+        this.finalArmor = infos.finalArmor;
+    },
     draw : function()
     {
         if(this.phaserObject !== null)

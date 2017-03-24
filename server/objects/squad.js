@@ -71,7 +71,9 @@ oneSquad.prototype = {
     },
     addShip : function(ship)
     {
+        ship.currentShipIndex = this.currentShipIndex;
         this.ships.push(ship);
+        this.currentShipIndex++;
     },
     createLifeBar : function()
     {
@@ -312,7 +314,7 @@ oneSquad.prototype = {
         });
         // after supporting a squad, one squad cannot move but can perform an attack, with -70% damages
         this.movesAllowed = 0;
-        this.addAttackModifier(createDamageModifier(0.7,1));
+        this.addAttackModifier(attackModifierFactory.createDamageModifier(0.7,1));
         return true;
     },
     addAttackModifier : function(attackModifier)

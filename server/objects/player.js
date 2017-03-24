@@ -16,6 +16,7 @@ var onePlayer = function(name, number, availableCasePositioning, availableCaseDe
     this.cardHandlers = [];
     this.pick = [];
     this.conn = null;
+    this.currentCardIndex = 0;
     this.createHandlers();
 };
 
@@ -59,6 +60,8 @@ onePlayer.prototype = {
         if(typeof index != "undefined" && index != null && index != -1)
         {
             var choosenHandler = this.cardHandlers[index];
+            card.currentCardIndex = this.currentCardIndex;
+            this.currentCardIndex++;
             card.setHandler(choosenHandler);
             choosenHandler.addCard(card);
         }

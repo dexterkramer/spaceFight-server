@@ -32,6 +32,7 @@ eurecaServer.exports.handshake = function(id)
 eurecaServer.exports.sendPositioningInfos = function(id, caseId)
 {
     clients[id].game.players[clients[id].playerIndex].fleat.capitalShip.case = clients[id].game.caseTable[caseId];
+    clients[id].game.caseTable[caseId].squad = clients[id].game.players[clients[id].playerIndex].fleat.capitalShip;
     clients[id].game.players[clients[id].playerIndex].fleat.deploySquad(clients[id].game.players[clients[id].playerIndex].fleat.capitalShip);
     clients[id].positioned = true;
     var allPositioned = true;
@@ -43,12 +44,13 @@ eurecaServer.exports.sendPositioningInfos = function(id, caseId)
     });
     if(allPositioned)
     {
+        clients[id].game.gamePhase();
         clients[id].game.refreshPlayersInfos();
         clients[id].game.players.forEach(function(player, index){
             clients[player.playerId].remote.unlockGame();
         });
     }
-    clients[id].game.gamePhase();
+    
     
     return true;
 }
@@ -58,28 +60,23 @@ eurecaServer.exports.nextTurn = function(id)
     if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
     {
         var indexChoosed = clients[id].game.nextTurn();
+        clients[id].game.refreshPlayersInfos();
         clients[id].game.players.forEach(function(player, index){
             clients[player.playerId].remote.sendTurn(indexChoosed);
         });
         
     }
 }
-/*
-eurecaServer.exports.support = function(id, squadIndex, caseIndex)
+
+
+eurecaServer.exports.cardPlayed = function(id, currentCardIndex, caseIndex)
 {
     if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
     {
-        //clients[id].
+        clients[id].game.cardPlayed(currentCardIndex, clients[id].game.players[clients[id].playerIndex], caseIndex);
+        clients[id].game.refreshPlayersInfos();
     }
 }
-
-eurecaServer.exports.move = function(id, squadIndex, caseIndex)
-{
-    if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
-    {
-        //clients[id].
-    }
-}*/
 
 
 eurecaServer.exports.squadGo = function(id, currentDeployedIndex, caseIndex)

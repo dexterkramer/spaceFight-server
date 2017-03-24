@@ -4,6 +4,7 @@ var ship = function(infos)
 {
     this.infos = infos;
     this.lifeBar = null;
+    this.currentShipIndex = null;
     this.createLifeBar();
 };
 
@@ -23,6 +24,7 @@ ship.prototype = {
         {
             shipInfos.lifeBar = this.lifeBar.createLifeBarInfos(mask.lifeBar);
         }
+        shipInfos.currentShipIndex = this.currentShipIndex;
         return shipInfos;
     },
     attack : function(target, attackModifiers)

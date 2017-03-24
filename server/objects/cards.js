@@ -1,9 +1,12 @@
+var playerMask = require("./../infosMasks/playerInfosMask.js");
+
 var oneCard = function(object, type)
 {
     this.object = object;
     this.type = type;
     this.handler = null;
     this.isDragged = false;
+    this.currentCardIndex = null;
 }
 
 oneCard.prototype = {
@@ -32,6 +35,7 @@ oneCard.prototype = {
         this.handler.card = null;
         this.handler = null;
         this.object = null;
+        this.type = null;
     },
     createCardInfos : function(mask)
     {
@@ -40,7 +44,11 @@ oneCard.prototype = {
         {
             cardInfos.type = this.type;
         }
-        if(object.object)
+        else
+        {
+            cardInfos.type = null;
+        }
+        if(mask.object)
         {
             if(this.type == "order")
             {
@@ -48,10 +56,14 @@ oneCard.prototype = {
             }   
             else if(this.type == "squad")
             {
-                cardInfos.object = this.object.createSquadInfos();
+                cardInfos.object = this.object.createSquadInfos(playerMask.fleat.deployedSquad);
             }
         }
-
+        else
+        {
+            cardInfos.object = null;
+        }
+        cardInfos.currentCardIndex = this.currentCardIndex;
         return cardInfos;
     }
 }

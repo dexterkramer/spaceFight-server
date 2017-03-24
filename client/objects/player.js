@@ -1,4 +1,4 @@
-var onePlayer = function(name, number, availableCasePositioning, availableCaseDeploying)
+var onePlayer = function(name, number, availableCasePositioning, availableCaseDeploying, isMe)
 {
     this.name = name;
     this.fleat = null;
@@ -11,7 +11,8 @@ var onePlayer = function(name, number, availableCasePositioning, availableCaseDe
     this.availableOrders = [];
     this.cardHandlers = [];
     this.pick = [];
-    this.createHandler();
+    this.isMe = isMe;
+    this.createHandler(isMe);
 };
 
 onePlayer.prototype = {
@@ -68,9 +69,9 @@ onePlayer.prototype = {
             }
         });
     },
-    createHandler : function()
+    createHandler : function(isMe)
     {
-        this.cardHandlers = createHandlers(this);
+        this.cardHandlers = createHandlers(this, isMe);
     },
     destroyCardView : function()
     {

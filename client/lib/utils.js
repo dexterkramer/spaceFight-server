@@ -309,12 +309,24 @@ function unlockMe()
     this.game.me.fleat.deployedSquad.forEach(function(squad){
         enableDragSquad(squad, dragSquad, stopDragSquadGaming);
     });
+    this.game.me.cardHandlers.forEach(function(cardHandler){
+        if(cardHandler.card != null)
+        {
+            enableDragCard(cardHandler.card, dragCard, stopDragCard);
+        }
+    });
 }
 
 function lockMe()
 {
     this.game.me.fleat.deployedSquad.forEach(function(squad){
         disableDragSquad(squad);
+    });
+    this.game.me.cardHandlers.forEach(function(cardHandler){
+        if(cardHandler.card != null)
+        {
+            disableDragCard(cardHandler.card);
+        }
     });
 }
 
@@ -353,7 +365,6 @@ function nextPlayer(rewind)
 
 function drawCardOrder(card, x, y)
 {
-    
     let oneCard = this.game.add.sprite(x, y, 'card');
     oneCard.anchor.x = 0.5;
     oneCard.anchor.y = 0.5;
@@ -363,9 +374,17 @@ function drawCardOrder(card, x, y)
     var style = { font: "35px Arial",fill: "#ff0044"/* fill: "#ff0044", wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
     var text = this.game.add.text(0, 0, card.object.name , style);
     text.anchor.set(0 , 0);
-//    text.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
-//    text.x = lifeBarX + ((lifebarWidth * percent) / 2) - (text.width / 2);
     oneCard.addChild(text);
+}
+
+function drawCardNeutral(card, x, y)
+{
+    let oneCard = this.game.add.sprite(x, y, 'card');
+    oneCard.anchor.x = 0.5;
+    oneCard.anchor.y = 0.5;
+    oneCard.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
+    oneCard.ref = card;
+    card.phaserObject = oneCard;
 }
 
 function drawCardSquad(card, x, y)
@@ -461,6 +480,14 @@ function enableDragCard(card, dragSquadFunc, stopDragSquadFunc)
     card.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
 }
 
+function disableDragCard(card)
+{
+    if(card.phaserObject.input != null)
+    {
+        card.phaserObject.input.disableDrag();
+    }
+}
+
 function enableDragSquad(squad, dragSquadFunc, stopDragSquadFunc)
 {
     squad.phaserObject.inputEnabled = true;
@@ -540,9 +567,9 @@ function createPlayer(playerJson, number, availableCasePositioning, availableCas
     return player;
 }*/
 
-function createPlayer2(playerJson, number, availableCasePositioning, availableCaseDeploying)
+function createPlayer2(playerJson, number, availableCasePositioning, availableCaseDeploying, isMe)
 {
-    var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying);
+    var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying, isMe);
     player.fleat = createFleat2(player, playerJson.fleat );
     if(playerJson.fleat.capitalShip != null && playerJson.fleat.capitalShip != false)
     {

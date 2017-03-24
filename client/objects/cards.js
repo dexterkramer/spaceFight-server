@@ -5,6 +5,7 @@ var oneCard = function(object, type)
     this.handler = null;
     this.phaserObject = null;
     this.isDragged = false;
+    this.overLappedCase = null;
 }
 
 oneCard.prototype = {
@@ -16,15 +17,22 @@ oneCard.prototype = {
     {
         if(this.handler !== null)
         {
-            if(this.type == "order")
+            if(this.type != null && this.object != null)
             {
-                drawCardOrder(this, this.handler.x, this.handler.y);
-                enableDragCard(this, dragCard, stopDragCard);
-            }   
-            else if(this.type == "squad")
+                if(this.type == "order")
+                {
+                    drawCardOrder(this, this.handler.x, this.handler.y);
+                    enableDragCard(this, dragCard, stopDragCard);
+                }   
+                else if(this.type == "squad")
+                {
+                    drawCardSquad(this, this.handler.x, this.handler.y);
+                    enableDragCard(this, dragCard, stopDragCard);
+                }
+            }
+            else
             {
-                drawCardSquad(this, this.handler.x, this.handler.y);
-                enableDragCard(this, dragCard, stopDragCard);
+                drawCardNeutral(this, this.handler.x, this.handler.y);
             }
         }
     },

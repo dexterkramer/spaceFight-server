@@ -1,11 +1,20 @@
-var ship = function(infos)
+var ship = function(infos, currentShipIndex)
 {
     this.infos = infos.infos;
     this.lifeBarInfos = infos.lifeBar;
+    this.currentShipIndex = infos.currentShipIndex;
     this.createLifeBar();
 };
 
 ship.prototype = {
+    refreshDatas : function(infos)
+    {
+        this.infos = infos.infos;
+        this.lifeBarInfos = infos.lifeBar;
+        this.currentShipIndex = infos.currentShipIndex;
+        this.lifeBar = null;
+        this.createLifeBar();
+    },
     createLifeBar : function()
     {
         this.lifeBar = new lifeBar(this.lifeBarInfos.armor, this.lifeBarInfos.shield, this.lifeBarInfos.maxArmor);

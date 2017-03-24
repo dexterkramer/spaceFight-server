@@ -1,6 +1,7 @@
 var playerMask = require("./../infosMasks/playerInfosMask.js");
 var ennemyMask = require("./../infosMasks/ennemyInfosMask.js");
 var attackModifierFactory = require("./attackModifier.js");
+var actionFactory = require("./action.js");
 var battleFactory = require("./battles.js");
 
 var Game = function()
@@ -50,12 +51,51 @@ Game.prototype = {
         this.battles.push(theBattle);
         return theBattle;
     },
-    move : function(currentDeployedIndex, playerSquad, caseIndex)
+    cardPlayed : function(currentCardIndex, player, caseIndex)
     {
-        var squadIndex = playerSquad.fleat.deployedSquad.findIndex(function(elem){
+        var handlerIndex = player.cardHandlers.findIndex(function(elem){
+            return elem.card != null && elem.card.currentCardIndex == currentCardIndex;
+        });
+        if(handlerIndex != -1)
+        {
+            if(this.caseTable[caseIndex] != null)
+            {
+                var card = player.cardHandlers[handlerIndex].card;
+                if(card.type == "squad")
+                {
+                    if(this.caseTable[caseIndex].squad == null)
+                    {
+                        
+                        this.caseTable[caseIndex].squad = card.object;
+                        card.object.case = this.caseTable[caseIndex];
+                        card.object.fleat.deploySquad(card.object);
+                        card.destroy();
+                    }
+                }else if(card.type == "order")
+                {
+                    if(this.caseTable[caseIndex].squad != null)
+                    {
+                        if(this.caseTable[caseIndex].squad.fleat.player == card.handler.player)
+                        {
+                            this.caseTable[caseIndex].squad.buff(card.object);
+                            card.destroy();
+                        }
+                        else if(this.caseTable[caseIndex].squad.fleat.player != card.handler.player)
+                        {
+                            this.caseTable[caseIndex].squad.buff(card.object);
+                            card.destroy();
+                        }
+                    }
+                }
+            }
+        }
+    },
+    move : function(currentDeployedIndex, player, caseIndex)
+    {
+        var squadIndex = player.fleat.deployedSquad.findIndex(function(elem){
             return elem.currentDeployedIndex == currentDeployedIndex;
         });
-        var squad = playerSquad.fleat.deployedSquad[squadIndex];
+        var squad = player.fleat.deployedSquad[squadIndex];
         if(squad.action == null)
         {
             if(squad.canGo(this.caseTable[caseIndex]))
@@ -76,7 +116,7 @@ Game.prototype = {
                         {
                             modifiers.push(attackModifierFactory.createDamageModifier(1-(toFriendlyFires.length/10),1));
                         }
-                        var flankBonus = squad.calcultateFlankingBonus(target);
+                        var flankBonus = squad.calcultateFlankingBonus(target, this.getDefendingAgainst(target));
                         if(flankBonus)
                         {
                             modifiers.push(flankBonus);
@@ -96,6 +136,20 @@ Game.prototype = {
                             squad.removeFromBattle();
                         }
                     }
+                    else
+                    {
+                        // stop if the squad have already made an action this turn
+                        if(squad.action != null)
+                        {
+                            
+                        }
+                        else
+                        {
+                            squad.support(target);
+                            target.updateLifeBar();
+                            squad.action = actionFactory.createAction("support", target);
+                        }
+                    }
                 }
                 else
                 {
@@ -110,14 +164,14 @@ Game.prototype = {
                         squad.case = this.caseTable[caseIndex];
                         squad.case.squad = squad;
                     }
-                    else if (sprite.ref.movesAllowed > 0)
+                    else if (squad.movesAllowed > 0)
                     {
                         if(squad.case !== null)
                         {
                             squad.case.squad = null;
                         }
                         squad.movesAllowed--;
-                        squad.movedFrom.push(sprite.ref.case);
+                        squad.movedFrom.push(squad.case);
                         squad.case = this.caseTable[caseIndex];
                         squad.case.squad = squad;
                     }
@@ -143,6 +197,7 @@ Game.prototype = {
             indexChoose = 0;
         }
         this.turn.player = this.players[indexChoose];
+        this.turn.player.drawOneCard();
         this.turn.player.resetSquadsActions();
         return indexChoose;
     },
@@ -152,6 +207,7 @@ Game.prototype = {
         if(this.turn.player == null)
         {
             this.turn.player = this.players[0];
+            this.turn.player.drawOneCard();
         }
         return true;
     },

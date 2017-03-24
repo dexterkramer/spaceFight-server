@@ -15,11 +15,19 @@ cardHandler.prototype = {
     }
 };
 
-function createHandlers(player)
+function createHandlers(player, isMe)
 {
     var i;
-    var x = 100;
-    var y = 800;
+    if(isMe)
+    {
+        var x = 100;
+        var y = 800;
+    }
+    else
+    {
+        var x = 600;
+        var y = 100;
+    }
     var handlers = [];
     for(i = 0; i < 10; i++)
     {

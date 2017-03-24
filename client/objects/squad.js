@@ -14,6 +14,7 @@ var oneSquad = function(name, fleat)
     this.attackModifiersArray = [];
     this.isDragged = false;
     this.currentDeployedIndex = null;
+    this.currentShipIndex = null;
 };
 
 oneSquad.prototype = {
@@ -28,6 +29,33 @@ oneSquad.prototype = {
         // move the sprite of the esouade to his new position 
         this.phaserObject.x = this.case.phaserObject.middleX;
         this.phaserObject.y = this.case.phaserObject.middleY;
+
+        this.lifeBar.refreshDatas(squadJson.lifeBar);
+        this.drawLifeBar();
+        this.ships.forEach(function(ship){
+            ship.toClean = true;
+        });
+        this.ships.forEach(function(ship){
+            let shipIndex = squadJson.ships.findIndex(function(shipJson){
+                return shipJson.currentShipIndex == ship.currentShipIndex;
+            });
+            if(shipIndex != -1)
+            {
+                ship.refreshDatas(squadJson.ships[shipIndex]);
+                ship.toClean = false;
+            }
+        });
+        var toCleanIndexes = [];
+        this.ships.forEach(function(ship, index){
+            if(ship.toClean)
+                toCleanIndexes.push(index);
+        });
+
+        toCleanIndexes.forEach(function(indexToClean){
+            this.ships.splice(indexToClean, 1);
+        });
+
+
     },
     applyMove : function()
     {

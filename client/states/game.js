@@ -10,7 +10,9 @@ TheGame.prototype = {
         this.game.eliminatedPlayers = [];
         this.game.infos = { tourInfos : null};
         this.game.battleInfos = null;
+        this.game.refreshing = false;
         drawCases();
+        drawAllCards();
         drawAllSquads();
         this.game.server.okToGame(this.game.client.id);
         //nextTurn();
@@ -18,11 +20,14 @@ TheGame.prototype = {
       },
     update : function(){
         checkLoosers();
-        this.game.caseTable.forEach(function(oneCase){
-            oneCase.NotOverLaped();
-        });
-        checkOverLapSquad(this.game.turn.player,this.game.caseTable, OverLapGamingDraggingManagment);
-        checkOverLapCard(this.game.turn.player,this.game.caseTable, this.game.turn.player.availableCaseDeploying, OverLapGamingCardDraggingManagment);
+        if(this.game.turn.player == this.game.me)
+        {
+            this.game.caseTable.forEach(function(oneCase){
+                oneCase.NotOverLaped();
+            });
+            checkOverLapSquad(this.game.me,this.game.caseTable, OverLapGamingDraggingManagment);
+            checkOverLapCard(this.game.me,this.game.caseTable, this.game.me.availableCaseDeploying, OverLapGamingCardDraggingManagment);
+        }
     }
 }
 
@@ -33,6 +38,7 @@ TheGame.prototype = {
 function refreshPlayers()
 {
     this.game.players.forEach(function(player, index){
+        ////////////// refresh squads /////////////////////////
         player.fleat.deployedSquad.forEach(function(squad){
             squad.toClean = true;
         });
@@ -63,6 +69,58 @@ function refreshPlayers()
         });
         toCleanArray.forEach(function(indexToRemove){
             player.fleat.undeploySquad(player.fleat.deployedSquad[indexToRemove]);
+        });
+
+        ////////////////// refresh cards //////////////////////////
+        this.game.tempPlayerInfos.players[index].cardHandlersInfos.forEach(function(cardHandler, index){
+            if(cardHandler.card != null)
+            {
+                if(player.cardHandlers[index].card != null)
+                {
+                    player.cardHandlers[index].card.destroy();
+                }
+                if(cardHandler.card.currentCardIndex != null && player.cardHandlers[index].card != null && player.cardHandlers[index].card.currentCardIndex != null && player.cardHandlers[index].card.currentCardIndex == cardHandler.card.currentCardIndex )
+                {   
+                    // same card, don't update.
+                }
+                else
+                {
+                    var object = null;
+                    if(cardHandler.card.type == "order")
+                    {
+                        object = createOrder(cardHandler.card.object);
+                    }
+                    else if(cardHandler.card.type == "squad")
+                    {
+                        object = createSquad2(player.fleat,cardHandler.card.object);
+                    }
+                    player.cardHandlers[index].card = createCard(object, cardHandler.card.type);
+                    player.cardHandlers[index].card.setHandler(player.cardHandlers[index]);
+                    player.cardHandlers[index].card.currentCardIndex = cardHandler.card.currentCardIndex;
+                    player.cardHandlers[index].card.drawCard();
+                }
+            }
+            else
+            {
+                if(player.cardHandlers[index].card != null)
+                {
+                    player.cardHandlers[index].card.destroy();
+                }
+            }
+        });
+
+
+    });
+}
+
+function drawAllCards()
+{
+    this.game.players.forEach(function(player, index){
+        player.cardHandlers.forEach(function(cardHandler){
+            if(cardHandler.card != null)
+            {
+                cardHandler.card.drawCard();
+            }
         });
     });
 }
@@ -199,18 +257,27 @@ function stopDragCard(sprite, pointer)
         {
             if(card.overlapedCase.squad == null)
             {
+                
+
+
+
+                this.game.server.cardPlayed(this.game.client.id, card.currentCardIndex, card.overlapedCase.number); 
+
+
+/*
                 card.overlapedCase.squad = card.object;
                 card.object.case = card.overlapedCase;
                 card.object.fleat.deploySquad(card.object);
                 enableDragSquad(card.object, dragSquad, stopDragSquadGaming);
-                card.destroy();
+                card.destroy();*/
             }
         }
         else if(card.type == "order")
         {
             if(card.overlapedCase.squad != null)
             {
-                if(card.overlapedCase.squad.fleat.player == card.handler.player)
+                this.game.server.cardPlayed(this.game.client.id, card.currentCardIndex, card.overlapedCase.number); 
+                /*if(card.overlapedCase.squad.fleat.player == card.handler.player)
                 {
                     card.overlapedCase.squad.buff(card.object);
                     card.destroy();
@@ -219,7 +286,7 @@ function stopDragCard(sprite, pointer)
                 {
                     card.overlapedCase.squad.buff(card.object);
                     card.destroy();
-                }
+                }*/
             }
         }
     }
@@ -694,10 +761,8 @@ function support(squad, target)
     {
         return false;
     }
-    
-    squad.support(target);
-    target.updateLifeBar();
-    target.drawLifeBar(this.game);
+
+    this.game.server.squadGo(this.game.client.id, squad.currentDeployedIndex, target.case.number);
     squad.action = new action("support", target);
     return true;
 }
