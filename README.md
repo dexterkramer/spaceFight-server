@@ -17,7 +17,7 @@ node ./server.js
 
 #### localhost:8000, open two browser windows and the game will start in both.
 
-** To change the port, modify the following line in the file server.js **
+**To change the port, modify the following line in the file server.js**
 
 ```
 server.listen(8000);
