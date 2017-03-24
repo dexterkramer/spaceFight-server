@@ -49,10 +49,12 @@ var eurecaClientSetup = function() {
 		eurecaClient.game.turn.player = eurecaClient.game.players[playerIndex];
 		if(eurecaClient.game.turn.player == eurecaClient.game.me)
 		{
+			refreshInfos();
 			unlockMe();
 		}
 		else
 		{
+			refreshInfos();
 			lockMe();
 		}
 		return true;
@@ -65,6 +67,18 @@ var eurecaClientSetup = function() {
 		refreshPlayers();
 		eurecaClient.game.refreshing = false;
 		return true;
+	}
+
+	eurecaClient.exports.sendWinner = function(playerIndex)
+	{
+		eurecaClient.game.winner = eurecaClient.game.players[playerIndex];
+		eurecaClient.game.end = 1;
+	}
+
+	eurecaClient.exports.sendDraw = function()
+	{
+		eurecaClient.game.draw = true;
+		eurecaClient.game.end = 1;
 	}
 
 }

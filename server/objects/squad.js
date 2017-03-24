@@ -116,7 +116,7 @@ oneSquad.prototype = {
         this.case = null;
         if(this == this.fleat.capitalShip)
         {
-            loose(this.fleat.player);
+            this.fleat.player.loose = true;
         }
     },
     applyDamages : function()

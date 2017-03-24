@@ -179,6 +179,48 @@ Game.prototype = {
             }
         }
         this.refreshPlayersInfos();
+        this.checkLooser();
+    },
+    checkLooser : function()
+    {
+        var loosers = [];
+        var notLooser = [];
+        this.players.forEach(function(player){
+            if(player.loose)
+            {
+                loosers.push(player);
+            }
+            else
+            {
+                notLooser.push(player);
+            }
+        });
+        if(loosers.length > 0)
+        {
+            if(loosers.length == this.players.length)
+            {
+                this.sendDraw();
+            }
+            else if(notLooser.length == 1)
+            {
+                this.sendWinner(notLooser[0]);
+            }
+        }
+    },
+    sendDraw : function()
+    {
+        this.players.forEach(function(player){
+             player.remote.sendDraw();
+        });
+    },
+    sendWinner : function(winner)
+    {
+        var winnerIndex = this.players.findIndex(function(elem){
+            return elem == winner;
+        });
+        this.players.forEach(function(player){
+            player.remote.sendWinner(winnerIndex);
+        });
     },
     nextTurn : function(id)
     {

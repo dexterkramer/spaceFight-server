@@ -11,6 +11,9 @@ TheGame.prototype = {
         this.game.infos = { tourInfos : null};
         this.game.battleInfos = null;
         this.game.refreshing = false;
+        this.game.end = 0;
+        this.game.winner = null;
+        this.game.draw = false;
         drawCases();
         drawAllCards();
         drawAllSquads();
@@ -19,7 +22,7 @@ TheGame.prototype = {
         button = this.game.add.button(600, 600, 'button', nextTurn, this, 1, 0, 1);
       },
     update : function(){
-        checkLoosers();
+        checkEnd();
         if(this.game.turn.player == this.game.me)
         {
             this.game.caseTable.forEach(function(oneCase){
@@ -125,6 +128,22 @@ function drawAllCards()
     });
 }
 
+function checkEnd()
+{
+    if(this.game.end == 1)
+    {
+        if(this.game.winner != null)
+        {
+            finishGame();
+        }
+        else if(this.game.draw)
+        {
+            finishGame();
+        }
+    }
+}
+
+
 function checkLoosers()
 {
     if(this.game.looser.length > 0)
@@ -169,21 +188,21 @@ function refreshInfos()
     {
         this.game.infos.tourInfos.phaserObject.destroy();
     }
-    if(this.game.players.length <= 1)
+    if(this.game.end == 1)
     {
-        if(this.game.players.length == 1)
-        {
+         if(this.game.winner != null)
+         {
             var infosTourX = 700;
             var infosTourY = 100;
-            var textTour = this.game.turn.player.name+ " win the game !";
+            var textTour = this.game.winner.name+ " win the game !";
             var style = { font: "20px Arial", fill: "#ff0044"/*, wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
             var text = this.game.add.text(infosTourX, infosTourY, textTour , style);
             text.anchor.set(0 , 0);
             this.game.infos.tourInfos = {};
             this.game.infos.tourInfos.phaserObject = text;
-        }
-        else
-        {
+         }
+         else if(this.game.draw)
+         {
             var infosTourX = 700;
             var infosTourY = 100;
             var textTour = "DRAW !";
@@ -192,7 +211,7 @@ function refreshInfos()
             text.anchor.set(0 , 0);
             this.game.infos.tourInfos = {};
             this.game.infos.tourInfos.phaserObject = text;
-        }
+         }
     }
     else
     {
@@ -224,7 +243,7 @@ function nextTurn()
         //this.game.turn.player.destroyCardView();
     }
     nextPlayer();
-    refreshInfos();
+    //refreshInfos();
     this.game.turn.player.resetSquadsActions();
     //this.game.turn.player.drawOneCard();
     //this.game.turn.player.showCards();

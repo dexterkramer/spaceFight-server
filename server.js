@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 var EurecaServer = require('eureca.io').EurecaServer;
  
 //create an instance of EurecaServer
-var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame', 'refreshPlayersInfos', 'sendTurn', 'okToGame']});
+var eurecaServer = new EurecaServer({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame', 'refreshPlayersInfos', 'sendTurn', 'okToGame', 'sendWinner', 'sendDraw']});
  
 //attach eureca.io to our http server
 eurecaServer.attach(server);
