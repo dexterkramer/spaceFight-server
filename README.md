@@ -2,15 +2,15 @@
 
 ### Install the server
 
-```
+```bash
 cd [repertoire]
 npm install
 ```
 
 ### Run the server
 
-```
-node ./server.js
+```bash
+npm start
 ```
 
 ### Launch the game
