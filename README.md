@@ -5,6 +5,7 @@
 ```bash
 cd [repertoire]
 npm install
+bower install
 ```
 
 ### Run the server
