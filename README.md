@@ -3,7 +3,7 @@
 ### Install the server
 
 ```bash
-cd [repertoire]
+cd [folder]
 npm install
 bower install
 ```
