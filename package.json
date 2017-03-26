@@ -4,6 +4,7 @@
   "description": "server for spacefight game",
   "main": "index.js",
   "dependencies": {
+    "bower": "^1.8.0",
     "engine.io": "^2.1.0",
     "eureca.io": "^0.7.1",
     "express": "^4.15.2"

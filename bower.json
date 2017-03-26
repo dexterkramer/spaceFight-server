@@ -1,0 +1,22 @@
+{
+  "name": "spacefightserver",
+  "description": "server for spacefight game",
+  "main": "index.js",
+  "authors": [
+    "dexterkramer <bsauveton@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/dexterkramer/spaceFight-server",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "phaser": "^2.6.2"
+  }
+}

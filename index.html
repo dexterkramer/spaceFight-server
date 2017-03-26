@@ -2,29 +2,33 @@
 <html lang="en"> 
 <head> 
 	<meta charset="UTF-8" />
-	<title>Phaser - Making your first game, part 1</title>
-	<script type="text/javascript" src="js/phaser.js"></script>
-    <script src="/eureca.js"></script>
-    <script src="client/client.js"></script>
-    <script src="client/objects/squad.js"></script>
-    <script src="client/objects/player.js"></script>
-    <script src="client/objects/fleat.js"></script>
-    <script src="client/objects/case.js"></script>
-    <script src="client/objects/ship.js"></script>
-    <script src="client/objects/lifeBar.js"></script>
-    <script src="client/objects/turn.js"></script>
-    <script src="client/objects/action.js"></script>
-    <script src="client/objects/battles.js"></script>
-    <script src="client/objects/order.js"></script>
-    <script src="client/objects/attackModifier.js"></script>
-    <script src="client/objects/cardHandler.js"></script>
-    <script src="client/objects/pick.js"></script>
-    <script src="client/objects/cards.js"></script>
-    <script src="client/states/boot.js"></script>
-    <script src="client/states/preload.js"></script>
-    <script src="client/states/positionning.js"></script>
-    <script src="client/states/game.js"></script>
-    <script src="client/lib/utils.js"></script>
+	<title></title>
+    <script type="text/javascript" src="/eureca.js"></script>
+    <script type="text/javascript" src="client/client.js"></script>
+    <script type="text/javascript" src="client/objects/squad.js"></script>
+    <script type="text/javascript" src="client/objects/player.js"></script>
+    <script type="text/javascript" src="client/objects/fleat.js"></script>
+    <script type="text/javascript" src="client/objects/case.js"></script>
+    <script type="text/javascript" src="client/objects/ship.js"></script>
+    <script type="text/javascript" src="client/objects/lifeBar.js"></script>
+    <script type="text/javascript" src="client/objects/turn.js"></script>
+    <script type="text/javascript" src="client/objects/action.js"></script>
+    <script type="text/javascript" src="client/objects/battles.js"></script>
+    <script type="text/javascript" src="client/objects/order.js"></script>
+    <script type="text/javascript" src="client/objects/attackModifier.js"></script>
+    <script type="text/javascript" src="client/objects/cardHandler.js"></script>
+    <script type="text/javascript" src="client/objects/pick.js"></script>
+    <script type="text/javascript" src="client/objects/cards.js"></script>
+    <script type="text/javascript" src="client/states/boot.js"></script>
+    <script type="text/javascript" src="client/states/preload.js"></script>
+    <script type="text/javascript" src="client/states/positionning.js"></script>
+    <script type="text/javascript" src="client/states/game.js"></script>
+    <script type="text/javascript" src="client/lib/utils.js"></script>
+    <script type="text/javascript" src="client/launchGame.js"></script>
+    <script type="text/javascript" src="bower_components\jquery\dist\jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components\bootstrap\dist\js\bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components\phaser\build\phaser.min.js"></script>
+    
     <style type="text/css">
         body {
             margin: 0;
@@ -32,33 +36,19 @@
     </style>
 </head>
 <body>
-
+<div class="gui-panel gui-panel-medium game-login-panel">
+   <form>
+      <div class="game-input-block">
+         <div class="game-gui-label">Enter a nickname</div>
+         <input type="text" class="game-gui-input">
+      </div>
+      <button class="game-login-button">GO !!</button>
+   </form>
+</div>
+<div id="game"></div>
 <script type="text/javascript">
 
-//var game = new Phaser.Game(850, 850, Phaser.AUTO, '', { preload: preload, create: create, update: update });
-var game = new Phaser.Game(1000, 900, Phaser.AUTO, '', { create: eurecaClientSetup, update:update });
-game.state.add("Boot",boot);
-game.state.add("Preload",preload);
-game.state.add("Positionning", positionning);
-game.state.add("TheGame", TheGame);
-
-function create(eurecaClient, eurecaServer)
-{
-    game.server = eurecaServer;
-    game.client = eurecaClient;
-    game.client.game = game;
-    //game.server.handshake(eurecaClient.id);
-}
-
-function update()
-{
-    
-    if(typeof game.client != "undefined" && game.client != null && game.client.lock >= 1)
-    {
-        game.state.start("Boot");
-    }
-}
-
+var game = launchGame();
 
 </script>
 

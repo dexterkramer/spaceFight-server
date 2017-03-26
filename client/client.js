@@ -33,7 +33,7 @@ var eurecaClientSetup = function() {
 	eurecaClient.exports.sendPlayersInfos = function(playersInfos, id)
 	{
 		eurecaClient.id = id;
-		create(eurecaClient, eurecaServer);
+		createGame(eurecaClient, eurecaServer);
 		if(eurecaClient.game != null)
 		{
 			eurecaClient.game.tempPlayerInfos = playersInfos;
