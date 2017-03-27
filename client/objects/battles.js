@@ -7,7 +7,7 @@ var battle = function(attackingSquad, target)
 }
 
 battle.prototype = {
-    process : function()
+    /*process : function()
     {
         if(this.isProcessed)
             return false;
@@ -43,7 +43,7 @@ battle.prototype = {
             this.attackingSquad.removeFromBattle();
         }
         this.isProcessed = true;
-    }
+    }*/
 };
 
 function createBattle(suqad, target)

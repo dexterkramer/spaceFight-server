@@ -54,8 +54,6 @@ oneSquad.prototype = {
         toCleanIndexes.forEach(function(indexToClean){
             this.ships.splice(indexToClean, 1);
         });
-
-
     },
     applyMove : function()
     {

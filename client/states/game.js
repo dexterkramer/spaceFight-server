@@ -6,8 +6,6 @@ TheGame.prototype = {
         this.game.add.tileSprite(0, 0, game.width, game.height, 'space');
         this.game.turn.number = 0;
         this.game.battles = [];
-        this.game.looser = [];
-        this.game.eliminatedPlayers = [];
         this.game.infos = { tourInfos : null};
         this.game.battleInfos = null;
         this.game.refreshing = false;
@@ -18,7 +16,6 @@ TheGame.prototype = {
         drawAllCards();
         drawAllSquads();
         this.game.server.okToGame(this.game.client.id);
-        //nextTurn();
         button = this.game.add.button(600, 600, 'button', nextTurn, this, 1, 0, 1);
       },
     update : function(){
@@ -56,7 +53,7 @@ function refreshPlayers()
             }
             else
             {
-                var newSquad = createSquad2( player.fleat, squadJson);
+                var newSquad = createSquad( player.fleat, squadJson);
                 newSquad.toClean = false;
                 newSquad.case = this.game.caseTable[squadJson.case.number];
                 newSquad.case.squad = newSquad;
@@ -95,7 +92,7 @@ function refreshPlayers()
                     }
                     else if(cardHandler.card.type == "squad")
                     {
-                        object = createSquad2(player.fleat,cardHandler.card.object);
+                        object = createSquad(player.fleat,cardHandler.card.object);
                     }
                     player.cardHandlers[index].card = createCard(object, cardHandler.card.type);
                     player.cardHandlers[index].card.setHandler(player.cardHandlers[index]);
@@ -111,8 +108,6 @@ function refreshPlayers()
                 }
             }
         });
-
-
     });
 }
 
@@ -143,43 +138,9 @@ function checkEnd()
     }
 }
 
-
-function checkLoosers()
-{
-    if(this.game.looser.length > 0)
-    {
-        var ref = this;
-        var i;
-        var initLenght = this.game.players.length;
-        for(i = 0; i < initLenght; i++)
-        {
-            var looserIndex = this.game.players.findIndex(function(elem){
-                return ref.game.looser.indexOf(elem) != -1;
-            });
-            if(looserIndex != -1)
-            {
-                this.game.eliminatedPlayers.push(this.game.players[looserIndex]);
-                this.game.players.splice(looserIndex, 1);
-            }
-        }
-        if(this.game.players.length <= 1)
-        {
-            finishGame();
-        }
-    }
-}
-
 function finishGame()
 {
     refreshInfos();
-    //console.log("finish !!!");
-    if(this.game.players.length == 1)
-    {
-        //console.log(this.game.players[0].name + " win ! ");
-    }
-    this.game.eliminatedPlayers.forEach(function(player){
-        //console.log(player.name + " looose, booohoohoo !!!!");
-    });
 }
 
 function refreshInfos()
@@ -232,22 +193,13 @@ function refreshInfos()
 function nextTurn()
 {
     this.game.battles = [];
-    /*if(this.game.turn.player !== null)
-    {
-        disableDragingFroPlayer(this.game.turn.player);
-    }*/
     this.game.turn.number++;
     if(this.game.turn.player != null)
     {
         this.game.turn.player.resetEffects();
-        //this.game.turn.player.destroyCardView();
     }
     nextPlayer();
-    //refreshInfos();
     this.game.turn.player.resetSquadsActions();
-    //this.game.turn.player.drawOneCard();
-    //this.game.turn.player.showCards();
-    //enableDrag(this.game.turn.player, dragSquad, stopDragSquadGaming);
 }
 
 function loose(player)
@@ -276,19 +228,7 @@ function stopDragCard(sprite, pointer)
         {
             if(card.overlapedCase.squad == null)
             {
-                
-
-
-
                 this.game.server.cardPlayed(this.game.client.id, card.currentCardIndex, card.overlapedCase.number); 
-
-
-/*
-                card.overlapedCase.squad = card.object;
-                card.object.case = card.overlapedCase;
-                card.object.fleat.deploySquad(card.object);
-                enableDragSquad(card.object, dragSquad, stopDragSquadGaming);
-                card.destroy();*/
             }
         }
         else if(card.type == "order")
@@ -296,16 +236,6 @@ function stopDragCard(sprite, pointer)
             if(card.overlapedCase.squad != null)
             {
                 this.game.server.cardPlayed(this.game.client.id, card.currentCardIndex, card.overlapedCase.number); 
-                /*if(card.overlapedCase.squad.fleat.player == card.handler.player)
-                {
-                    card.overlapedCase.squad.buff(card.object);
-                    card.destroy();
-                }
-                else if(card.overlapedCase.squad.fleat.player != card.handler.player)
-                {
-                    card.overlapedCase.squad.buff(card.object);
-                    card.destroy();
-                }*/
             }
         }
     }
@@ -315,7 +245,6 @@ function stopDragCard(sprite, pointer)
         sprite.x = card.handler.x;
         sprite.y = card.handler.y;
     }
-    //stopDragPlayer(sprite);
 }
 
 function OverLapGamingCardDraggingManagment(card)
@@ -361,11 +290,6 @@ function removeBattleInfos()
             this.game.battleInfos.ennemyTextPhaserObject.destroy();
             this.game.battleInfos.ennemyTextPhaserObject = null;
         }
-        /*if(this.game.battleInfos.flankBonusTextPhaserObject != null)
-        {
-            this.game.battleInfos.flankBonusTextPhaserObject.destroy();
-            this.game.battleInfos.flankBonusTextPhaserObject = null;
-        }*/
     }
     this.game.battleInfos = null;
 }
@@ -500,7 +424,7 @@ function stopDragSquadGaming(sprite, pointer)
             // if the squad is alreay on another case, remove it from the case.
             if(move(sprite))
             {
-                //refreshAction(sprite.ref);
+                
             }
         }
         else
@@ -561,38 +485,6 @@ function attack(squad, target)
     });
 
     var attackResult = this.game.server.squadGo(this.game.client.id, squad.currentDeployedIndex, caseIndex);
-
-
-/*    squad.initFinalArmor();
-    target.initFinalArmor();
-    var modifiers = [];
-    var toFriendlyFires = squad.getFriendlyFire(target);
-    squad.applyFriendlyFire(toFriendlyFires);
-    if(toFriendlyFires.length > 0)
-    {
-        modifiers.push(createDamageModifier(1-(toFriendlyFires.length/10),1));
-    }
-    var flankBonus = squad.calcultateFlankingBonus(target);
-    if(flankBonus)
-    {
-        modifiers.push(flankBonus);
-    }
-    squad.attack(target, modifiers);
-    target.attack(squad,  []);
-    target.applyDamages();
-    squad.applyDamages();
-    squad.updateLifeBar();
-    target.updateLifeBar();
-    target.drawLifeBar();
-    squad.drawLifeBar();
-    if(target.lifeBar.armor <= 0)
-    {
-        target.removeFromBattle();
-    }
-    if(squad.lifeBar.armor <= 0)
-    {
-        squad.removeFromBattle();
-    }*/
     drawAttack(squad.action);
 }
 
@@ -660,14 +552,6 @@ function isDefendingAgainst(defendingSquad, attackingSquad)
     return false;
 }
 
-function doFights()
-{
-    var actualTurn = this.game.turn.number;
-    this.game.battles.forEach(function(battle){
-        battle.process(actualTurn);
-    });
-}
-
 function drawAttack(battle)
 {
     var distance = Phaser.Math.distance(battle.attackingSquad.phaserObject.x, battle.attackingSquad.phaserObject.y, battle.target.phaserObject.x, battle.target.phaserObject.y );
@@ -727,38 +611,6 @@ function move(sprite)
         }
     }
     return false;
-}
-
-function refreshAction(squad)
-{
-    var defendingAgainst = getDefendingAgainst(squad);
-    defendingAgainst.forEach(function(battle, index){
-        battle.arrowPhaserObject.destroy();
-        if(battle.attackingSquad.canGo(squad.case))
-        {
-            drawAttack(battle.attackingSquad.action);
-        }
-        else
-        {
-            removeBattle(battle);
-            battle.attackingSquad.action = null;
-        }
-    });
-
-    if(squad.action != null && squad.action.type == "attack")
-    {
-        squad.action.arrowPhaserObject.destroy();
-        if(squad.canGo(squad.action.target.case))
-        {
-            drawAttack(squad.action);
-        }
-        else
-        {
-            removeBattle(squad.action);
-            squad.action.target.action = null;
-            squad.action = null;
-        }
-    }
 }
 
 ////////////////////////////////////////////

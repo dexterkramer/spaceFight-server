@@ -55,15 +55,6 @@ function positioningNextTurn()
     {
         disableDragingFroPlayer(this.game.turn.player);
         this.game.server.sendPositioningInfos(this.game.client.id, this.game.turn.player.fleat.capitalShip.case.number); 
-        /*nextPlayer(false);
-        if(this.game.turn.player !== null)
-        {
-            positioningTurnInit(this.game.turn.player);
-        }
-        else
-        {
-            finish();
-        }*/
     }
 }
 

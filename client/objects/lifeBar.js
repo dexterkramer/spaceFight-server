@@ -1,6 +1,5 @@
 var lifeBar = function(armor, shield, maxArmor)
 {
-    //this.startArmor = armor;
     this.armor = armor;
     this.startShielf = shield;
     this.shield = shield;
@@ -41,5 +40,27 @@ lifeBar.prototype = {
         this.phaserObject = lifeBarPhaser;
         this.textObject = lifeBarPhaser.textObject;
         return lifeBarPhaser;
+    },
+    getLifeBarColor : function()
+    {
+        var percent = this.armor / this.maxArmor; 
+        var color = 0xEC2727;
+        if(percent > 0.2 )
+        {
+            color = 0xEC7C27;
+        }
+        if(percent > 0.4)
+        {
+            color = 0xECDF27;
+        }
+        if(percent > 0.6)
+        {
+            color = 0x9AEC27;
+        }
+        if(percent > 0.8)
+        {
+            color = 0x4BEC27;
+        }
+        return color;
     }
 };

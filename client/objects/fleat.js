@@ -15,7 +15,7 @@ oneFleat.prototype = {
     },
     addCapitalShip : function(squadJson)
     {
-        this.capitalShip = createSquad2(this, squadJson);
+        this.capitalShip = createSquad(this, squadJson);
     },
     undeploySquad : function(squad)
     {

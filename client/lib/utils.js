@@ -336,31 +336,6 @@ function nextPlayer(rewind)
     {
         this.game.server.nextTurn(this.game.client.id);
     }
-    /*
-    if(this.game.turn.player == null)
-    {
-        if(typeof this.game.players[0] !== "undefined" && this.game.players[0] !== null)
-        {
-            this.game.turn.player = this.game.players[0];
-        }        
-        return this.game.turn.player;
-    }
-    if(typeof this.game.players[this.game.turn.player.number + 1] !== "undefined" && this.game.players[this.game.turn.player.number + 1] !== null)
-    {
-         this.game.turn.player = this.game.players[this.game.turn.player.number + 1];
-    }
-    else
-    {
-        if(typeof rewind == "undefined" || rewind == true)
-        {
-            this.game.turn.player = this.game.players[0];
-        }
-        else
-        {
-            this.game.turn.player = null;
-        }
-    }
-    return this.game.turn.player;*/
 }
 
 function drawCardOrder(card, x, y)
@@ -513,27 +488,17 @@ function clearGameCache (game) {
     this.game.load.reset();
     this.game.load.removeAll();
 }
-/*
+
 function createFleat(player, fleatJson)
-{
-
-    var fleat = new oneFleat(fleatJson.name, player);
-    fleatJson.squads.forEach(function(squadJson){
-        fleat.addSquad(createSquad(fleat, squadJson));
-    });
-    return fleat;
-}*/
-
-function createFleat2(player, fleatJson)
 {
     var fleat = new oneFleat(fleatJson.name, player);
     fleatJson.deployedSquad.forEach(function(squadJson){
-        fleat.deploySquad(createSquad2(fleat, squadJson));
+        fleat.deploySquad(createSquad(fleat, squadJson));
     });
     return fleat;
 }
 
-function createSquad2(fleat, squadJson)
+function createSquad(fleat, squadJson)
 {
      var squad = new oneSquad(squadJson.name, fleat);
      squad.currentDeployedIndex = squadJson.currentDeployedIndex;
@@ -546,31 +511,11 @@ function createSquad2(fleat, squadJson)
      squad.createLifeBar();
      return squad;
 }
-/*
-function createSquad(fleat, squadJson)
-{
-    var squad = new oneSquad(squadJson.name, fleat);
-    squadJson.ships.forEach(function(shipJson){
-        squad.addShip(new ship(shipJson));
-    });
-    squad.createLifeBar();
-    return squad;
-}
 
-function createPlayer(playerJson, number, availableCasePositioning, availableCaseDeploying)
-{
-    var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying);
-    player.fleat = createFleat(player, playerJson.fleat );
-    player.orders = createOrders(player, playerJson.orders);
-    player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
-    player.createPick();
-    return player;
-}*/
-
-function createPlayer2(playerJson, number, availableCasePositioning, availableCaseDeploying, isMe)
+function createPlayer(playerJson, number, availableCasePositioning, availableCaseDeploying, isMe)
 {
     var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying, isMe);
-    player.fleat = createFleat2(player, playerJson.fleat );
+    player.fleat = createFleat(player, playerJson.fleat );
     if(playerJson.fleat.capitalShip != null && playerJson.fleat.capitalShip != false)
     {
         player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
@@ -612,10 +557,6 @@ function createCases(casemap)
         caseTable[elem.number].topRight = (elem.links.topRight !== null) ? caseTable[elem.links.topRight] : null;
         caseTable[elem.number].bottomLeft = (elem.links.bottomLeft !== null) ? caseTable[elem.links.bottomLeft] : null;
         caseTable[elem.number].bottomRight = (elem.links.bottomRight !== null) ? caseTable[elem.links.bottomRight] : null;
-    });
-
-    caseTable.forEach(function(oneCase){
-        oneCase.findCasePosition();
     });
     return caseTable;
 }
