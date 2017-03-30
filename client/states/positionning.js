@@ -53,7 +53,7 @@ function positioningNextTurn()
 {
     if(this.game.turn.player.okToFinishPositioning())
     {
-        disableDragingFroPlayer(this.game.turn.player);
+        this.game.turn.player.disableDragingAllSquads();
         this.game.server.sendPositioningInfos(this.game.client.id, this.game.turn.player.fleat.capitalShip.case.number); 
     }
 }
@@ -67,7 +67,7 @@ function positioningPlayer(player)
     player.fleat.capitalShip.originalY = YposSquad;
 
     player.fleat.deploySquad(player.fleat.capitalShip);
-    enableDragSquad(player.fleat.capitalShip, dragSquad, stopDragSquad);
+    player.fleat.capitalShip.enableDrag(dragSquad, stopDragSquad);
 }
 
 function refreshInfosPositioning()

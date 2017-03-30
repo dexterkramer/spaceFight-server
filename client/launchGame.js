@@ -1,10 +1,10 @@
 function launchGame()
 {
     var game = new Phaser.Game(1000, 900, Phaser.AUTO, '', { create: eurecaClientSetup, update:updateGame });
-    game.state.add("Boot",boot);
-    game.state.add("Preload",preload);
-    game.state.add("Positionning", positionning);
-    game.state.add("TheGame", TheGame);
+    game.state.add("Boot",new boot(game));
+    game.state.add("Preload",new preload(game));
+    game.state.add("Positionning",new positionning(game));
+    game.state.add("TheGame",new TheGame(game));
     return game;
 }
 

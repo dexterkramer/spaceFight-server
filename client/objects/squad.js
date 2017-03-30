@@ -18,6 +18,62 @@ var oneSquad = function(name, fleat)
 };
 
 oneSquad.prototype = {
+    remove : function()
+    {
+        if(this.phaserObject != null)
+        {
+            this.phaserObject.destroy();
+            this.phaserObject = null;
+        }
+    },
+    toPosition : function()
+    {
+        if(this.case != null)
+        {
+            // move the sprite of the squad to his new position 
+            this.phaserObject.x = this.case.phaserObject.middleX;
+            this.phaserObject.y = this.case.phaserObject.middleY;
+        }
+    },
+    draw : function()
+    {
+        var squadWidth = 100;
+        var squadHeight = 100;
+        var x;
+        var y;
+        if(this.case !== null)
+        {
+            x = this.case.phaserObject.middleX;
+            y = this.case.phaserObject.middleY;
+        }
+        else
+        {
+            x = this.originalX;
+            y = this.originalY;
+        }
+        var oneSquad = this.game.add.sprite(x, y, 'squad');
+        oneSquad.anchor.x = 0.5;
+        oneSquad.anchor.y = 0.5;
+        oneSquad.scale.setTo(squadWidth / oneSquad.width, squadHeight / oneSquad.height);
+        oneSquad.ref = this;
+        this.phaserObject = oneSquad;
+        this.drawLifeBar();
+    },
+    disableDrag : function()
+    {
+        if(this.phaserObject != null && this.phaserObject.input != null)
+        {
+            this.phaserObject.input.disableDrag();
+        }
+    },
+    enableDrag : function(dragSquadFunc, stopDragSquadFunc)
+    {
+        this.phaserObject.inputEnabled = true;
+        this.game.physics.arcade.enable(this.phaserObject);
+        this.phaserObject.input.enableDrag();
+        this.phaserObject.events.onDragStart.add(dragSquadFunc, this);
+        this.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
+    },
     refreshDatas : function(squadJson, caseTable)
     {
         if(this.case !== null)
@@ -26,12 +82,9 @@ oneSquad.prototype = {
         }
         this.case = caseTable[squadJson.case.number];
         this.case.squad = this;
-        // move the sprite of the esouade to his new position 
-        this.phaserObject.x = this.case.phaserObject.middleX;
-        this.phaserObject.y = this.case.phaserObject.middleY;
+
 
         this.lifeBar.refreshDatas(squadJson.lifeBar);
-        this.drawLifeBar();
         this.ships.forEach(function(ship){
             ship.toClean = true;
         });
@@ -81,9 +134,9 @@ oneSquad.prototype = {
     },
     drawLifeBar : function()
     {
-        var lifeBarPhaserObject = this.lifeBar.draw();
-        this.phaserObject.addChild(lifeBarPhaserObject);
-        this.phaserObject.addChild(lifeBarPhaserObject.textObject);
+        this.lifeBar.draw();
+        this.phaserObject.addChild(this.lifeBar.phaserObject);
+        this.phaserObject.addChild(this.lifeBar.textObject);
     },
     addShip : function(ship)
     {
@@ -99,7 +152,7 @@ oneSquad.prototype = {
             totalShield += ship.lifeBar.shield;
             totalMaxArmor += ship.lifeBar.maxArmor;
         });
-        this.lifeBar = new lifeBar(totalArmor, totalShield, totalMaxArmor);
+        this.lifeBar = createLifeBar(this.game, totalArmor, totalShield, totalMaxArmor);
     },
     updateLifeBar : function()
     {
@@ -354,10 +407,6 @@ oneSquad.prototype = {
             }
         });
         //ref.movesAllowed = 0;
-    },
-    disableDrag : function()
-    {
-        this.phaserObject.input.disableDrag();
     },
     getAvailableSupportedShip : function()
     {

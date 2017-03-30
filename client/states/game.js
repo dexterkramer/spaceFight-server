@@ -50,10 +50,12 @@ function refreshPlayers()
             {
                 player.fleat.deployedSquad[squadIndex].toClean = false;
                 player.fleat.deployedSquad[squadIndex].refreshDatas(squadJson, this.game.caseTable);
+                player.fleat.deployedSquad[squadIndex].toPosition();
+                player.fleat.deployedSquad[squadIndex].drawLifeBar();
             }
             else
             {
-                var newSquad = createSquad( player.fleat, squadJson);
+                var newSquad = createSquad(this.game, player.fleat, squadJson);
                 newSquad.toClean = false;
                 newSquad.case = this.game.caseTable[squadJson.case.number];
                 newSquad.case.squad = newSquad;
@@ -88,13 +90,13 @@ function refreshPlayers()
                     var object = null;
                     if(cardHandler.card.type == "order")
                     {
-                        object = createOrder(cardHandler.card.object);
+                        object = createOrder(this.game, cardHandler.card.object);
                     }
                     else if(cardHandler.card.type == "squad")
                     {
-                        object = createSquad(player.fleat,cardHandler.card.object);
+                        object = createSquad(this.game, player.fleat,cardHandler.card.object);
                     }
-                    player.cardHandlers[index].card = createCard(object, cardHandler.card.type);
+                    player.cardHandlers[index].card = createCard(this.game, object, cardHandler.card.type);
                     player.cardHandlers[index].card.setHandler(player.cardHandlers[index]);
                     player.cardHandlers[index].card.currentCardIndex = cardHandler.card.currentCardIndex;
                     player.cardHandlers[index].card.drawCard();
@@ -118,6 +120,7 @@ function drawAllCards()
             if(cardHandler.card != null)
             {
                 cardHandler.card.drawCard();
+                cardHandler.card.enableDrag(dragCard, stopDragCard);
             }
         });
     });
@@ -438,7 +441,7 @@ function stopDragSquadGaming(sprite, pointer)
                 if(sprite.ref.action == null)
                 {
                     attack(sprite.ref, sprite.ref.overlapedCase.squad);
-                    disableDragSquad(sprite.ref);
+                    sprite.ref.disableDrag();
                 }
                 else
                 {

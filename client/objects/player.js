@@ -60,14 +60,20 @@ onePlayer.prototype = {
             choosenHandler.addCard(card);
         }
     },
-    showCards : function()
+    disableDragingAllSquads : function()
     {
-        this.cardHandlers.forEach(function(handler, index){
-            if(handler.card != null)
+        this.fleat.deployedSquad.forEach(function(squad){
+            if(squad.phaserObject != null)
             {
-                handler.card.drawCard();
+                squad.phaserObject.input.disableDrag();
             }
         });
+    },
+    drawAllSquads : function()
+    {
+        this.fleat.deployedSquad.forEach(function(squad){
+            squad.draw();
+        });   
     },
     createHandler : function(isMe)
     {

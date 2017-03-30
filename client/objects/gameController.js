@@ -21,72 +21,6 @@ gameController.prototype = {
             this.server.nextTurn(this.client.id);
         }
     },
-    createFleat : function(player, fleatJson)
-    {
-        var fleat = new oneFleat(this, fleatJson.name, player);
-        fleatJson.deployedSquad.forEach(function(squadJson){
-            fleat.deploySquad(this.createSquad(fleat, squadJson));
-        });
-        return fleat;
-    },
-    createSquad : function(fleat, squadJson)
-    {
-        var squad = new oneSquad(this, squadJson.name, fleat);
-        squad.currentDeployedIndex = squadJson.currentDeployedIndex;
-        squadJson.ships.forEach(function(shipJson){
-            if(shipJson != null)
-            {
-                squad.addShip(new ship(shipJson));
-            }
-        });
-        squad.createLifeBar();
-        return squad;
-    },
-    createPlayer : function(playerJson, number, availableCasePositioning, availableCaseDeploying, isMe)
-    {
-        var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying, isMe);
-        player.fleat = this.createFleat(player, playerJson.fleat );
-        if(playerJson.fleat.capitalShip != null && playerJson.fleat.capitalShip != false)
-        {
-            player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
-        }
-
-        player.createPick();
-        return player;
-    },
-    createCases : function(casemap)
-    {
-        var caseByLine = 4;
-        var lines = 4;
-        this.caseTable = [];
-        casemap.forEach(function(elem){
-            let newCase = new oneCase(elem.name, elem.number, elem.height, elem.width);
-            this.caseTable[elem.number] = newCase;
-        });
-
-        casemap.forEach(function(elem){
-            this.caseTable[elem.number].left = (elem.links.left !== null) ? this.caseTable[elem.links.left] : null;
-            this.caseTable[elem.number].right = (elem.links.right !== null) ? this.caseTable[elem.links.right] : null;
-            this.caseTable[elem.number].topLeft = (elem.links.topLeft !== null) ? this.caseTable[elem.links.topLeft] : null;
-            this.caseTable[elem.number].topRight = (elem.links.topRight !== null) ? this.caseTable[elem.links.topRight] : null;
-            this.caseTable[elem.number].bottomLeft = (elem.links.bottomLeft !== null) ? this.caseTable[elem.links.bottomLeft] : null;
-            this.caseTable[elem.number].bottomRight = (elem.links.bottomRight !== null) ? this.caseTable[elem.links.bottomRight] : null;
-        });
-    },
-    createOrders : function(player, ordersJson)
-    {
-        var orderArray = [];
-        var ref = this;
-        ordersJson.forEach(function(order){
-            orderArray.push(ref.createOrder(order));
-        });
-        return orderArray;
-    },
-    createOrder : function(orderJson)
-    {
-        var orderObject = new oneOrder(orderJson.name, orderJson.effects);
-        return orderObject;
-    },
     checkOverLapSquad : function(player, caseTable, OverLapDraggingManagmentFunc)
     {
         player.fleat.deployedSquad.forEach(function(squad){
@@ -135,7 +69,7 @@ gameController.prototype = {
         this.me.cardHandlers.forEach(function(cardHandler){
             if(cardHandler.card != null)
             {
-                ref.enableDragCard(cardHandler.card, dragCard, stopDragCard);
+                cardHandler.card.enableDrag(dragCard, stopDragCard);
             }
         });
     },
@@ -143,110 +77,14 @@ gameController.prototype = {
     {
         var ref = this;
         this.me.fleat.deployedSquad.forEach(function(squad){
-            ref.disableDragSquad(squad);
+            squad.disableDrag();
         });
         this.me.cardHandlers.forEach(function(cardHandler){
             if(cardHandler.card != null)
             {
-                ref.disableDragCard(cardHandler.card);
+                cardHandler.card.disableDrag();
             }
         });
-    },
-    disableDragSquad : function(squad)
-    {
-        if(squad.phaserObject != null && squad.phaserObject.input != null)
-        {
-            squad.phaserObject.input.disableDrag();
-        }
-    },
-    disableDragCard : function(card)
-    {
-        if(card.phaserObject.input != null)
-        {
-            card.phaserObject.input.disableDrag();
-        }
-    },
-    drawSquad : function(squad, x, y)
-    {
-        var squadWidth = 100;
-        var squadHeight = 100;
-        let oneSquad = this.phaserObject.add.sprite(x, y, 'squad');
-        oneSquad.anchor.x = 0.5;
-        oneSquad.anchor.y = 0.5;
-        oneSquad.scale.setTo(squadWidth / oneSquad.width, squadHeight / oneSquad.height);
-        oneSquad.ref = squad;
-        squad.phaserObject = oneSquad;
-        squad.drawLifeBar();
-    },
-    drawCardSquad : function(card, x, y)
-    {
-        let oneCard = this.phaserObject.add.sprite(x, y, 'card');
-        oneCard.anchor.x = 0.5;
-        oneCard.anchor.y = 0.5;
-        oneCard.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
-        oneCard.ref = card;
-        card.phaserObject = oneCard;
-        let oneSquad = this.phaserObject.add.sprite(0, 0, 'squad');
-        oneSquad.anchor.x = 0.5;
-        oneSquad.anchor.y = 0.5;
-        oneCard.addChild(oneSquad);
-    },
-    drawCardNeutral : function(card, x, y)
-    {
-        let oneCard = this.phaserObject.add.sprite(x, y, 'card');
-        oneCard.anchor.x = 0.5;
-        oneCard.anchor.y = 0.5;
-        oneCard.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
-        oneCard.ref = card;
-        card.phaserObject = oneCard;
-    },
-    enableDragCard : function(card, dragSquadFunc, stopDragSquadFunc)
-    {
-        card.phaserObject.inputEnabled = true;
-        this.phaserObject.physics.arcade.enable(card.phaserObject);
-        card.phaserObject.input.enableDrag();
-        card.phaserObject.events.onDragStart.add(dragSquadFunc, this);
-        card.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
-    },
-    enableDragSquad : function(squad, dragSquadFunc, stopDragSquadFunc)
-    {
-        squad.phaserObject.inputEnabled = true;
-        this.phaserObject.physics.arcade.enable(squad.phaserObject);
-        squad.phaserObject.input.enableDrag();
-        squad.phaserObject.events.onDragStart.add(dragSquadFunc, this);
-        squad.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
-    },
-    drawLifeBar : function(lifebarObject)
-    {
-        var lifeBarX = -50;
-        var lifeBarY = 35;
-        var lifeBarHeight = 8;
-        var lifebarWidth = 100;
-
-        var lifeBar = this.phaserObject.add.graphics(lifeBarX, lifeBarY);
-        lifeBar.lineStyle(lifeBarHeight, lifebarObject.getLifeBarColor());
-        lifeBar.lineTo(lifebarWidth * percent, 0);
-        //this.phaserObject.addChild(lifeBar);
-        lifeBar.anchor.set(0, 0);
-        var style = { font: "9px Arial",/* fill: "#ff0044", wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-        var text = this.phaserObject.add.text(lifeBarX, lifeBar.y - (lifeBarHeight / 2) - 3, lifebarObject.armor + "/" + lifebarObject.maxArmor , style);
-        text.anchor.set(0 , 0);
-        text.x = lifeBarX + ((lifebarWidth * percent) / 2) - (text.width / 2);
-        lifeBar.textObject = text;
-        return lifeBar;
-    },
-    drawCardOrder : function(card, x, y)
-    {
-        let oneCard = this.phaserObject.add.sprite(x, y, 'card');
-        oneCard.anchor.x = 0.5;
-        oneCard.anchor.y = 0.5;
-        oneCard.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
-        oneCard.ref = card;
-        card.phaserObject = oneCard;
-        var style = { font: "35px Arial",fill: "#ff0044"/* fill: "#ff0044", wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-        var text = this.phaserObject.add.text(0, 0, card.object.name , style);
-        text.anchor.set(0 , 0);
-        oneCard.addChild(text);
     },
     drawCases : function()
     {

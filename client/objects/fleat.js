@@ -15,31 +15,19 @@ oneFleat.prototype = {
     },
     addCapitalShip : function(squadJson)
     {
-        this.capitalShip = createSquad(this, squadJson);
+        this.capitalShip = createSquad(this.game, this, squadJson);
     },
     undeploySquad : function(squad)
     {
         this.deployedSquad.splice(this.deployedSquad.findIndex(function(elem){
             return elem == squad;
         }),1);
-        disableDragSquad(squad);
-        removeSquad(squad);
+        squad.disableDrag();
+        squad.remove();
     },
     deploySquad : function(squad)
     {
-        var x;
-        var y;
-        if(squad.case !== null)
-        {
-            x = squad.case.phaserObject.middleX;
-            y = squad.case.phaserObject.middleY;
-        }
-        else
-        {
-            x = squad.originalX;
-            y = squad.originalY;
-        }
-        drawSquad(squad, x, y);
+        squad.draw();
         this.deployedSquad.push(squad);
     }
 };

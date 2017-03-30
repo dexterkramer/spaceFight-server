@@ -45,12 +45,6 @@ function dragSquad(sprite, pointer)
     sprite.ref.isDragged = true;
 }
 
-function removeSquad(squad)
-{
-    squad.phaserObject.destroy();
-    squad.phaserObject = null;
-}
-
 function stopDragPlayer(sprite)
 {
     // has the squad been dragged on a case ?
@@ -264,55 +258,15 @@ function drawCases(game)
     }  
 }
 
-function disableDragingFroPlayer(player)
-{
-    player.fleat.deployedSquad.forEach(function(squad){
-        if(squad.phaserObject != null)
-        {
-            squad.phaserObject.input.disableDrag();
-        }
-    });
-}
-
-function disableDragSquad(squad)
-{
-    if(squad.phaserObject != null && squad.phaserObject.input != null)
-    {
-        squad.phaserObject.input.disableDrag();
-    }
-}
-
-function drawLifeBar(lifebarObject)
-{
-    var lifeBarX = -50;
-    var lifeBarY = 35;
-    var lifeBarHeight = 8;
-    var lifebarWidth = 100;
-
-    var lifeBar = this.game.add.graphics(lifeBarX, lifeBarY);
-    var percent = lifebarObject.armor / lifebarObject.maxArmor; 
-    lifeBar.lineStyle(lifeBarHeight, getLifeBarColor(percent));
-    lifeBar.lineTo(lifebarWidth * percent, 0);
-    //this.phaserObject.addChild(lifeBar);
-    lifeBar.anchor.set(0, 0);
-    var style = { font: "9px Arial",/* fill: "#ff0044", wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-    var text = this.game.add.text(lifeBarX, lifeBar.y - (lifeBarHeight / 2) - 3, lifebarObject.armor + "/" + lifebarObject.maxArmor , style);
-    text.anchor.set(0 , 0);
-    text.x = lifeBarX + ((lifebarWidth * percent) / 2) - (text.width / 2);
-    lifeBar.textObject = text;
-    //this.phaserObject.addChild(text);
-    return lifeBar;
-}
-
 function unlockMe()
 {
     this.game.me.fleat.deployedSquad.forEach(function(squad){
-        enableDragSquad(squad, dragSquad, stopDragSquadGaming);
+        squad.enableDrag(dragSquad, stopDragSquadGaming);
     });
     this.game.me.cardHandlers.forEach(function(cardHandler){
         if(cardHandler.card != null)
         {
-            enableDragCard(cardHandler.card, dragCard, stopDragCard);
+            cardHandler.card.enableDrag(dragCard, stopDragCard);
         }
     });
 }
@@ -320,12 +274,12 @@ function unlockMe()
 function lockMe()
 {
     this.game.me.fleat.deployedSquad.forEach(function(squad){
-        disableDragSquad(squad);
+        squad.disableDrag();
     });
     this.game.me.cardHandlers.forEach(function(cardHandler){
         if(cardHandler.card != null)
         {
-            disableDragCard(cardHandler.card);
+            cardHandler.card.disableDrag();
         }
     });
 }
@@ -338,144 +292,10 @@ function nextPlayer(rewind)
     }
 }
 
-function drawCardOrder(card, x, y)
-{
-    let oneCard = this.game.add.sprite(x, y, 'card');
-    oneCard.anchor.x = 0.5;
-    oneCard.anchor.y = 0.5;
-    oneCard.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
-    oneCard.ref = card;
-    card.phaserObject = oneCard;
-    var style = { font: "35px Arial",fill: "#ff0044"/* fill: "#ff0044", wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-    var text = this.game.add.text(0, 0, card.object.name , style);
-    text.anchor.set(0 , 0);
-    oneCard.addChild(text);
-}
-
-function drawCardNeutral(card, x, y)
-{
-    let oneCard = this.game.add.sprite(x, y, 'card');
-    oneCard.anchor.x = 0.5;
-    oneCard.anchor.y = 0.5;
-    oneCard.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
-    oneCard.ref = card;
-    card.phaserObject = oneCard;
-}
-
-function drawCardSquad(card, x, y)
-{
-    let oneCard = this.game.add.sprite(x, y, 'card');
-    oneCard.anchor.x = 0.5;
-    oneCard.anchor.y = 0.5;
-    oneCard.scale.setTo(card.handler.width / oneCard.width, card.handler.height / oneCard.height);
-    oneCard.ref = card;
-    card.phaserObject = oneCard;
-    let oneSquad = this.game.add.sprite(0, 0, 'squad');
-    oneSquad.anchor.x = 0.5;
-    oneSquad.anchor.y = 0.5;
-    //oneSquad.scale.setTo(squadWidth / oneSquad.width, squadHeight / oneSquad.height);
-    oneCard.addChild(oneSquad);
-}
-
-var squadWidth = 100;
-var squadHeight = 100;
-
-function drawSquad(squad, x, y)
-{
-    let oneSquad = this.game.add.sprite(x, y, 'squad');
-    oneSquad.anchor.x = 0.5;
-    oneSquad.anchor.y = 0.5;
-    oneSquad.scale.setTo(squadWidth / oneSquad.width, squadHeight / oneSquad.height);
-    oneSquad.ref = squad;
-    squad.phaserObject = oneSquad;
-    squad.drawLifeBar();
-}
-
-function drawPlayerSquads(player)
-{
-
-    player.fleat.deployedSquad.forEach(function(squad){
-        let x;
-        let y;
-        if(squad.case !== null)
-        {
-            x = squad.case.phaserObject.middleX;
-            y = squad.case.phaserObject.middleY;
-        }
-        else
-        {
-            x = squad.originalX;
-            y = squad.originalY;
-        }
-        drawSquad(squad, x, y);
-    });    
-}
-
-function getLifeBarColor(percent)
-{
-    var color = 0xEC2727;
-    if(percent > 0.2 )
-    {
-        color = 0xEC7C27;
-    }
-    if(percent > 0.4)
-    {
-        color = 0xECDF27;
-    }
-    if(percent > 0.6)
-    {
-        color = 0x9AEC27;
-    }
-    if(percent > 0.8)
-    {
-        color = 0x4BEC27;
-    }
-    return color;
-}
-
-function enableDrag(player, dragSquadFunc, stopDragSquadFunc)
-{
-    player.fleat.deployedSquad.forEach(function(squad){
-        if(squad.phaserObject == null)
-            return;
-        squad.phaserObject.inputEnabled = true;
-        this.game.physics.arcade.enable(squad.phaserObject);
-        squad.phaserObject.input.enableDrag();
-        squad.phaserObject.events.onDragStart.add(dragSquadFunc, this);
-        squad.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
-    });
-}
-
-function enableDragCard(card, dragSquadFunc, stopDragSquadFunc)
-{
-    card.phaserObject.inputEnabled = true;
-    this.game.physics.arcade.enable(card.phaserObject);
-    card.phaserObject.input.enableDrag();
-    card.phaserObject.events.onDragStart.add(dragSquadFunc, this);
-    card.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
-}
-
-function disableDragCard(card)
-{
-    if(card.phaserObject.input != null)
-    {
-        card.phaserObject.input.disableDrag();
-    }
-}
-
-function enableDragSquad(squad, dragSquadFunc, stopDragSquadFunc)
-{
-    squad.phaserObject.inputEnabled = true;
-    this.game.physics.arcade.enable(squad.phaserObject);
-    squad.phaserObject.input.enableDrag();
-    squad.phaserObject.events.onDragStart.add(dragSquadFunc, this);
-    squad.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
-}
-
 function drawAllSquads()
 {
     this.game.players.forEach(function(player){
-        drawPlayerSquads(player);
+        player.drawAllSquads();
     });
 }
 
@@ -489,33 +309,50 @@ function clearGameCache (game) {
     this.game.load.removeAll();
 }
 
-function createFleat(player, fleatJson)
+function createFleat(game, player, fleatJson)
 {
     var fleat = new oneFleat(fleatJson.name, player);
+    fleat.game = game;
     fleatJson.deployedSquad.forEach(function(squadJson){
-        fleat.deploySquad(createSquad(fleat, squadJson));
+        fleat.deploySquad(createSquad(game, fleat, squadJson));
     });
     return fleat;
 }
 
-function createSquad(fleat, squadJson)
+function createShip(game, shipJson)
+{
+    var theShip = new ship(shipJson);
+    theShip.game = game;
+    return theShip;   
+}
+
+function createLifeBar(game, armor, shield, maxArmor)
+{
+    var lifeBarobj = new lifeBar(armor, shield, maxArmor);
+    lifeBarobj.game = game;
+    return lifeBarobj;
+}
+
+function createSquad(game, fleat, squadJson)
 {
      var squad = new oneSquad(squadJson.name, fleat);
      squad.currentDeployedIndex = squadJson.currentDeployedIndex;
+     squad.game = game;
      squadJson.ships.forEach(function(shipJson){
         if(shipJson != null)
         {
-            squad.addShip(new ship(shipJson));
+            squad.addShip(createShip(game, shipJson));
         }
      });
      squad.createLifeBar();
      return squad;
 }
 
-function createPlayer(playerJson, number, availableCasePositioning, availableCaseDeploying, isMe)
+function createPlayer(game, playerJson, number, availableCasePositioning, availableCaseDeploying, isMe)
 {
     var player = new onePlayer(playerJson.name, number, availableCasePositioning, availableCaseDeploying, isMe);
-    player.fleat = createFleat(player, playerJson.fleat );
+    player.fleat = createFleat(game, player, playerJson.fleat );
+    player.game = game;
     if(playerJson.fleat.capitalShip != null && playerJson.fleat.capitalShip != false)
     {
         player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
@@ -525,18 +362,10 @@ function createPlayer(playerJson, number, availableCasePositioning, availableCas
     return player;
 }
 
-function createOrders(player, ordersJson)
-{
-    var orderArray = [];
-    ordersJson.forEach(function(order){
-        orderArray.push(createOrder(order));
-    });
-    return orderArray;
-}
-
-function createOrder(orderJson)
+function createOrder(game, orderJson)
 {
     var orderObject = new oneOrder(orderJson.name, orderJson.effects);
+    orderObject.game = game;
     return orderObject;
 }
 
