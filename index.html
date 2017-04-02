@@ -19,6 +19,7 @@
     <script type="text/javascript" src="client/objects/cardHandler.js"></script>
     <script type="text/javascript" src="client/objects/pick.js"></script>
     <script type="text/javascript" src="client/objects/cards.js"></script>
+    <script type="text/javascript" src="client/objects/gameController.js"></script>
     <script type="text/javascript" src="client/states/boot.js"></script>
     <script type="text/javascript" src="client/states/preload.js"></script>
     <script type="text/javascript" src="client/states/positionning.js"></script>
@@ -36,10 +37,36 @@
     </style>
 </head>
 <body>
-
+<button id="connect" > connect </button>
+<button id="play" style="display:none;" > play </button>
+<div id="game" ></div>
 <script type="text/javascript">
 
-var game = launchGame();
+//var game = launchGame();
+$(document).ready(function() {
+    var client = null;
+    var server = null;
+    $("#connect").click(function(elem){
+        client = eurecaClientSetup(function(proxy){
+            server = proxy;
+            $("#connect").css('display', 'none');
+            $("#play").css('display', 'block');
+        });
+    });
+
+    $("#play").click(function(elem){
+        if(client != null && server != null)
+        {
+            var gameController = new gameController(client, server);
+            client.gameController = gameController;
+            gameController.launchGame('game');
+        }
+    });
+
+
+});  
+
+
 
 </script>
 

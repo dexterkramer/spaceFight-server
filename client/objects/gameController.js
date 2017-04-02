@@ -1,18 +1,63 @@
 
-var gameController = function(phaserObject){
-    this.phaserObject = phaserObject;
+var gameController = function(client, server){
+    this.game = null;
     this.caseTable = null;
     this.players = [];
-    this.client = null;
-    this.server = null;
+    this.client = client;
+    this.server = server;
+    this.IsLoaded = false;
     this.me = null;
-    this.turn = null;
+    this.turn = new oneTurn();;
 }
 
 gameController.prototype = {
+    launchGame : function(div)
+    {
+        var game = new Phaser.Game(1000, 900, Phaser.AUTO, div);
+        this.game = game;
+
+        var bootState = new boot(game);
+        bootState.gameController = this;
+        game.state.add("Boot",bootState);
+        
+        var preloadState = new preload(game);
+        preloadState.gameController = this;
+        game.state.add("Preload",preloadState);
+
+        var positioningState = new positionning(game);
+        positioningState.gameController = this;
+        game.state.add("Positionning",positioningState);
+
+        var theGameState = new TheGame(game);
+        theGameState.gameController = this;
+        game.state.add("TheGame",theGameState);
+        this.server.wantToGame(this.client.id);
+        this.game.state.start("Boot");
+        return game;
+    },
+    addPlayer : function(playerInfos, isMe)
+    {
+        if(this.players.length == 0)
+        {
+            this.players.push(createPlayer(this.game, playerInfos, 0, this.caseTable.slice( 12 , 19), this.caseTable.slice( 16 , 19), isMe));
+        }
+        else if(this.players.length == 1)
+        {
+            this.players.push(createPlayer(this.game, playerInfos, 1, this.game.caseTable.slice( 0 , 7 ), this.game.caseTable.slice( 0 , 3 ), isMe));
+        }
+        
+    },
     setCaseTable : function(caseTable)
     {
         this.caseTable = caseTable;
+    },
+    startPositioning : function()
+    {
+        this.game.state.start("Positionning");
+    },
+    setMe : function(index)
+    {
+        this.me = this.players[index];
     },
     nextPlayer : function(rewind)
     {

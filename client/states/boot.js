@@ -8,10 +8,10 @@ boot.prototype = {
           //this.game.load.image("loading","assets/loading.png"); 
 	},
   	create: function(){
-		if(this.game.client.lock >= 1)
-		{
-			this.game.state.start("Preload");
-		}
+		//if(this.game.client.lock >= 1)
+		//{
+		this.game.state.start("Preload");
+		//}
 		//this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 		//this.scale.pageAlignHorizontally = true;
 		//this.scale.setScreenSize();

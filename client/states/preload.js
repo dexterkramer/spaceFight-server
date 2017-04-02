@@ -20,13 +20,13 @@ preload.prototype = {
 	},
         create: function(){
                 this.game.add.tileSprite(0, 0, game.width, game.height, 'space');
-                this.game.players = [];
-                this.game.caseTable = createCases(this.game.cache.getJSON('casemap'));
-                this.game.players.push(createPlayer(this.game, this.game.tempPlayerInfos.players[0], 0, this.game.caseTable.slice( 12 , 19), this.game.caseTable.slice( 16 , 19), this.game.tempPlayerInfos.index === 0));
-                this.game.players.push(createPlayer(this.game, this.game.tempPlayerInfos.players[1], 1, this.game.caseTable.slice( 0 , 7 ), this.game.caseTable.slice( 0 , 3 ), this.game.tempPlayerInfos.index === 1));
-                this.game.me = this.game.players[this.game.tempPlayerInfos.index];
-                this.game.turn = new oneTurn();
-                this.game.state.start("Positionning");
-                this.game.server.handshake(this.game.client.id);
-	}
+                this.gameController.setCaseTable(createCases(this.game.cache.getJSON('casemap')));
+	},
+        update : function()
+        {
+                if(this.gameController.IsLoaded)
+                {
+                        this.gameController.startPositioning();
+                }
+        }
 }

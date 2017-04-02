@@ -3,15 +3,17 @@
 var ready = false;
 var eurecaServer;
 //this function will handle client communication with the server
-var eurecaClientSetup = function() {
+var eurecaClientSetup = function(onConnect) {
 	var id;
 	//create an instance of eureca.io client
 	var eurecaClient = new Eureca.Client();
 	eurecaClient.lock = 0;
 	eurecaClient.game = null;
+	eurecaClient.gameController = null;
 	
-	eurecaClient.ready(function (proxy) {		
-		eurecaServer = proxy;
+	eurecaClient.ready(function (proxy) {	
+		onConnect(proxy);	
+		//eurecaServer = proxy;
 		//eurecaServer = proxy;
 		
 		//we temporary put create function here so we make sure to launch the game once the client is ready
@@ -19,10 +21,9 @@ var eurecaClientSetup = function() {
 		ready = true;
 	});	
 
-	eurecaClient.exports.unlockPositioning = function() 
+	eurecaClient.setId = function(id)
 	{
-		//create() is moved here to make sure nothing is created before uniq id assignation
-		eurecaClient.lock = 2;
+		eurecaClient.id = id;
 	}
 
 	eurecaClient.exports.unlockGame = function()
@@ -32,12 +33,14 @@ var eurecaClientSetup = function() {
 
 	eurecaClient.exports.sendPlayersInfos = function(playersInfos, id)
 	{
-		eurecaClient.id = id;
-		createGame(eurecaClient, eurecaServer);
-		if(eurecaClient.game != null)
+		//eurecaClient.id = id;
+		//createGame(eurecaClient, eurecaServer);
+		if(eurecaClient.gameController != null)
 		{
-			eurecaClient.game.tempPlayerInfos = playersInfos;
-			eurecaClient.lock = 1;
+			eurecaClient.gameController.addPlayer(playersInfos.players[0], playersInfos.index === 0);
+			eurecaClient.gameController.addPlayer(playersInfos.players[1], playersInfos.index === 1);
+			eurecaClient.gameController.setMe(playersInfos.index);
+			eurecaClient.gameController.IsLoaded = true;
 		}
 		return true;
 	}
@@ -80,5 +83,5 @@ var eurecaClientSetup = function() {
 		eurecaClient.game.draw = true;
 		eurecaClient.game.end = 1;
 	}
-
+	return eurecaClient;
 }
