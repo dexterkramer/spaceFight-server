@@ -57,9 +57,9 @@ $(document).ready(function() {
     $("#play").click(function(elem){
         if(client != null && server != null)
         {
-            var gameController = new gameController(client, server);
-            client.gameController = gameController;
-            gameController.launchGame('game');
+            var gc = new gameController(client, server);
+            client.gameController = gc;
+            gc.launchGame('game');
         }
     });
 

@@ -66,13 +66,22 @@ oneSquad.prototype = {
             this.phaserObject.input.disableDrag();
         }
     },
-    enableDrag : function(dragSquadFunc, stopDragSquadFunc)
+    enableDrag : function(dragSquadFunc, stopDragSquadFunc, context)
     {
         this.phaserObject.inputEnabled = true;
         this.game.physics.arcade.enable(this.phaserObject);
         this.phaserObject.input.enableDrag();
-        this.phaserObject.events.onDragStart.add(dragSquadFunc, this);
-        this.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
+        this.phaserObject.events.onDragStart.add(dragSquadFunc, context);
+        this.phaserObject.events.onDragStop.add(stopDragSquadFunc, context);
+    },
+    returnPreviousCase : function()
+    {
+        // don't move the squad to the case (attack the ennemy squad instead)
+        if(this.case !== null)
+        {
+            this.phaserObject.x = this.case.phaserObject.middleX;
+            this.phaserObject.y = this.case.phaserObject.middleY;
+        }
     },
     refreshDatas : function(squadJson, caseTable)
     {
@@ -176,16 +185,6 @@ oneSquad.prototype = {
         });
         return totalFirePower;
     },
-    removeFromBattle : function()
-    {
-        this.fleat.undeploySquad(this);
-        this.case.squad = null;
-        this.case = null;
-        if(this == this.fleat.capitalShip)
-        {
-            loose(this.fleat.player);
-        }
-    },
     canDefend : function()
     {
         if(this.action != null && this.action.type == "defend")
@@ -251,10 +250,8 @@ oneSquad.prototype = {
         }
         return false;
     },
-    calcultateFlankingBonus : function(defendingSquad)
+    calcultateFlankingBonus : function(defendingSquad, defendingAgainst)
     {
-        var defendingAgainst = getDefendingAgainst(defendingSquad);
-
         if(defendingAgainst.length > 0 && defendingAgainst[0].attackingSquad != this)
         {
             var firstToAttack = defendingAgainst[0].attackingSquad;
@@ -278,11 +275,10 @@ oneSquad.prototype = {
         }
         return false;
     },
-    getFriendlyFire : function(defendingSquad)
+    getFriendlyFire : function(defendingSquad, defendingAgainst)
     {
         var ref = this;
         var toFriendlyFire = [];
-        var defendingAgainst = getDefendingAgainst(defendingSquad);
         if(defendingAgainst.length > 0)
         {
             defendingAgainst.forEach(function(battle){
@@ -297,68 +293,6 @@ oneSquad.prototype = {
             });
         }
         return toFriendlyFire;
-    },
-    applyFriendlyFire : function(toFriendlyFire)
-    {
-        var ref = this;
-        toFriendlyFire.forEach(function(squad){
-            var modifiers = [];
-            modifiers.push(createDamageModifier(0.1,1));
-            ref.attack(squad, modifiers);
-            squad.applyDamages();
-            squad.updateLifeBar();
-            squad.drawLifeBar();
-            if(squad.lifeBar.armor <= 0)
-            {
-                squad.removeFromBattle();
-            }
-        });
-    },
-    defend : function(defendingSquad, modifiers)
-    {
-        var attackingModifierArrayTmp = this.attackModifiersArray.slice(0,this.attackModifiersArray.length);
-        if(typeof modifiers != "undefined" && modifiers != null)
-        {
-            modifiers.forEach(function(modifier){
-                if(modifier.type == "AttackModifier")
-                {
-                    attackingModifierArrayTmp.push(modifier);
-                }
-            });
-        }
-        var attackingShipArray = this.getAvailableShips();
-        var defendingShipArray = defendingSquad.getAvailableShips();
-        var shipGroups = [];
-        while(attackingShipArray.length > 0)
-        { 
-            let i;
-            let selectedShips = [];
-            // ships focus ennemies ship 3 v 1 
-            for(i = 0; i < 3 && attackingShipArray.length > 0; i++)
-            {
-                let selectIndex = Math.floor(Math.random()*attackingShipArray.length);
-                selectedShips.push(attackingShipArray[selectIndex]);
-                attackingShipArray.splice(selectIndex, 1);
-            }
-            shipGroups.push(selectedShips);
-        }
-        var ref = this;
-        shipGroups.forEach(function(shipGroup){
-            if(defendingShipArray.length >= 0)
-            {
-                let selectedEnnemyIndex = Math.floor(Math.random()*defendingShipArray.length);
-                shipGroup.forEach(function(ship){
-                    if(typeof defendingShipArray[selectedEnnemyIndex] !== "undefined")
-                    {
-                        ship.attack(defendingShipArray[selectedEnnemyIndex], attackingModifierArrayTmp);
-                        if(defendingShipArray[selectedEnnemyIndex].lifeBar.tempArmor <= 0)
-                        {
-                            defendingShipArray.splice(selectedEnnemyIndex, 1);
-                        }
-                    }
-                });
-            }
-        });
     },
     attack : function(defendingSquad, modifiers)
     {

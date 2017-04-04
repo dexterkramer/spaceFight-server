@@ -20,13 +20,11 @@ oneCard.prototype = {
         {
             if(this.type == "order")
             {
-                //drawCardOrder(this, this.handler.x, this.handler.y);
-                //enableDragCard(this, dragCard, stopDragCard);
+
             }   
             else if(this.type == "squad")
             {
-                //drawCardSquad(this, this.handler.x, this.handler.y);
-                //enableDragCard(this, dragCard, stopDragCard);
+
             }
         }
     },

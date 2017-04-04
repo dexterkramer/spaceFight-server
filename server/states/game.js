@@ -11,18 +11,10 @@ TheGame.prototype = {
         this.game.eliminatedPlayers = [];
         this.game.infos = { tourInfos : null};
         this.game.battleInfos = null;
-        //drawCases();
-        //drawAllSquads();
         nextTurn();
-        //button = this.game.add.button(600, 600, 'button', nextTurn, this, 1, 0, 1);
       },
     update : function(){
-        /*checkLoosers();
-        this.game.caseTable.forEach(function(oneCase){
-            oneCase.NotOverLaped();
-        });*/
-        //checkOverLapSquad(this.game.turn.player,this.game.caseTable, OverLapGamingDraggingManagment);
-        //checkOverLapCard(this.game.turn.player,this.game.caseTable, this.game.turn.player.availableCaseDeploying, OverLapGamingCardDraggingManagment);
+
     }
 }
 
@@ -141,116 +133,6 @@ function loose(player)
 ///////////////////// DRAG AND OVERLAP ////////////////////
 ///////////////////////////////////////////////////////////
 
-function dragCard(sprite, pointer)
-{
-    sprite.body.moves = false;
-    sprite.ref.isDragged = true;
-}
-
-function stopDragCard(sprite, pointer)
-{
-    var card = sprite.ref;
-    sprite.body.moves = false;
-    card.isDragged = false;
-    if(card.overlapedCase !== null )
-    {
-        if(card.type == "squad")
-        {
-            if(card.overlapedCase.squad == null)
-            {
-                card.overlapedCase.squad = card.object;
-                card.object.case = card.overlapedCase;
-                card.object.fleat.deploySquad(card.object);
-                enableDragSquad(card.object, dragSquad, stopDragSquadGaming);
-                card.destroy();
-            }
-        }
-        else if(card.type == "order")
-        {
-            if(card.overlapedCase.squad != null)
-            {
-                if(card.overlapedCase.squad.fleat.player == card.handler.player)
-                {
-                    card.overlapedCase.squad.buff(card.object);
-                    card.destroy();
-                }
-                else if(card.overlapedCase.squad.fleat.player != card.handler.player)
-                {
-                    card.overlapedCase.squad.buff(card.object);
-                    card.destroy();
-                }
-            }
-        }
-    }
-    else
-    {
-        // set the squad to the original position.
-        sprite.x = card.handler.x;
-        sprite.y = card.handler.y;
-    }
-    //stopDragPlayer(sprite);
-}
-
-function removeBattleInfos()
-{
-    this.game.battleInfos = null;
-}
-
-function stopDragSquadGaming(sprite, pointer)
-{
-    removeBattleInfos();
-    sprite.body.moves = false;
-    sprite.ref.isDragged = false;
-    // has the squad been dragged on a case ?
-    if(sprite.ref.overlapedCase !== null && sprite.ref.canGo(sprite.ref.overlapedCase))
-    {
-        // does the case already coutain an squad ?
-        if(sprite.ref.overlapedCase.squad == null)
-        {
-            // if the squad is alreay on another case, remove it from the case.
-            if(move(sprite))
-            {
-
-            }
-        }
-        else
-        {
-            if(sprite.ref.overlapedCase.squad.fleat.player == sprite.ref.fleat.player)
-            {
-                support(sprite.ref, sprite.ref.overlapedCase.squad);
-            }
-            if(sprite.ref.overlapedCase.squad.fleat.player != sprite.ref.fleat.player)
-            {
-                if(sprite.ref.action == null)
-                {
-                    attack(sprite.ref, sprite.ref.overlapedCase.squad);
-                    disableDragSquad(sprite.ref);
-                }
-                else
-                {
-                    returnPreviousCase(sprite.ref);
-                }
-            }
-        }
-    }
-    else
-    {
-        // set the squad to the original position.
-        sprite.x = sprite.ref.case.phaserObject.middleX;
-        sprite.y = sprite.ref.case.phaserObject.middleY;
-    }
-}
-
-function returnPreviousCase(squad)
-{
-    // don't move the squad to the case (attack the ennemy squad instead)
-    if(squad.case !== null)
-    {
-        squad.phaserObject.x = squad.case.phaserObject.middleX;
-        squad.phaserObject.y = squad.case.phaserObject.middleY;
-    }
-}
-
 //////////////////////////////////////////////////////////////////////////
 /////////////////////////// ATTACK ///////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -338,35 +220,6 @@ function findBattle(attackingSquad)
     return this.game.battles[index];
 }
 
-function findUnprocessedBattle(attackingSquad)
-{
-    var index = this.game.battles.findIndex(function(elem){
-        return elem.isProcessed == false && elem.attackingSquad == attackingSquad;
-    });
-    if(typeof index == "undefined" || index == null || index == -1)
-    {
-        return false;
-    }
-    return this.game.battles[index];
-}
-
-function isDefendingAgainst(defendingSquad, attackingSquad)
-{
-    defendingBattle = findUnprocessedBattle(defendingSquad);
-    if(defendingBattle && defendingBattle.target == attackingSquad)
-    {
-        return defendingBattle;
-    }
-    return false;
-}
-
-function doFights()
-{
-    var actualTurn = this.game.turn.number;
-    this.game.battles.forEach(function(battle){
-        battle.process(actualTurn);
-    });
-}
 
 
 ////////////////////////////////////////////

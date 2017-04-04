@@ -114,7 +114,7 @@ eurecaServer.exports.okToGame = function(id)
 eurecaServer.exports.wantToGame = function(id)
 {
     var remote = eurecaServer.getClient(id); 
-    clients[conn.id] = {id:id, remote:remote, game:null}
+    clients[id] = {id:id, remote:remote, game:null}
 
     var pool = tryToMakeMatch();
 

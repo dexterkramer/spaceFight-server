@@ -13,13 +13,13 @@ oneCard.prototype = {
     {
         this.handler = handler;
     },
-    enableDrag : function(dragSquadFunc, stopDragSquadFunc)
+    enableDrag : function(dragSquadFunc, stopDragSquadFunc, context)
     {
         this.phaserObject.inputEnabled = true;
         this.game.physics.arcade.enable(this.phaserObject);
         this.phaserObject.input.enableDrag();
-        this.phaserObject.events.onDragStart.add(dragSquadFunc, this);
-        this.phaserObject.events.onDragStop.add(stopDragSquadFunc, this);
+        this.phaserObject.events.onDragStart.add(dragSquadFunc, context);
+        this.phaserObject.events.onDragStop.add(stopDragSquadFunc, context);
     },
     disableDrag : function()
     {

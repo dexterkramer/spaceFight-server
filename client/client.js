@@ -12,23 +12,18 @@ var eurecaClientSetup = function(onConnect) {
 	eurecaClient.gameController = null;
 	
 	eurecaClient.ready(function (proxy) {	
-		onConnect(proxy);	
-		//eurecaServer = proxy;
-		//eurecaServer = proxy;
-		
-		//we temporary put create function here so we make sure to launch the game once the client is ready
-		
+		onConnect(proxy);			
 		ready = true;
 	});	
 
-	eurecaClient.setId = function(id)
+	eurecaClient.exports.setId = function(id)
 	{
 		eurecaClient.id = id;
 	}
 
 	eurecaClient.exports.unlockGame = function()
 	{
-		eurecaClient.lock = 3;
+		eurecaClient.gameController.goGaming = true;
 	}
 
 	eurecaClient.exports.sendPlayersInfos = function(playersInfos, id)
@@ -47,41 +42,39 @@ var eurecaClientSetup = function(onConnect) {
 
 	eurecaClient.exports.sendTurn = function(playerIndex)
 	{
-		
-		while(eurecaClient.game.refreshing);
-		eurecaClient.game.turn.player = eurecaClient.game.players[playerIndex];
-		if(eurecaClient.game.turn.player == eurecaClient.game.me)
+		while(eurecaClient.gameController.refreshing);
+		eurecaClient.gameController.turn.player = eurecaClient.gameController.players[playerIndex];
+		if(eurecaClient.gameController.turn.player == eurecaClient.gameController.me)
 		{
-			refreshInfos();
-			unlockMe();
+			eurecaClient.gameController.refreshInfos();
+			eurecaClient.gameController.unlockMe();
 		}
 		else
 		{
-			refreshInfos();
-			lockMe();
+			eurecaClient.gameController.refreshInfos();
+			eurecaClient.gameController.lockMe();
 		}
 		return true;
 	}
 
 	eurecaClient.exports.refreshPlayersInfos = function(playersInfos)
 	{
-		eurecaClient.game.tempPlayerInfos = playersInfos;
-		eurecaClient.game.refreshing = true;
-		refreshPlayers();
-		eurecaClient.game.refreshing = false;
+		eurecaClient.gameController.refreshing = true;
+		eurecaClient.gameController.refreshPlayers(playersInfos);
+		eurecaClient.gameController.refreshing = false;
 		return true;
 	}
 
 	eurecaClient.exports.sendWinner = function(playerIndex)
 	{
-		eurecaClient.game.winner = eurecaClient.game.players[playerIndex];
-		eurecaClient.game.end = 1;
+		eurecaClient.gameController.winner = eurecaClient.gameController.players[playerIndex];
+		eurecaClient.gameController.end = 1;
 	}
 
 	eurecaClient.exports.sendDraw = function()
 	{
-		eurecaClient.game.draw = true;
-		eurecaClient.game.end = 1;
+		eurecaClient.gameController.draw = true;
+		eurecaClient.gameController.end = 1;
 	}
 	return eurecaClient;
 }
