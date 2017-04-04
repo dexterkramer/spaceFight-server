@@ -4,7 +4,7 @@ var express = require('express')
 
 var player1Json = require("./assets/player1.json");
 var player2Json = require("./assets/player2.json");
-var boot = require("./server/states/boot.js");
+var boot = require("./server/objects/boot.js");
 
 // serve static files from the current directory
 app.use(express.static(__dirname));

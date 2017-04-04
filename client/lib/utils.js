@@ -49,8 +49,6 @@ function createSquad(game, fleat, squadJson)
 
 function createPlayer(game, playerJson, number, isMe)
 {
-    //availableCasePositioning
-    //availableCaseDeploying
     var player = new onePlayer(playerJson.name, number, isMe);
     player.fleat = createFleat(game, player, playerJson.fleat );
     player.game = game;
