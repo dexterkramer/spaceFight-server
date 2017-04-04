@@ -7,13 +7,6 @@ var onePick = function(player)
 onePick.prototype = {
     initPick : function()
     {
-        /*var ref = this;
-        this.player.orders.forEach(function(order){
-            ref.pile.push(createCard(order, "order"));
-        });
-        this.player.fleat.squads.forEach(function(squad){
-            ref.pile.push(createCard(squad, "squad"));
-        });*/
     },
     drawOne : function()
     {

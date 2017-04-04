@@ -4,7 +4,7 @@ var express = require('express')
 
 var player1Json = require("./assets/player1.json");
 var player2Json = require("./assets/player2.json");
-var boot = require("./server/states/boot.js");
+var boot = require("./server/objects/boot.js");
 
 // serve static files from the current directory
 app.use(express.static(__dirname));
@@ -22,12 +22,6 @@ eurecaServer.attach(server);
 server.listen(8000);
 
 clients = [];
-
-eurecaServer.exports.handshake = function(id)
-{
-    clients[id].remote.unlockPositioning();
-    return true;
-}
 
 eurecaServer.exports.sendPositioningInfos = function(id, caseId)
 {
@@ -117,15 +111,10 @@ eurecaServer.exports.okToGame = function(id)
     return true;
 }
 
-
-
-//detect client connection
-eurecaServer.onConnect(function (conn) {    
-
-    var remote = eurecaServer.getClient(conn.id); 
-
-    //register the client
-	clients[conn.id] = {id:conn.id, remote:remote, game:null}
+eurecaServer.exports.wantToGame = function(id)
+{
+    var remote = eurecaServer.getClient(id); 
+    clients[id] = {id:id, remote:remote, game:null}
 
     var pool = tryToMakeMatch();
 
@@ -138,6 +127,29 @@ eurecaServer.onConnect(function (conn) {
         pool[1].playerIndex = 1;
         //here we call setId (defined in the client side)
     }
+}
+
+//detect client connection
+eurecaServer.onConnect(function (conn) {    
+
+    var remote = eurecaServer.getClient(conn.id); 
+    remote.setId(conn.id);
+    //var remote = eurecaServer.getClient(conn.id); 
+
+    //register the client
+//	clients[conn.id] = {id:conn.id, remote:remote, game:null}
+
+//    var pool = tryToMakeMatch();
+
+/*    if(pool)
+    {
+        var game = launchGame(pool[0],pool[1]);
+        pool[0].game = game;
+        pool[0].playerIndex = 0;
+        pool[1].game = game;
+        pool[1].playerIndex = 1;
+        //here we call setId (defined in the client side)
+    }*/
 
     console.log('New Client id=%s ', conn.id, conn.remoteAddress);
 });

@@ -17,7 +17,7 @@ ship.prototype = {
     },
     createLifeBar : function()
     {
-        this.lifeBar = new lifeBar(this.lifeBarInfos.armor, this.lifeBarInfos.shield, this.lifeBarInfos.maxArmor);
+        this.lifeBar = createLifeBar(this.game, this.lifeBarInfos.armor, this.lifeBarInfos.shield, this.lifeBarInfos.maxArmor);
     },
     attack : function(target, attackModifiers)
     {

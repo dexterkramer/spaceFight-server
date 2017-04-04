@@ -1,11 +1,11 @@
-var onePlayer = function(name, number, availableCasePositioning, availableCaseDeploying, isMe)
+var onePlayer = function(name, number, isMe)
 {
     this.name = name;
     this.fleat = null;
     this.blocked = true;
     this.number = number;
-    this.availableCasePositioning = availableCasePositioning;
-    this.availableCaseDeploying = availableCaseDeploying;
+    this.availableCasePositioning = null;
+    this.availableCaseDeploying = null;
     this.movesAllowed = 1;
     this.orders = [];
     this.availableOrders = [];
@@ -60,14 +60,20 @@ onePlayer.prototype = {
             choosenHandler.addCard(card);
         }
     },
-    showCards : function()
+    disableDragingAllSquads : function()
     {
-        this.cardHandlers.forEach(function(handler, index){
-            if(handler.card != null)
+        this.fleat.deployedSquad.forEach(function(squad){
+            if(squad.phaserObject != null)
             {
-                handler.card.drawCard();
+                squad.phaserObject.input.disableDrag();
             }
         });
+    },
+    drawAllSquads : function()
+    {
+        this.fleat.deployedSquad.forEach(function(squad){
+            squad.draw();
+        });   
     },
     createHandler : function(isMe)
     {
