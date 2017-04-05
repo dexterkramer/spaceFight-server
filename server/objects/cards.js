@@ -4,34 +4,13 @@ var oneCard = function(object, type)
 {
     this.object = object;
     this.type = type;
-    this.handler = null;
     this.isDragged = false;
     this.currentCardIndex = null;
 }
 
 oneCard.prototype = {
-    setHandler : function(handler)
-    {
-        this.handler = handler;
-    },
-    drawCard : function()
-    {
-        if(this.handler !== null)
-        {
-            if(this.type == "order")
-            {
-
-            }   
-            else if(this.type == "squad")
-            {
-
-            }
-        }
-    },
     destroy : function()
     {
-        this.handler.card = null;
-        this.handler = null;
         this.object = null;
         this.type = null;
     },

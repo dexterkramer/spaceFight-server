@@ -1,7 +1,6 @@
 var fleatFactory = require('./fleat.js');
 var orderFactory = require('./order.js');
 var pickFactory = require('./pick.js'); 
-var handlerFactory = require('./cardHandler.js');
 
 var onePlayer = function(name, number, availableCasePositioning, availableCaseDeploying)
 {
@@ -13,12 +12,11 @@ var onePlayer = function(name, number, availableCasePositioning, availableCaseDe
     this.availableCaseDeploying = availableCaseDeploying;
     this.movesAllowed = 1;
     this.orders = [];
-    this.cardHandlers = [];
+    this.cards = [];
     this.pick = [];
     this.conn = null;
     this.currentCardIndex = 0;
     this.loose = false;
-    this.createHandlers();
 };
 
 onePlayer.prototype = {
@@ -50,26 +48,18 @@ onePlayer.prototype = {
     },
     drawOneCard : function()
     {
-        var card = this.pick.drawOne();
-        if(!card)
+        if(this.cards.length < 10)
         {
-            return false;
-        }
-        var index = this.cardHandlers.findIndex(function(elem){
-            return elem.card == null;
-        });
-        if(typeof index != "undefined" && index != null && index != -1)
-        {
-            var choosenHandler = this.cardHandlers[index];
+            var card = this.pick.drawOne();
+            if(!card)
+            {
+                return false;
+            }
+            
             card.currentCardIndex = this.currentCardIndex;
             this.currentCardIndex++;
-            card.setHandler(choosenHandler);
-            choosenHandler.addCard(card);
+            this.cards.push(card);
         }
-    },
-    createHandlers : function()
-    {
-        this.cardHandlers = handlerFactory.createHandlers(this);
     },
     createPlayerInfos : function(mask)
     {
@@ -77,14 +67,11 @@ onePlayer.prototype = {
         playerInfos.name = this.name;
         if(mask.fleat)
             playerInfos.fleat = this.fleat.createFleatInfos(mask.fleat);
-        if(mask.cardHandlers)
+        if(mask.cards)
         {
-            playerInfos.cardHandlersInfos = [];
-            this.cardHandlers.forEach(function(cardHandler){
-                if(cardHandler != null)
-                {
-                    playerInfos.cardHandlersInfos.push(cardHandler.createHandlerinfos(mask.cardHandlers));
-                }
+            playerInfos.cardsInfos = [];
+            this.cards.forEach(function(card){
+                playerInfos.cardsInfos.push(card.createCardInfos(mask.cards));
             });
         }
 

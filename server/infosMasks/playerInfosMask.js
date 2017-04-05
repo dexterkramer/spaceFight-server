@@ -53,11 +53,9 @@ var playerInfosMask = {
             }
         },
     },
-    cardHandlers : {
-        card : {
-            type : true,
-            object : true
-        }
+    cards : {
+        type : true,
+        object : true
     }
 }
 

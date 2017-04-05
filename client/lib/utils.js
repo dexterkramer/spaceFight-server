@@ -8,6 +8,15 @@ function clearGameCache (game) {
     this.game.load.removeAll();
 }
 
+
+function createCard(game, player, object, type)
+{
+    var card = new oneCard(object, type);
+    card.game = game;
+    card.player = player;
+    return card;
+}
+
 function createFleat(game, player, fleatJson)
 {
     var fleat = new oneFleat(fleatJson.name, player);
@@ -57,7 +66,6 @@ function createPlayer(game, playerJson, number, isMe)
         player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
     }
 
-    player.createPick();
     return player;
 }
 

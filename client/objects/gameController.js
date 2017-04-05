@@ -90,11 +90,11 @@ gameController.prototype = {
     {
         var ref = this;
         this.players.forEach(function(player, index){
-            player.cardHandlers.forEach(function(cardHandler){
-                if(cardHandler.card != null)
+            player.cards.forEach(function(card){
+                if(card != null)
                 {
-                    cardHandler.card.drawCard();
-                    cardHandler.card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
+                    card.drawCard();
+                    card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
                 }
             });
         });
@@ -129,8 +129,8 @@ gameController.prototype = {
         else
         {
             // set the squad to the original position.
-            sprite.x = card.handler.x;
-            sprite.y = card.handler.y;
+            sprite.x = card.x;
+            sprite.y = card.y;
         }
     },
     refreshPlayers : function(playerInfos)
@@ -172,43 +172,51 @@ gameController.prototype = {
                 player.fleat.undeploySquad(player.fleat.deployedSquad[indexToRemove]);
             });
 
+            player.cards.forEach(function(c){
+                c.toDestroy = true;
+            });
             ////////////////// refresh cards //////////////////////////
-            playerInfos.players[index].cardHandlersInfos.forEach(function(cardHandler, index){
-                if(cardHandler.card != null)
+            playerInfos.players[index].cardsInfos.forEach(function(card, index){
+                if(card != null)
                 {
-                    if(cardHandler.card.currentCardIndex != null && player.cardHandlers[index].card != null && player.cardHandlers[index].card.currentCardIndex != null && player.cardHandlers[index].card.currentCardIndex == cardHandler.card.currentCardIndex )
-                    {   
-                        // same card, don't update.
+                    let cardIndex = player.cards.findIndex(function(elem){
+                        return elem.currentCardIndex = card.currentCardIndex;
+                    });
+                    if(cardIndex != -1)
+                    {
+                        player.cards[cardIndex].toDestroy = false;
                     }
                     else
                     {
-                        if(player.cardHandlers[index].card != null)
-                        {
-                            player.cardHandlers[index].card.destroy();
-                        }
                         var object = null;
-                        if(cardHandler.card.type == "order")
+                        if(card.type == "order")
                         {
-                            object = createOrder(ref.game, cardHandler.card.object);
+                            object = createOrder(ref.game, card.object);
                         }
-                        else if(cardHandler.card.type == "squad")
+                        else if(card.type == "squad")
                         {
-                            object = createSquad(ref.game, player.fleat,cardHandler.card.object);
+                            object = createSquad(ref.game, player.fleat,card.object);
                         }
-                        player.cardHandlers[index].card = createCard(ref.game, object, cardHandler.card.type);
-                        player.cardHandlers[index].card.setHandler(player.cardHandlers[index]);
-                        player.cardHandlers[index].card.currentCardIndex = cardHandler.card.currentCardIndex;
-                        player.cardHandlers[index].card.drawCard();
-                    }
-                }
-                else
-                {
-                    if(player.cardHandlers[index].card != null)
-                    {
-                        player.cardHandlers[index].card.destroy();
+                        let newCard = createCard(ref.game, player, object, card.type);
+                        player.cards.push(newCard);
+                        newCard.currentCardIndex = card.currentCardIndex;
+                        newCard.drawCard();
                     }
                 }
             });
+            var toCleanArray = [];
+            player.cards.forEach(function(c, index){
+                if(c.toDestroy)
+                {
+                    toCleanArray.push(index);
+                }
+            });
+
+            toCleanArray.forEach(function(indexToRemove){
+                player.cards[indexToRemove].destroy();
+                player.cards.splice(indexToRemove, 1);
+            });
+
         });
     },   
     refreshInfosPositioning : function()
@@ -453,18 +461,18 @@ gameController.prototype = {
     checkOverLapCard : function(player, caseTable, deployAvailableCase, OverLapDraggingManagmentFunc)
     {
         var ref = this;
-        player.cardHandlers.forEach(function(cardHandler){
-            if(cardHandler.card != null && cardHandler.card.isDragged)
+        player.cards.forEach(function(card){
+            if(card != null && card.isDragged)
             {
-                if(cardHandler.card.type == "order")
+                if(card.type == "order")
                 {
-                    cardHandler.card.overlapedCase = ref.getOverlapedCase(caseTable);
+                    card.overlapedCase = ref.getOverlapedCase(caseTable);
                 }
-                else if(cardHandler.card.type == "squad")
+                else if(card.type == "squad")
                 {
-                    cardHandler.card.overlapedCase = ref.getOverlapedCase(deployAvailableCase);
+                    card.overlapedCase = ref.getOverlapedCase(deployAvailableCase);
                 }
-                OverLapDraggingManagmentFunc(cardHandler.card);
+                OverLapDraggingManagmentFunc(card);
             }
         });
     },
@@ -483,11 +491,11 @@ gameController.prototype = {
             {
                 if(card.overlapedCase.squad != null)
                 {
-                    if(card.overlapedCase.squad.fleat.player == card.handler.player)
+                    if(card.overlapedCase.squad.fleat.player == card.player)
                     {
                         card.overlapedCase.SupportOverLaped();
                     }
-                    if(card.overlapedCase.squad.fleat.player != card.handler.player)
+                    if(card.overlapedCase.squad.fleat.player != card.player)
                     {
                         card.overlapedCase.AttackOverLaped();
                     }
@@ -526,7 +534,6 @@ gameController.prototype = {
         {
             infos.flankBonus.push(flankBonus);
         }
-
         return infos;
     },
     OverLapGamingDraggingManagment : function(squad)
@@ -731,10 +738,10 @@ gameController.prototype = {
         this.me.fleat.deployedSquad.forEach(function(squad){
             squad.enableDrag(ref.dragSquad, ref.stopDragSquadGaming, ref);
         });
-        this.me.cardHandlers.forEach(function(cardHandler){
-            if(cardHandler.card != null)
+        this.me.cards.forEach(function(card){
+            if(card != null)
             {
-                cardHandler.card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
+                card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
             }
         });
     },
@@ -750,10 +757,10 @@ gameController.prototype = {
         this.me.fleat.deployedSquad.forEach(function(squad){
             squad.disableDrag();
         });
-        this.me.cardHandlers.forEach(function(cardHandler){
-            if(cardHandler.card != null)
+        this.me.cards.forEach(function(card){
+            if(card != null)
             {
-                cardHandler.card.disableDrag();
+                card.disableDrag();
             }
         });
     },

@@ -28,11 +28,9 @@ var ennemyInfosMask = {
             }
         },
     },
-    cardHandlers : {
-        card : {
-            type : false,
-            object : false
-        }
+    cards : {
+        type : false,
+        object : false
     }
 }
 

@@ -53,14 +53,14 @@ Game.prototype = {
     },
     cardPlayed : function(currentCardIndex, player, caseIndex)
     {
-        var handlerIndex = player.cardHandlers.findIndex(function(elem){
-            return elem.card != null && elem.card.currentCardIndex == currentCardIndex;
+        var cardIndex = player.cards.findIndex(function(card){
+            return card != null && card.currentCardIndex == currentCardIndex;
         });
-        if(handlerIndex != -1)
+        if(cardIndex != -1)
         {
             if(this.caseTable[caseIndex] != null)
             {
-                var card = player.cardHandlers[handlerIndex].card;
+                var card = player.cards[cardIndex];
                 if(card.type == "squad")
                 {
                     if(this.caseTable[caseIndex].squad == null)
@@ -70,20 +70,23 @@ Game.prototype = {
                         card.object.case = this.caseTable[caseIndex];
                         card.object.fleat.deploySquad(card.object);
                         card.destroy();
+                        player.cards.splice(cardIndex, 1);
                     }
                 }else if(card.type == "order")
                 {
                     if(this.caseTable[caseIndex].squad != null)
                     {
-                        if(this.caseTable[caseIndex].squad.fleat.player == card.handler.player)
+                        if(this.caseTable[caseIndex].squad.fleat.player == card.player)
                         {
                             this.caseTable[caseIndex].squad.buff(card.object);
                             card.destroy();
+                            player.cards.splice(cardIndex, 1);
                         }
-                        else if(this.caseTable[caseIndex].squad.fleat.player != card.handler.player)
+                        else if(this.caseTable[caseIndex].squad.fleat.player != card.player)
                         {
                             this.caseTable[caseIndex].squad.buff(card.object);
                             card.destroy();
+                            player.cards.splice(cardIndex, 1);
                         }
                     }
                 }
