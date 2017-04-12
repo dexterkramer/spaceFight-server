@@ -42,7 +42,7 @@ var eurecaClientSetup = function(onConnect) {
 
 	eurecaClient.exports.sendTurn = function(playerIndex)
 	{
-		//while(eurecaClient.gameController.refreshing);
+		while(eurecaClient.gameController.refreshing);
 		eurecaClient.gameController.turn.player = eurecaClient.gameController.players[playerIndex];
 		if(eurecaClient.gameController.turn.player == eurecaClient.gameController.me)
 		{
@@ -54,6 +54,7 @@ var eurecaClientSetup = function(onConnect) {
 			eurecaClient.gameController.refreshInfos();
 			eurecaClient.gameController.lockMe();
 		}
+		
 		return true;
 	}
 

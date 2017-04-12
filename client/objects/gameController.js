@@ -43,6 +43,14 @@ gameController.prototype = {
         this.game.state.start("Boot");
         return game;
     },
+    cleanPhaserObjectReferences : function()
+    {
+        this.players.forEach(function(player){
+            player.cards.forEach(function(card){
+                card.phaserObject = null;
+            });
+        });
+    },
     refreshBattleInfos : function()
     {
         var infosBattleX = 700;
@@ -90,15 +98,15 @@ gameController.prototype = {
     {
         var ref = this;
         this.players.forEach(function(player, index){
-            player.cards.forEach(function(card){
+            player.cards.forEach(function(card, cardIndex){
                 if(card != null)
                 {
-                    ref.setCardPosition(player, card);
+                    ref.setCardPosition(player, card, cardIndex);
                     card.drawCard();
-                    if(!card.isNeutral())
+                    /*if(!card.isNeutral())
                     {
                         card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
-                    }
+                    }*/
                 }
             });
         });
@@ -184,7 +192,7 @@ gameController.prototype = {
                 if(card != null)
                 {
                     let cardIndex = player.cards.findIndex(function(elem){
-                        return elem.currentCardIndex = card.currentCardIndex;
+                        return elem.currentCardIndex == card.currentCardIndex;
                     });
                     if(cardIndex != -1)
                     {
@@ -202,10 +210,10 @@ gameController.prototype = {
                             object = createSquad(ref.game, player.fleat,card.object);
                         }
                         let newCard = createCard(ref.game, player, object, card.type);
+                        newCard.toDestroy = false;
                         player.cards.push(newCard);
                         newCard.currentCardIndex = card.currentCardIndex;
-                        ref.setCardPosition(player, newCard, player.cards.length);
-                        newCard.drawCard();
+                       
                     }
                 }
             });
@@ -222,6 +230,10 @@ gameController.prototype = {
                 player.cards.splice(indexToRemove, 1);
             });
 
+            player.cards.forEach(function(card, index){
+                ref.setCardPosition(player, card, index);
+                card.drawCard();
+            });
         });
     },   
     setCardPosition : function(player, card, /* optional */ index)

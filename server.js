@@ -39,10 +39,10 @@ eurecaServer.exports.sendPositioningInfos = function(id, caseId)
     if(allPositioned)
     {
         clients[id].game.gamePhase();
-        clients[id].game.refreshPlayersInfos();
         clients[id].game.players.forEach(function(player, index){
             clients[player.playerId].remote.unlockGame();
         });
+        clients[id].game.refreshPlayersInfos();
     }
     
     

@@ -16,6 +16,7 @@ positionning.prototype = {
         this.gameController.checkOverLapSquad(this.gameController.turn.player,this.gameController.turn.player.availableCasePositioning, this.gameController.OverLapPositioningDraggingManagment.bind(this.gameController));   
         if(this.gameController.goGaming)
         {
+            this.gameController.cleanPhaserObjectReferences();
             this.gameController.finishPositioning();
         }
     }

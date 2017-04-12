@@ -42,25 +42,32 @@ oneCard.prototype = {
     },
     drawCard : function()
     {
-        if(this.type != null && this.object != null)
+        if(this.phaserObject == null)
         {
-            if(this.type == "order")
+            if(this.type != null && this.object != null)
             {
-                this.drawCardOrder();
-            }   
-            else if(this.type == "squad")
+                if(this.type == "order")
+                {
+                    this.drawCardOrder();
+                }   
+                else if(this.type == "squad")
+                {
+                    this.drawCardSquad();
+                }
+            }
+            else
             {
-                this.drawCardSquad();
+                this.drawCardNeutral();
             }
         }
         else
         {
-            this.drawCardNeutral();
+            this.phaserObject.x = this.x;
+            this.phaserObject.y = this.y;
         }
     },
     drawCardOrder : function()
     {
-        console.log(1,this.x, this.y);
         let oneCard = this.game.add.sprite(this.x, this.y, 'card');
         oneCard.anchor.x = 0.5;
         oneCard.anchor.y = 0.5;
@@ -74,7 +81,6 @@ oneCard.prototype = {
     },
     drawCardSquad : function()
     {
-        console.log(2, this.x, this.y);
         let oneCard = this.game.add.sprite(this.x, this.y, 'card');
         oneCard.anchor.x = 0.5;
         oneCard.anchor.y = 0.5;
@@ -88,7 +94,6 @@ oneCard.prototype = {
     },
     drawCardNeutral : function(x, y)
     {
-        console.log(3, this.x, this.y);
         let oneCard = this.game.add.sprite(this.x, this.y, 'card');
         oneCard.anchor.x = 0.5;
         oneCard.anchor.y = 0.5;
@@ -98,6 +103,7 @@ oneCard.prototype = {
     },
     destroy : function()
     {
+        console.log('la');
         this.phaserObject.destroy();
         this.phaserObject = null;
         this.object = null;
