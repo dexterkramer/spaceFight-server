@@ -93,8 +93,12 @@ gameController.prototype = {
             player.cards.forEach(function(card){
                 if(card != null)
                 {
+                    ref.setCardPosition(player, card);
                     card.drawCard();
-                    card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
+                    if(!card.isNeutral())
+                    {
+                        card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
+                    }
                 }
             });
         });
@@ -200,6 +204,7 @@ gameController.prototype = {
                         let newCard = createCard(ref.game, player, object, card.type);
                         player.cards.push(newCard);
                         newCard.currentCardIndex = card.currentCardIndex;
+                        ref.setCardPosition(player, newCard, player.cards.length);
                         newCard.drawCard();
                     }
                 }
@@ -219,6 +224,45 @@ gameController.prototype = {
 
         });
     },   
+    setCardPosition : function(player, card, /* optional */ index)
+    {
+        if(typeof index == "undefined")
+        {
+            var index = player.cards.findIndex(function(elem){
+                return elem.currentCardIndex == card.currentCardIndex;
+            });
+        }
+        if(card.isNeutral())
+        {
+            var x = 300;
+            var y = 100;
+            var angle = 1.6;
+            if(index != 0)
+            {
+                x = player.cards[index - 1].x + 50;
+                y = player.cards[index - 1].y + 20;
+                angle = player.cards[index - 1].angle + 0.2;
+            }
+            card.x = x;
+            card.y = y;
+            card.angle = angle;
+        }
+        else
+        {
+            var x = 300;
+            var y = 600;
+            var angle = - 1.6;
+            if(index != 0)
+            {
+                x = player.cards[index - 1].x + 50;
+                y = player.cards[index - 1].y + 20;
+                angle = player.cards[index - 1].angle + 0.2;
+            }
+            card.x = x;
+            card.y = y;
+            card.angle = angle;
+        }
+    },
     refreshInfosPositioning : function()
     {
         if(this.infos.tourInfos != null && this.infos.tourInfos.phaserObject != null)

@@ -8,6 +8,9 @@ var oneCard = function(object, type)
     this.width = 100;
     this.height = 100;
     this.player = null;
+    this.x = null;
+    this.y = null;
+    this.angle = null;
 }
 
 oneCard.prototype = {
@@ -26,27 +29,39 @@ oneCard.prototype = {
             this.phaserObject.input.disableDrag();
         }
     },
-    drawCard : function(x, y)
+    isNeutral : function()
+    {
+        if(this.type != null && this.object != null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    },
+    drawCard : function()
     {
         if(this.type != null && this.object != null)
         {
             if(this.type == "order")
             {
-                this.drawCardOrder(x, y);
+                this.drawCardOrder();
             }   
             else if(this.type == "squad")
             {
-                this.drawCardSquad(x, y);
+                this.drawCardSquad();
             }
         }
         else
         {
-            this.drawCardNeutral(x, y);
+            this.drawCardNeutral();
         }
     },
-    drawCardOrder : function(x, y)
+    drawCardOrder : function()
     {
-        let oneCard = this.game.add.sprite(x, y, 'card');
+        console.log(1,this.x, this.y);
+        let oneCard = this.game.add.sprite(this.x, this.y, 'card');
         oneCard.anchor.x = 0.5;
         oneCard.anchor.y = 0.5;
         oneCard.scale.setTo(this.width / oneCard.width, this.height / oneCard.height);
@@ -57,9 +72,10 @@ oneCard.prototype = {
         text.anchor.set(0 , 0);
         oneCard.addChild(text);
     },
-    drawCardSquad : function(x, y)
+    drawCardSquad : function()
     {
-        let oneCard = this.game.add.sprite(x, y, 'card');
+        console.log(2, this.x, this.y);
+        let oneCard = this.game.add.sprite(this.x, this.y, 'card');
         oneCard.anchor.x = 0.5;
         oneCard.anchor.y = 0.5;
         oneCard.scale.setTo(this.width / oneCard.width, this.height / oneCard.height);
@@ -72,7 +88,8 @@ oneCard.prototype = {
     },
     drawCardNeutral : function(x, y)
     {
-        let oneCard = this.game.add.sprite(x, y, 'card');
+        console.log(3, this.x, this.y);
+        let oneCard = this.game.add.sprite(this.x, this.y, 'card');
         oneCard.anchor.x = 0.5;
         oneCard.anchor.y = 0.5;
         oneCard.scale.setTo(this.width / oneCard.width, this.height / oneCard.height);
