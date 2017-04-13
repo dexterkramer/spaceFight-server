@@ -103,10 +103,6 @@ gameController.prototype = {
                 {
                     ref.setCardPosition(player, card, cardIndex);
                     card.drawCard();
-                    /*if(!card.isNeutral())
-                    {
-                        card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
-                    }*/
                 }
             });
         });
@@ -135,6 +131,13 @@ gameController.prototype = {
                 if(card.overlapedCase.squad != null)
                 {
                     this.server.cardPlayed(this.client.id, card.currentCardIndex, card.overlapedCase.number); 
+                }
+            }
+            else if(card.type == "captain")
+            {
+                if(card.overlapedCase.squad != null)
+                {
+                    this.server.cardPlayed(this.client.id, card.currentCardIndex, card.overlapedCase.number);
                 }
             }
         }
@@ -246,13 +249,13 @@ gameController.prototype = {
         }
         if(card.isNeutral())
         {
-            var x = 300;
-            var y = 100;
+            var x = 500;
+            var y = 50;
             var angle = 1.6;
             if(index != 0)
             {
                 x = player.cards[index - 1].x + 50;
-                y = player.cards[index - 1].y + 20;
+                y = player.cards[index - 1].y;
                 angle = player.cards[index - 1].angle + 0.2;
             }
             card.x = x;
@@ -261,13 +264,13 @@ gameController.prototype = {
         }
         else
         {
-            var x = 300;
-            var y = 600;
+            var x = 400;
+            var y = 700;
             var angle = - 1.6;
             if(index != 0)
             {
                 x = player.cards[index - 1].x + 50;
-                y = player.cards[index - 1].y + 20;
+                y = player.cards[index - 1].y;
                 angle = player.cards[index - 1].angle + 0.2;
             }
             card.x = x;
@@ -557,6 +560,13 @@ gameController.prototype = {
                     }
                 }
             }
+            else if(card.type == "captain")
+            {
+                if(card.overlapedCase.squad == null && card.overlapedCase.squad.fleat.player == card.player)
+                {
+                    card.overlapedCase.OverLaped();
+                }
+            }
         }
     },
     getDefendingAgainst : function(defendingSquad)
@@ -782,8 +792,8 @@ gameController.prototype = {
         {
             if(squad.case !== null)
             {
-                sprite.x = squad.case.phaserObject.middleX;
-                sprite.y = squad.case.phaserObject.middleY;
+                squad.phaserObject.x = squad.case.phaserObject.middleX;
+                squad.phaserObject.y = squad.case.phaserObject.middleY;
             }
         }
         return false;

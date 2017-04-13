@@ -40,6 +40,10 @@ oneCard.prototype = {
             return true;
         }
     },
+    drawCardCaptain : function()
+    {
+        
+    },
     drawCard : function()
     {
         if(this.phaserObject == null)
@@ -53,6 +57,10 @@ oneCard.prototype = {
                 else if(this.type == "squad")
                 {
                     this.drawCardSquad();
+                }
+                else if(this.type == "captain")
+                {
+                    this.drawCardCaptain();
                 }
             }
             else
