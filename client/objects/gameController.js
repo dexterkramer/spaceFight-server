@@ -107,47 +107,6 @@ gameController.prototype = {
             });
         });
     },
-    dragCard : function(sprite, pointer)
-    {
-        sprite.body.moves = false;
-        sprite.ref.isDragged = true;
-    },
-    stopDragCard : function(sprite, pointer)
-    {
-        var card = sprite.ref;
-        sprite.body.moves = false;
-        card.isDragged = false;
-        if(card.overlapedCase !== null )
-        {
-            if(card.type == "squad")
-            {
-                if(card.overlapedCase.squad == null)
-                {
-                    this.server.cardPlayed(this.client.id, card.currentCardIndex, card.overlapedCase.number); 
-                }
-            }
-            else if(card.type == "order")
-            {
-                if(card.overlapedCase.squad != null)
-                {
-                    this.server.cardPlayed(this.client.id, card.currentCardIndex, card.overlapedCase.number); 
-                }
-            }
-            else if(card.type == "captain")
-            {
-                if(card.overlapedCase.squad != null)
-                {
-                    this.server.cardPlayed(this.client.id, card.currentCardIndex, card.overlapedCase.number);
-                }
-            }
-        }
-        else
-        {
-            // set the squad to the original position.
-            sprite.x = card.x;
-            sprite.y = card.y;
-        }
-    },
     refreshPlayers : function(playerInfos)
     {
         var ref = this;
@@ -278,24 +237,6 @@ gameController.prototype = {
             card.angle = angle;
         }
     },
-    refreshInfosPositioning : function()
-    {
-        if(this.infos.tourInfos != null && this.infos.tourInfos.phaserObject != null)
-        {
-            this.infos.tourInfos.phaserObject.destroy();
-        }
-        if(this.turn.player != null)
-        {
-            var infosTourX = 700;
-            var infosTourY = 100;
-            var textTour = this.turn.player.name+ " place your capital ship !";
-            var style = { font: "20px Arial", fill: "#ff0044"/*, wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-            var text = this.game.add.text(infosTourX, infosTourY, textTour , style);
-            text.anchor.set(0 , 0);
-            this.infos.tourInfos = {};
-            this.infos.tourInfos.phaserObject = text;
-        }
-    },
     refreshInfos : function()
     {
         if(this.infos.tourInfos != null && this.infos.tourInfos.phaserObject != null)
@@ -342,42 +283,6 @@ gameController.prototype = {
             }
         }
     },
-    positioningTurnInit : function(player)
-    {
-        this.refreshInfosPositioning();
-        this.positioningPlayer(player);
-        this.game.add.button(600, 600, 'button', this.positioningNextTurn, this, 1, 0, 1);
-    },
-    positioningNextTurn : function()
-    {
-        if(this.turn.player.okToFinishPositioning())
-        {
-            this.turn.player.disableDragingAllSquads();
-            this.server.sendPositioningInfos(this.client.id, this.turn.player.fleat.capitalShip.case.number); 
-        }
-    },
-    checkOverLapSquad : function(player, caseTable, OverLapDraggingManagmentFunc)
-    {
-        var ref = this;
-        player.fleat.deployedSquad.forEach(function(squad){
-            if(squad.isDragged)
-            {
-                squad.overlapedCase = ref.getOverlapedCase(caseTable);
-                OverLapDraggingManagmentFunc(squad);
-            }
-        });
-    },
-    OverLapPositioningDraggingManagment : function(squad)
-    {
-        if(squad.overlapedCase !== null && squad.overlapedCase.squad !== null && squad.overlapedCase.squad !== squad)
-        {
-            squad.overlapedCase.BadOverLaped();
-        }
-        else if(squad.overlapedCase !== null)
-        {
-            squad.overlapedCase.OverLaped(); 
-        }
-    },
     getOverlapedCase : function (caseTable)
     {
         let overLapCase = null;
@@ -390,81 +295,9 @@ gameController.prototype = {
         });
         return overLapCase;
     },
-    positioningPlayer : function(player)
-    {
-        var XposSquad = 100;
-        var YposSquad = 700;
-
-        player.fleat.capitalShip.originalX = XposSquad;
-        player.fleat.capitalShip.originalY = YposSquad;
-
-        player.fleat.deploySquad(player.fleat.capitalShip);
-        player.fleat.capitalShip.enableDrag(this.dragSquad, this.stopDragSquad, this);
-    }, 
     finishPositioning : function()
     {
         this.game.state.start("TheGame");
-    },
-    stopDragSquad : function(sprite, pointer)
-    {
-        sprite.body.moves = false;
-        sprite.ref.isDragged = false;
-        // has the squad been dragged on a case ?
-        if(sprite.ref.overlapedCase !== null)
-        {
-            // does the case already coutain an squad ?
-            if(sprite.ref.overlapedCase.squad == null)
-            {
-                // if the squad is alreay on another case, remove it from the case.
-                if(sprite.ref.case !== null)
-                {
-                    sprite.ref.case.squad = null;
-                }
-
-                //linking the squad to the new case.
-                sprite.ref.case = sprite.ref.overlapedCase;
-                sprite.ref.overlapedCase.squad = sprite.ref;
-
-                // move the sprite of the esouade to his new position 
-                sprite.x = sprite.ref.overlapedCase.phaserObject.middleX;
-                sprite.y = sprite.ref.overlapedCase.phaserObject.middleY;
-            }
-            else
-            {
-                // go here if the squad is moved to a case already countaining a fleet.
-                // if the esouade had already a case : get back to the previous case.
-                if(sprite.ref.case !== null)
-                {
-                    sprite.x = sprite.ref.case.phaserObject.middleX;
-                    sprite.y = sprite.ref.case.phaserObject.middleY;
-                }
-                else
-                {
-                    // else if the squad is not linked to a case : return to the original position.
-                    sprite.x = sprite.ref.originalX;
-                    sprite.y = sprite.ref.originalY;
-                }
-            }
-        }
-        else
-        {
-            // go here if the squad is not dragged on a case.
-            // if the squad add a case previously : remove it.
-            if(sprite.ref.case !== null)
-            {
-                sprite.ref.case.squad = null;
-                sprite.ref.case = null;
-            }
-
-            // set the squad to the original position.
-            sprite.x = sprite.ref.originalX;
-            sprite.y = sprite.ref.originalY;
-        }
-    },
-    dragSquad : function(sprite, pointer)
-    {
-        sprite.body.moves = false;
-        sprite.ref.isDragged = true;
     },
     addPlayer : function(playerInfos, isMe)
     {
@@ -517,58 +350,6 @@ gameController.prototype = {
     {
         this.refreshInfos();
     },
-    checkOverLapCard : function(player, caseTable, deployAvailableCase, OverLapDraggingManagmentFunc)
-    {
-        var ref = this;
-        player.cards.forEach(function(card){
-            if(card != null && card.isDragged)
-            {
-                if(card.type == "order")
-                {
-                    card.overlapedCase = ref.getOverlapedCase(caseTable);
-                }
-                else if(card.type == "squad")
-                {
-                    card.overlapedCase = ref.getOverlapedCase(deployAvailableCase);
-                }
-                OverLapDraggingManagmentFunc(card);
-            }
-        });
-    },
-    OverLapGamingCardDraggingManagment : function(card)
-    {
-        if(card.overlapedCase !== null)
-        {
-            if(card.type == "squad")
-            {
-                if(card.overlapedCase.squad == null)
-                {
-                    card.overlapedCase.OverLaped();
-                }
-            }
-            else if(card.type == "order")
-            {
-                if(card.overlapedCase.squad != null)
-                {
-                    if(card.overlapedCase.squad.fleat.player == card.player)
-                    {
-                        card.overlapedCase.SupportOverLaped();
-                    }
-                    if(card.overlapedCase.squad.fleat.player != card.player)
-                    {
-                        card.overlapedCase.AttackOverLaped();
-                    }
-                }
-            }
-            else if(card.type == "captain")
-            {
-                if(card.overlapedCase.squad == null && card.overlapedCase.squad.fleat.player == card.player)
-                {
-                    card.overlapedCase.OverLaped();
-                }
-            }
-        }
-    },
     getDefendingAgainst : function(defendingSquad)
     {
         var defendingAgainst = [];
@@ -602,97 +383,6 @@ gameController.prototype = {
         }
         return infos;
     },
-    OverLapGamingDraggingManagment : function(squad)
-    {
-        var battleInfos = false;
-        if(squad.overlapedCase !== null)
-        {
-            if(squad.canGo(squad.overlapedCase))
-            {
-                if(squad.overlapedCase.squad != null)
-                {
-                    if(squad.overlapedCase.squad.fleat.player != squad.fleat.player )
-                    {
-                        var toFriendlyFires = squad.getFriendlyFire(squad.overlapedCase.squad, this.getDefendingAgainst(squad.overlapedCase.squad));
-                        toFriendlyFires.forEach(function(toFriendlyFire) {
-                            toFriendlyFire.case.FirendlyFireOverlaped();
-                        });
-                        squad.overlapedCase.AttackOverLaped();
-                        battleInfos = this.createBattleInfos(squad, squad.overlapedCase.squad, toFriendlyFires);
-                        if(battleInfos)
-                        {
-                            this.removeBattleInfos();
-                            this.battleInfos = battleInfos;
-                            this.refreshBattleInfos();
-                        }
-                    }
-                    else if(squad.overlapedCase.squad.fleat.player == squad.fleat.player )
-                    {
-                        this.removeBattleInfos();
-                        squad.overlapedCase.SupportOverLaped();
-                    }
-                }
-                else
-                {
-                    if(squad.movedFrom[squad.movedFrom.length - 1] == squad.overlapedCase || squad.movesAllowed > 0)
-                    {  
-                        this.removeBattleInfos();
-                        squad.overlapedCase.OverLaped();
-                    }
-                }
-            }
-            else
-            {
-                this.removeBattleInfos();
-            }
-        }
-        else
-        {
-            this.removeBattleInfos();
-        }
-    },
-    stopDragSquadGaming : function(sprite, pointer)
-    {
-        this.removeBattleInfos();
-        sprite.body.moves = false;
-        var squad = sprite.ref;
-        squad.isDragged = false;
-        // has the squad been dragged on a case ?
-        if(squad.overlapedCase !== null && squad.canGo(squad.overlapedCase))
-        {
-            // does the case already coutain an squad ?
-            if(squad.overlapedCase.squad == null)
-            {
-                // if the squad is alreay on another case, remove it from the case.
-                this.move(squad);
-            }
-            else
-            {
-                if(squad.overlapedCase.squad.fleat.player == squad.fleat.player)
-                {
-                    this.support(squad, squad.overlapedCase.squad);
-                }
-                if(squad.overlapedCase.squad.fleat.player != squad.fleat.player)
-                {
-                    if(squad.action == null)
-                    {
-                        this.attack(squad, squad.overlapedCase.squad);
-                        squad.disableDrag();
-                    }
-                    else
-                    {
-                        squad.returnPreviousCase();
-                    }
-                }
-            }
-        }
-        else
-        {
-            // set the squad to the original position.
-            sprite.x = sprite.ref.case.phaserObject.middleX;
-            sprite.y = sprite.ref.case.phaserObject.middleY;
-        }
-    },  
     attack : function(squad, target)
     {
         // don't move the squad to the case (attack the ennemy squad instead)
@@ -802,12 +492,12 @@ gameController.prototype = {
     {
         var ref = this;
         this.me.fleat.deployedSquad.forEach(function(squad){
-            squad.enableDrag(ref.dragSquad, ref.stopDragSquadGaming, ref);
+            squad.enableDrag(ref.game.state.getCurrentState().dragSquad, ref.game.state.getCurrentState().stopDragSquad, ref.game.state.getCurrentState());
         });
         this.me.cards.forEach(function(card){
             if(card != null)
             {
-                card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
+                card.enableDrag(ref.game.state.getCurrentState().dragCard, ref.game.state.getCurrentState().stopDragCard, ref.game.state.getCurrentState());
             }
         });
     },

@@ -38,6 +38,50 @@
             ]
         }
     ],
+    "captains" : [
+        {
+            "name" : "captain1",
+            "effects" : [
+                {
+                    "type" : "lifePoint",
+                    "value" : 500,
+                    "valueType" : "absolute"
+                },
+                {
+                    "type" : "damage",
+                    "value" : 1.5,
+                    "valueType" : "relative"
+                },
+                {
+                    "type" : "resist",
+                    "value" : 20,
+                    "valueType" : "relative"
+                }
+            ],
+            "AP" : 3
+        },
+        {
+            "name" : "captain2",
+            "effects" : [
+                {
+                    "type" : "lifePoint",
+                    "value" : 500,
+                    "valueType" : "absolute"
+                },
+                {
+                    "type" : "damage",
+                    "value" : 1.5,
+                    "valueType" : "relative"
+                },
+                {
+                    "type" : "resist",
+                    "value" : 20,
+                    "valueType" : "relative"
+                }
+            ],
+            "AP" : 4
+        }
+    ],
     "fleat" : {
         "name" : "maSuperFlote2",
         "capitalShip" : {

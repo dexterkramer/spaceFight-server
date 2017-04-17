@@ -38,6 +38,71 @@
             ]
         }
     ],
+    "captains" : [
+        {
+            "name" : "captain1",
+            "effects" : [
+                {
+                    "type" : "lifePoint",
+                    "value" : 500,
+                    "valueType" : "absolute"
+                },
+                {
+                    "type" : "damage",
+                    "value" : 1.5,
+                    "valueType" : "relative"
+                },
+                {
+                    "type" : "resist",
+                    "value" : 20,
+                    "valueType" : "relative"
+                }
+            ],
+            "AP" : 3
+        },
+        {
+            "name" : "captain2",
+            "effects" : [
+                {
+                    "type" : "lifePoint",
+                    "value" : 500,
+                    "valueType" : "absolute"
+                },
+                {
+                    "type" : "damage",
+                    "value" : 1.5,
+                    "valueType" : "relative"
+                },
+                {
+                    "type" : "resist",
+                    "value" : 20,
+                    "valueType" : "relative"
+                }
+            ],
+            "AP" : 4
+        },
+        {
+            "name" : "captain3",
+            "effects" : [
+                {
+                    "type" : "lifePoint",
+                    "value" : 200,
+                    "valueType" : "absolute"
+                },
+                {
+                    "type" : "damage",
+                    "value" : 1.2,
+                    "valueType" : "relative"
+                },
+                {
+                    "type" : "resist",
+                    "value" : 10,
+                    "valueType" : "relative"
+                }
+            ],
+            "AP" : 1
+        }
+    ],
     "fleat" : {
         "name" : "maSuperFlote",
         "capitalShip" : {
@@ -59,11 +124,40 @@
                 "ships" : [
                     {
                         "name" : "gros",
-                        "firePower" : 50,
+                        "firePower" : 80,
                         "support" : 20,
                         "shield" : 100,
                         "maxArmor" : 400,
-                        "armor" : 400
+                        "armor" : 400,
+                        "speed" : 50
+                    }
+                ]
+            },
+            {
+                "name" : "squad2player1",
+                "ships" : [
+                    {
+                        "name" : "pasgros",
+                        "firePower" : 20,
+                        "support" : 0,
+                        "shield" : 50,
+                        "maxArmor" : 100,
+                        "armor" : 100,
+                        "speed" : 100
+                    }
+                ]
+            },
+            {
+                "name" : "squad3player1",
+                "ships" : [
+                    {
+                        "name" : "moyen",
+                        "firePower" : 40,
+                        "support" : 20,
+                        "shield" : 100,
+                        "maxArmor" : 200,
+                        "armor" : 200,
+                        "speed" : 70
                     }
                 ]
             }
