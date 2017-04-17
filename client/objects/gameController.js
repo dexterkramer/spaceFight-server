@@ -51,45 +51,6 @@ gameController.prototype = {
             });
         });
     },
-    refreshBattleInfos : function()
-    {
-        var infosBattleX = 700;
-        var infosBattleY = 350;
-        var textSquadName = this.battleInfos.squad.name;
-        var textFirePower = "\nFire Power : " + this.battleInfos.firePower; 
-        var textArmor = "\nArmor : " + this.battleInfos.armor;
-        var textEnnemyName = this.battleInfos.target.name;
-        var textEnnemyFirePower = "\nFire Power : " + this.battleInfos.ennemyFirePower; 
-        var textEnnemyArmor = "\nArmor : " + this.battleInfos.ennemyArmor;
-        var textFriendlyFire = "";
-        if(this.battleInfos.toFriendlyFire.length > 0)
-        {   
-            textFriendlyFire = "\n FriendlyFire : ";
-            this.battleInfos.toFriendlyFire.forEach(function(toFriendly){
-                textFriendlyFire += "\n" + toFriendly.name;
-            });
-        }
-
-        var textFlankBonus = "";
-        var yPosToAdd = 0;
-        this.battleInfos.flankBonus.forEach(function(bonus){
-            yPosToAdd += 10;
-            textFlankBonus += "\n flank bonus : " + bonus.damageModifier;
-        });
-
-        var style = { font: "20px Arial", fill: "#20D113"/*, wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-        var text = this.game.add.text(infosBattleX, infosBattleY, textSquadName + textFirePower + textArmor + textFlankBonus, style);
-        text.anchor.set(0 , 0);
-        this.battleInfos.squadTextPhaserObject = text;
-
-        var infosBattleX = 700;
-        var infosBattleY = 450 + yPosToAdd;
-
-        var styleEnnemy = { font: "20px Arial", fill: "#ff0044"/*, wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-        var textEnnemy = this.game.add.text(infosBattleX, infosBattleY, textEnnemyName + textEnnemyFirePower + textEnnemyArmor + textFriendlyFire, styleEnnemy);
-        textEnnemy.anchor.set(0 , 0);
-        this.battleInfos.ennemyTextPhaserObject = textEnnemy;
-    },
     initTurns : function()
     {
         this.turn.number = 0;

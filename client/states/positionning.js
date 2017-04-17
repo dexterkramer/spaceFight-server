@@ -134,16 +134,5 @@ positionning.prototype = {
             this.gameController.turn.player.disableDragingAllSquads();
             this.gameController.server.sendPositioningInfos(this.gameController.client.id, this.gameController.turn.player.fleat.capitalShip.case.number); 
         }
-    },
-    positioningPlayer : function(player)
-    {
-        var XposSquad = 100;
-        var YposSquad = 700;
-
-        player.fleat.capitalShip.originalX = XposSquad;
-        player.fleat.capitalShip.originalY = YposSquad;
-
-        player.fleat.deploySquad(player.fleat.capitalShip);
-        player.fleat.capitalShip.enableDrag(this.dragSquad, this.stopDragSquad, this);
-    }, 
+    }
 }

@@ -111,7 +111,6 @@ oneCard.prototype = {
     },
     destroy : function()
     {
-        console.log('la');
         this.phaserObject.destroy();
         this.phaserObject = null;
         this.object = null;

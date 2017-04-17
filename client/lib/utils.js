@@ -8,7 +8,6 @@ function clearGameCache (game) {
     this.game.load.removeAll();
 }
 
-
 function createCard(game, player, object, type)
 {
     var card = new oneCard(object, type);
@@ -97,3 +96,22 @@ function createCases(casemap)
     return caseTable;
 }
 
+function createDamageModifier(damageModifier, turns)
+{
+    var attackModifier = new AttackModifier(turns);
+    attackModifier.setDamageModifier(damageModifier);
+    return attackModifier;
+}
+
+function createBattle(suqad, target)
+{
+    var theBattle = new battle(suqad, target);
+    return theBattle;
+}
+
+function createPick(player)
+{
+    var pick = new onePick(player);
+    pick.initPick();
+    return pick;
+}

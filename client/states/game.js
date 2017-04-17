@@ -142,7 +142,7 @@ TheGame.prototype = {
                         {
                             this.gameController.removeBattleInfos();
                             this.gameController.battleInfos = battleInfos;
-                            this.gameController.refreshBattleInfos();
+                            this.refreshBattleInfos();
                         }
                     }
                     else if(squad.overlapedCase.squad.fleat.player == squad.fleat.player )
@@ -169,6 +169,45 @@ TheGame.prototype = {
         {
             this.gameController.removeBattleInfos();
         }
+    },
+    refreshBattleInfos : function()
+    {
+        var infosBattleX = 700;
+        var infosBattleY = 350;
+        var textSquadName = this.gameController.battleInfos.squad.name;
+        var textFirePower = "\nFire Power : " + this.gameController.battleInfos.firePower; 
+        var textArmor = "\nArmor : " + this.gameController.battleInfos.armor;
+        var textEnnemyName = this.gameController.battleInfos.target.name;
+        var textEnnemyFirePower = "\nFire Power : " + this.gameController.battleInfos.ennemyFirePower; 
+        var textEnnemyArmor = "\nArmor : " + this.gameController.battleInfos.ennemyArmor;
+        var textFriendlyFire = "";
+        if(this.gameController.battleInfos.toFriendlyFire.length > 0)
+        {   
+            textFriendlyFire = "\n FriendlyFire : ";
+            this.gameController.battleInfos.toFriendlyFire.forEach(function(toFriendly){
+                textFriendlyFire += "\n" + toFriendly.name;
+            });
+        }
+
+        var textFlankBonus = "";
+        var yPosToAdd = 0;
+        this.gameController.battleInfos.flankBonus.forEach(function(bonus){
+            yPosToAdd += 10;
+            textFlankBonus += "\n flank bonus : " + bonus.damageModifier;
+        });
+
+        var style = { font: "20px Arial", fill: "#20D113"/*, wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
+        var text = this.gameController.game.add.text(infosBattleX, infosBattleY, textSquadName + textFirePower + textArmor + textFlankBonus, style);
+        text.anchor.set(0 , 0);
+        this.gameController.battleInfos.squadTextPhaserObject = text;
+
+        var infosBattleX = 700;
+        var infosBattleY = 450 + yPosToAdd;
+
+        var styleEnnemy = { font: "20px Arial", fill: "#ff0044"/*, wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
+        var textEnnemy = this.gameController.game.add.text(infosBattleX, infosBattleY, textEnnemyName + textEnnemyFirePower + textEnnemyArmor + textFriendlyFire, styleEnnemy);
+        textEnnemy.anchor.set(0 , 0);
+        this.gameController.battleInfos.ennemyTextPhaserObject = textEnnemy;
     },
     checkOverLapCard : function(player, caseTable, deployAvailableCase)
     {

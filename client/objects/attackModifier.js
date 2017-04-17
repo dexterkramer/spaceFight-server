@@ -12,9 +12,3 @@ AttackModifier.prototype = {
     }
 };
 
-function createDamageModifier(damageModifier, turns)
-{
-    var attackModifier = new AttackModifier(turns);
-    attackModifier.setDamageModifier(damageModifier);
-    return attackModifier;
-}

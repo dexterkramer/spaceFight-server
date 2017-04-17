@@ -21,9 +21,3 @@ onePick.prototype = {
     }
 };
 
-function createPick(player)
-{
-    var pick = new onePick(player);
-    pick.initPick();
-    return pick;
-}

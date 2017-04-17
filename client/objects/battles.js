@@ -9,9 +9,3 @@ var battle = function(attackingSquad, target)
 battle.prototype = {
 
 };
-
-function createBattle(suqad, target)
-{
-    var theBattle = new battle(suqad, target);
-    return theBattle;
-}
