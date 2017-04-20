@@ -11,11 +11,12 @@
             ]
         },
         {
-            "name" : "attaquez !!!!",
+            "name" : "soin !!!!",
             "effects" : [
                 {
-                    "type" : "damage",
-                    "value" : 1.5
+                    "type" : "heal",
+                    "value" : 100,
+                    "valueType" : "relative"
                 }
             ]
         },
@@ -158,6 +159,48 @@
                         "maxArmor" : 200,
                         "armor" : 200,
                         "speed" : 70
+                    }
+                ]
+            },            
+            {
+                "name" : "squad4player1",
+                "ships" : [
+                    {
+                        "name" : "moyen",
+                        "firePower" : 10,
+                        "support" : 50,
+                        "shield" : 100,
+                        "maxArmor" : 200,
+                        "armor" : 200,
+                        "speed" : 100
+                    }
+                ]
+            },            
+            {
+                "name" : "squad5player1",
+                "ships" : [
+                    {
+                        "name" : "moyen",
+                        "firePower" : 40,
+                        "support" : 0,
+                        "shield" : 100,
+                        "maxArmor" : 200,
+                        "armor" : 200,
+                        "speed" : 80
+                    }
+                ]
+            },
+            {
+                "name" : "squad6player1",
+                "ships" : [
+                    {
+                        "name" : "gros",
+                        "firePower" : 180,
+                        "support" : 0,
+                        "shield" : 100,
+                        "maxArmor" : 250,
+                        "armor" : 300,
+                        "speed" : 50
                     }
                 ]
             }

@@ -28,8 +28,6 @@ var eurecaClientSetup = function(onConnect) {
 
 	eurecaClient.exports.sendPlayersInfos = function(playersInfos, id)
 	{
-		//eurecaClient.id = id;
-		//createGame(eurecaClient, eurecaServer);
 		if(eurecaClient.gameController != null)
 		{
 			eurecaClient.gameController.addPlayer(playersInfos.players[0], playersInfos.index === 0);

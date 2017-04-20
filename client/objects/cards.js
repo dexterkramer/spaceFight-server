@@ -42,7 +42,16 @@ oneCard.prototype = {
     },
     drawCardCaptain : function()
     {
-        
+        let oneCard = this.game.add.sprite(this.x, this.y, 'card');
+        oneCard.anchor.x = 0.5;
+        oneCard.anchor.y = 0.5;
+        oneCard.scale.setTo(this.width / oneCard.width, this.height / oneCard.height);
+        oneCard.ref = this;
+        this.phaserObject = oneCard;
+        let oneSquad = this.game.add.sprite(0, 0, 'captain');
+        oneSquad.anchor.x = 0.5;
+        oneSquad.anchor.y = 0.5;
+        oneCard.addChild(oneSquad);
     },
     drawCard : function()
     {

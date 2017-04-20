@@ -1,6 +1,7 @@
 var fleatFactory = require('./fleat.js');
 var orderFactory = require('./order.js');
 var pickFactory = require('./pick.js'); 
+var captainFactory = require('./captain.js');
 
 var onePlayer = function(name, number, availableCasePositioning, availableCaseDeploying)
 {
@@ -91,6 +92,7 @@ module.exports = {
         player.playerId = playerJson.playerId;
         player.fleat = fleatFactory.createFleat(player, playerJson.fleat );
         player.orders = orderFactory.createOrders(player, playerJson.orders);
+        player.captains = captainFactory.createCaptains(player, playerJson.captains );
         player.fleat.addCapitalShip(playerJson.fleat.capitalShip);
         player.createPick();
         return player;

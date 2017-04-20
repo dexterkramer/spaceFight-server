@@ -26,6 +26,10 @@ var playerInfosMask = {
                 finalArmor : true
             }
         },
+        captains : {
+            name : true,
+            effects : true
+        },
         deployedSquad : {
             case : {
                 number : true
@@ -55,7 +59,38 @@ var playerInfosMask = {
     },
     cards : {
         type : true,
-        object : true
+        object : {
+            squad : {
+                case : {
+                    number : true
+                },
+                movesAllowed : true,
+                attackModifiersArray : {
+                    type : true,
+                    turns : true,
+                    damageModifier : true
+                },
+                ships : {
+                    infos : true,
+                    lifeBar : {
+                        armor : true,
+                        shield : true,
+                        maxArmor : true,
+                        finalArmor : true
+                    }
+                },
+                lifeBar : {
+                    armor : true,
+                    shield : true,
+                    maxArmor : true,
+                    finalArmor : true
+                }
+            },
+            captain : {
+                name : true,
+                effects : true
+            },
+        }
     }
 }
 

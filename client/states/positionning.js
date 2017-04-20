@@ -109,6 +109,17 @@ positionning.prototype = {
         this.positioningPlayer(player);
         this.gameController.game.add.button(600, 600, 'button', this.positioningNextTurn, this, 1, 0, 1);
     },
+    positioningPlayer : function(player)
+    {
+         var XposSquad = 100;
+         var YposSquad = 700;
+ 
+         player.fleat.capitalShip.originalX = XposSquad;
+         player.fleat.capitalShip.originalY = YposSquad;
+ 
+         player.fleat.deploySquad(player.fleat.capitalShip);
+         player.fleat.capitalShip.enableDrag(this.dragSquad, this.stopDragSquad, this);
+     }, 
     refreshInfos : function()
     {
         if(this.gameController.infos.tourInfos != null && this.gameController.infos.tourInfos.phaserObject != null)

@@ -28,6 +28,7 @@ var ennemyInfosMask = {
             }
         },
     },
+    captains : false,
     cards : {
         type : false,
         object : false

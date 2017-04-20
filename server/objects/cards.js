@@ -1,4 +1,3 @@
-var playerMask = require("./../infosMasks/playerInfosMask.js");
 
 var oneCard = function(object, type)
 {
@@ -33,7 +32,12 @@ oneCard.prototype = {
             }   
             else if(this.type == "squad")
             {
-                cardInfos.object = this.object.createSquadInfos(playerMask.fleat.deployedSquad);
+                cardInfos.object = this.object.createSquadInfos(mask.object.squad);
+            }
+            else if(this.type == "captain")
+            {
+                console.log(this.object);
+                cardInfos.object = this.object.createCaptainInfos(mask.object.captain);
             }
         }
         else

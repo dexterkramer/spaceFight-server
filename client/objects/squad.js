@@ -15,6 +15,7 @@ var oneSquad = function(name, fleat)
     this.isDragged = false;
     this.currentDeployedIndex = null;
     this.currentShipIndex = null;
+    this.captain = null;
 };
 
 oneSquad.prototype = {

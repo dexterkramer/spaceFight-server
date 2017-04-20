@@ -103,11 +103,82 @@
                 "ships" : [
                     {
                         "name" : "gros",
-                        "firePower" : 50,
-                        "shield" : 100,
+                        "firePower" : 80,
                         "support" : 20,
+                        "shield" : 100,
                         "maxArmor" : 400,
-                        "armor" : 400
+                        "armor" : 400,
+                        "speed" : 50
+                    }
+                ]
+            },
+            {
+                "name" : "squad2player2",
+                "ships" : [
+                    {
+                        "name" : "pasgros",
+                        "firePower" : 20,
+                        "support" : 0,
+                        "shield" : 50,
+                        "maxArmor" : 100,
+                        "armor" : 100,
+                        "speed" : 100
+                    }
+                ]
+            },
+            {
+                "name" : "squad3player2",
+                "ships" : [
+                    {
+                        "name" : "moyen",
+                        "firePower" : 40,
+                        "support" : 20,
+                        "shield" : 100,
+                        "maxArmor" : 200,
+                        "armor" : 200,
+                        "speed" : 70
+                    }
+                ]
+            },
+            {
+                "name" : "squad4player2",
+                "ships" : [
+                    {
+                        "name" : "moyen",
+                        "firePower" : 10,
+                        "support" : 50,
+                        "shield" : 100,
+                        "maxArmor" : 200,
+                        "armor" : 200,
+                        "speed" : 100
+                    }
+                ]
+            },            
+            {
+                "name" : "squad5player2",
+                "ships" : [
+                    {
+                        "name" : "moyen",
+                        "firePower" : 40,
+                        "support" : 0,
+                        "shield" : 100,
+                        "maxArmor" : 200,
+                        "armor" : 200,
+                        "speed" : 80
+                    }
+                ]
+            },
+            {
+                "name" : "squad6player2",
+                "ships" : [
+                    {
+                        "name" : "gros",
+                        "firePower" : 180,
+                        "support" : 0,
+                        "shield" : 100,
+                        "maxArmor" : 250,
+                        "armor" : 300,
+                        "speed" : 50
                     }
                 ]
             }

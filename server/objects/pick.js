@@ -16,6 +16,9 @@ onePick.prototype = {
         this.player.fleat.squads.forEach(function(squad){
             ref.pile.push(cardFactory.createCard(squad, "squad"));
         });
+        this.player.captains.forEach(function(captain){
+            ref.pile.push(cardFactory.createCard(captain, "captain"));
+        });
     },
     drawOne : function()
     {
