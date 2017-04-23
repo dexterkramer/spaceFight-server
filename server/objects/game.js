@@ -72,7 +72,8 @@ Game.prototype = {
                         card.destroy();
                         player.cards.splice(cardIndex, 1);
                     }
-                }else if(card.type == "order")
+                }
+                else if(card.type == "order")
                 {
                     if(this.caseTable[caseIndex].squad != null)
                     {
@@ -181,8 +182,6 @@ Game.prototype = {
                 }
             }
         }
-        this.refreshPlayersInfos();
-        this.checkLooser();
     },
     checkLooser : function()
     {
@@ -260,7 +259,11 @@ Game.prototype = {
     {
         var playersInfos = this.createPlayersInfos();
         var ennemyInfos = this.createEnnemyInfos();
-        this.players.forEach(function(player, index){
+        var ref = this;
+        var playerTurnIndex = ref.players.findIndex(function(player){
+            return player == ref.turn.player;
+        });
+        ref.players.forEach(function(player, index){
             var toSendPlayersInfos = {};
             toSendPlayersInfos.players = [];
             toSendPlayersInfos.players[index] = playersInfos[index];
@@ -272,7 +275,7 @@ Game.prototype = {
                     toSendPlayersInfos.players[indexEnnemy] = ennemy;
                 }
             });
-            player.remote.refreshPlayersInfos(toSendPlayersInfos);
+            player.remote.refreshPlayersInfos(toSendPlayersInfos, playerTurnIndex);
         });
     },
     nextPlayer : function(rewind)

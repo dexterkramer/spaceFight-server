@@ -36,7 +36,6 @@ oneCard.prototype = {
             }
             else if(this.type == "captain")
             {
-                console.log(this.object);
                 cardInfos.object = this.object.createCaptainInfos(mask.object.captain);
             }
         }

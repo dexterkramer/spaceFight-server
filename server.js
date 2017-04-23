@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 var Eureca = require("eureca.io");
  
 //create an instance of EurecaServer
-var eurecaServer = new Eureca.Server({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame', 'refreshPlayersInfos', 'sendTurn', 'okToGame', 'sendWinner', 'sendDraw']});
+var eurecaServer = new Eureca.Server({allow:['setId', 'unlockPositioning', 'sendPlayersInfos', 'unlockGame', 'refreshPlayersInfos', 'okToGame', 'sendWinner', 'sendDraw']});
  
 //attach eureca.io to our http server
 eurecaServer.attach(server);
@@ -44,8 +44,6 @@ eurecaServer.exports.sendPositioningInfos = function(id, caseId)
         });
         clients[id].game.refreshPlayersInfos();
     }
-    
-    
     return true;
 }
 
@@ -55,10 +53,6 @@ eurecaServer.exports.nextTurn = function(id)
     {
         var indexChoosed = clients[id].game.nextTurn();
         clients[id].game.refreshPlayersInfos();
-        clients[id].game.players.forEach(function(player, index){
-            clients[player.playerId].remote.sendTurn(indexChoosed);
-        });
-        
     }
 }
 
@@ -78,6 +72,8 @@ eurecaServer.exports.squadGo = function(id, currentDeployedIndex, caseIndex)
     if(clients[id].game.players[clients[id].playerIndex] == clients[id].game.turn.player)
     {
         clients[id].game.move(currentDeployedIndex, clients[id].game.players[clients[id].playerIndex], caseIndex);
+        clients[id].game.refreshPlayersInfos();
+        clients[id].game.checkLooser();
     }
     
 }
@@ -89,25 +85,7 @@ eurecaServer.exports.okToGame = function(id)
     var playerIndex = clients[id].game.players.findIndex(function(elem){
         return elem == clients[id].game.turn.player;
     });
-    clients[id].remote.sendTurn(playerIndex);
-
-    /*this.players.forEach(function(player, index){
-        player.remote.sendTurn(playerIndex);
-    });
-
-
-    clients[id].inGame = true;
-    var allInGame = true;
-    clients[id].game.players.forEach(function(player, index){
-        if(!clients[player.playerId].inGame)
-        {
-            allInGame = false;
-        }
-    });
-    if(allInGame)
-    {
-        clients[id].game.gamePhase();
-    }*/
+    clients[id].game.refreshPlayersInfos();
     return true;
 }
 
@@ -125,7 +103,6 @@ eurecaServer.exports.wantToGame = function(id)
         pool[0].playerIndex = 0;
         pool[1].game = game;
         pool[1].playerIndex = 1;
-        //here we call setId (defined in the client side)
     }
 }
 

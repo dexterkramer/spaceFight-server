@@ -38,29 +38,27 @@ var eurecaClientSetup = function(onConnect) {
 		return true;
 	}
 
-	eurecaClient.exports.sendTurn = function(playerIndex)
+	eurecaClient.exports.refreshPlayersInfos = function(playersInfos, playerIndex)
 	{
-		while(eurecaClient.gameController.refreshing);
-		eurecaClient.gameController.turn.player = eurecaClient.gameController.players[playerIndex];
-		if(eurecaClient.gameController.turn.player == eurecaClient.gameController.me)
-		{
-			eurecaClient.gameController.refreshInfos();
-			eurecaClient.gameController.unlockMe();
-		}
-		else
-		{
-			eurecaClient.gameController.refreshInfos();
-			eurecaClient.gameController.lockMe();
-		}
-		
-		return true;
-	}
+		eurecaClient.gameController.tempPlayersInfos = playersInfos;
+		eurecaClient.gameController.tempPlayerIndex = playerIndex;
 
-	eurecaClient.exports.refreshPlayersInfos = function(playersInfos)
-	{
-		eurecaClient.gameController.refreshing = true;
-		eurecaClient.gameController.refreshPlayers(playersInfos);
-		eurecaClient.gameController.refreshing = false;
+		/*eurecaClient.gameController.refreshPlayers(playersInfos);
+		if(playerIndex != -1)
+		{
+			eurecaClient.gameController.turn.player = eurecaClient.gameController.players[playerIndex];
+			if(eurecaClient.gameController.turn.player == eurecaClient.gameController.me)
+			{
+				eurecaClient.gameController.refreshInfos();
+				eurecaClient.gameController.unlockMe();
+			}
+			else
+			{
+				eurecaClient.gameController.refreshInfos();
+				eurecaClient.gameController.lockMe();
+			}
+		}*/
+
 		return true;
 	}
 

@@ -13,6 +13,7 @@ TheGame.prototype = {
       },
     update : function(){
         this.gameController.checkEnd();
+        this.gameController.checkRefreshInfos();
         if(this.gameController.turn.player == this.gameController.me)
         {
             this.gameController.caseTable.forEach(function(oneCase){

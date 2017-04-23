@@ -449,6 +449,32 @@ gameController.prototype = {
         }
         return false;
     },
+    checkRefreshInfos : function()
+    {
+        if(this.tempPlayersInfos != null)
+        {
+            this.refreshPlayers(this.tempPlayersInfos);
+            this.tempPlayersInfos = null;
+        }
+        if(this.tempPlayerIndex != null)
+        {
+            if(this.tempPlayerIndex != -1)
+            {
+                this.turn.player = this.players[this.tempPlayerIndex];
+                if(this.turn.player == this.me)
+                {
+                    this.refreshInfos();
+                    this.unlockMe();
+                }
+                else
+                {
+                    this.refreshInfos();
+                    this.lockMe();
+                }
+            }
+            this.tempPlayerIndex = null;
+        }
+    },
     unlockMe : function()
     {
         var ref = this;
