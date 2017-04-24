@@ -145,5 +145,19 @@ positionning.prototype = {
             this.gameController.turn.player.disableDragingAllSquads();
             this.gameController.server.sendPositioningInfos(this.gameController.client.id, this.gameController.turn.player.fleat.capitalShip.case.number); 
         }
-    }
+    },
+    unlockMe : function()
+    {
+        var ref = this;
+        this.gameController.me.fleat.deployedSquad.forEach(function(squad){
+            squad.enableDrag(ref.dragSquad, ref.stopDragSquad, ref);
+        });
+    },
+    lockMe : function()
+    {
+        var ref = this;
+        this.gameController.me.fleat.deployedSquad.forEach(function(squad){
+            squad.disableDrag();
+        });
+    },
 }

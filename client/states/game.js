@@ -261,5 +261,31 @@ TheGame.prototype = {
                 }
             }
         }
+    },
+    unlockMe : function()
+    {
+        var ref = this;
+        this.gameController.me.fleat.deployedSquad.forEach(function(squad){
+            squad.enableDrag(ref.dragSquad, ref.stopDragSquad, ref);
+        });
+        this.gameController.me.cards.forEach(function(card){
+            if(card != null)
+            {
+                card.enableDrag(ref.dragCard, ref.stopDragCard, ref);
+            }
+        });
+    },
+    lockMe : function()
+    {
+        var ref = this;
+        this.gameController.me.fleat.deployedSquad.forEach(function(squad){
+            squad.disableDrag();
+        });
+        this.gameController.me.cards.forEach(function(card){
+            if(card != null)
+            {
+                card.disableDrag();
+            }
+        });
     }
 }

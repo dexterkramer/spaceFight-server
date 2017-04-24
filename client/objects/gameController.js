@@ -464,47 +464,21 @@ gameController.prototype = {
                 if(this.turn.player == this.me)
                 {
                     this.refreshInfos();
-                    this.unlockMe();
+                    this.game.state.getCurrentState().unlockMe();
                 }
                 else
                 {
                     this.refreshInfos();
-                    this.lockMe();
+                    this.game.state.getCurrentState().lockMe();
                 }
             }
             this.tempPlayerIndex = null;
         }
     },
-    unlockMe : function()
-    {
-        var ref = this;
-        this.me.fleat.deployedSquad.forEach(function(squad){
-            squad.enableDrag(ref.game.state.getCurrentState().dragSquad, ref.game.state.getCurrentState().stopDragSquad, ref.game.state.getCurrentState());
-        });
-        this.me.cards.forEach(function(card){
-            if(card != null)
-            {
-                card.enableDrag(ref.game.state.getCurrentState().dragCard, ref.game.state.getCurrentState().stopDragCard, ref.game.state.getCurrentState());
-            }
-        });
-    },
     drawAllSquads : function()
     {
         this.players.forEach(function(player){
             player.drawAllSquads();
-        });
-    },
-    lockMe : function()
-    {
-        var ref = this;
-        this.me.fleat.deployedSquad.forEach(function(squad){
-            squad.disableDrag();
-        });
-        this.me.cards.forEach(function(card){
-            if(card != null)
-            {
-                card.disableDrag();
-            }
         });
     },
     drawCases : function()
