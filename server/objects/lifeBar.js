@@ -7,6 +7,7 @@ var lifeBar = function(armor, shield, maxArmor)
     this.tempArmor = armor;
     this.maxArmor = maxArmor;
     this.finalArmor = armor;
+    this.additionaleLifeArray = [];
 }
 
 lifeBar.prototype = {
@@ -17,6 +18,20 @@ lifeBar.prototype = {
     setShield : function(shield)
     {
         this.shield = shield;
+    },
+    setAdditionalLife : function(from, value)
+    {
+        this.additionaleLifeArray.push({from : from, value : value});
+    },
+    removeAdditionalLife : function(from)
+    {
+        var index = this.additionaleLifeArray.findIndex(function(additionalLife){
+            return additionalLife.from == from;
+        });
+        if(index != -1)
+        {
+            this.additionaleLifeArray.splice(index, 1);
+        }
     },
     createLifeBarInfos : function(mask){
         var lifeBarInfos = {};

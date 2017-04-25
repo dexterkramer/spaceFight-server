@@ -11,6 +11,8 @@ var oneCard = function(object, type)
     this.x = null;
     this.y = null;
     this.angle = null;
+    this.game = null;
+    this.group = null;
 }
 
 oneCard.prototype = {

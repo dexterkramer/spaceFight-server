@@ -15,10 +15,17 @@ var oneSquad = function(name, fleat)
     this.tempAction = null;
     this.attackModifiersArray = [];
     this.lifeBar = null;
+    this.captain = null;
     this.currentDeployedIndex = null;
 };
 
 oneSquad.prototype = {
+    addCaptain : function(captain)
+    {   
+        this.captain = captain;
+        this.captain.setSquad(this);
+        this.captain.init();
+    },
     createSquadInfos : function(mask)
     {
         var squadInfos = {};

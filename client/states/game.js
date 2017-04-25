@@ -224,6 +224,10 @@ TheGame.prototype = {
                 {
                     card.overlapedCase = ref.gameController.getOverlapedCase(deployAvailableCase);
                 }
+                else if(card.type == "captain")
+                {
+                    card.overlapedCase = ref.gameController.getOverlapedCase(caseTable);
+                }
                 ref.OverLapCardDraggingManagment(card);
             }
         });
@@ -255,9 +259,9 @@ TheGame.prototype = {
             }
             else if(card.type == "captain")
             {
-                if(card.overlapedCase.squad == null && card.overlapedCase.squad.fleat.player == card.player)
+                if(card.overlapedCase.squad != null && card.overlapedCase.squad.fleat.player == card.player)
                 {
-                    card.overlapedCase.OverLaped();
+                    card.overlapedCase.SupportOverLaped();
                 }
             }
         }

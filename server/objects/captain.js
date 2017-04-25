@@ -3,9 +3,18 @@ var captain = function(player, name, effects)
     //this.player = player;
     this.name = name;
     this.effects = effects;
+    this.squad = null;
 }
 
 captain.prototype = {
+    init : function()
+    {
+
+    },
+    setSquad : function(squad)
+    {
+        this.squad = squad;
+    },
     createCaptainInfos : function(mask)
     {
         var captainInfos = {};
@@ -22,7 +31,7 @@ captain.prototype = {
 };
 
 module.exports = {
-    creatCaptain : function(player, name, effects)
+    createCaptain : function(player, name, effects)
     {
         var theCaptain = new captain(player, name, effects);
         return theCaptain;
@@ -32,7 +41,7 @@ module.exports = {
         var ref = this;
         var captainsArray = [];
         captainsJson.forEach(function(c){
-            captainsArray.push(ref.creatCaptain(player, c.name, c.effects));
+            captainsArray.push(ref.createCaptain(player, c.name, c.effects));
         });
         return captainsArray;
     }

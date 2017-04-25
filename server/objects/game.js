@@ -91,6 +91,18 @@ Game.prototype = {
                         }
                     }
                 }
+                else if(card.type == "captain")
+                {
+                    if(this.caseTable[caseIndex].squad != null)
+                    {
+                        if(this.caseTable[caseIndex].squad.fleat.player == card.player)
+                        {
+                            this.caseTable[caseIndex].squad.addCaptain(card.object);
+                            card.destroy();
+                            player.cards.splice(cardIndex, 1);
+                        }
+                    }
+                }
             }
         }
     },

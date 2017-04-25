@@ -115,3 +115,18 @@ function createPick(player)
     pick.initPick();
     return pick;
 }
+
+function createCaptain(game, player, captainJson)
+{
+    var theCaptain = new captain(game, player, captainJson.name, captainJson.effects);
+    return theCaptain;
+}
+
+function createCaptains (game, player, captainsJson)
+{
+    var captainsArray = [];
+    captainsJson.forEach(function(c){
+        captainsArray.push(createCaptain(game, player, c));
+    });
+    return captainsArray;
+}

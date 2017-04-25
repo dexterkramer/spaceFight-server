@@ -132,6 +132,10 @@ gameController.prototype = {
                         {
                             object = createSquad(ref.game, player.fleat,card.object);
                         }
+                        else if(card.type == "captain")
+                        {
+                            object = createCaptain(ref.game, player, card.object);
+                        }
                         let newCard = createCard(ref.game, player, object, card.type);
                         newCard.toDestroy = false;
                         player.cards.push(newCard);
