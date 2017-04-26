@@ -9,7 +9,10 @@ var captain = function(player, name, effects)
 captain.prototype = {
     init : function()
     {
-
+        if(this.squad != null)
+        {
+            
+        }
     },
     setSquad : function(squad)
     {

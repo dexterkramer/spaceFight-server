@@ -21,7 +21,7 @@ lifeBar.prototype = {
     },
     setAdditionalLife : function(from, value)
     {
-        this.additionaleLifeArray.push({from : from, value : value});
+        this.additionaleLifeArray.push({from : from, value : value, maxValue : value});
     },
     removeAdditionalLife : function(from)
     {
@@ -32,6 +32,33 @@ lifeBar.prototype = {
         {
             this.additionaleLifeArray.splice(index, 1);
         }
+    },
+    shoot : function(firePower)
+    {
+        var firePowerLeft = firePower;
+        while(firePowerLeft > 0 && this.armor > 0)
+        {
+            this.additionaleLifeArray.forEach(function(additionalLife){
+                if(additionalLife.value > 0)
+                {
+                    let previousValue = additionalLife.value;
+                    additionalLife.value = (previousValue - firePowerLeft > 0) ? previousValue - firePowerLeft : 0;
+                    firePowerLeft = firePowerLeft - previousValue;
+                }
+            });
+            if(firePowerLeft > 0)
+            {
+                this.armor = (this.armor - firePowerLeft > 0) ? this.armor - firePowerLeft : 0;
+            }
+        }
+    },
+    getTotalAdditionalLife : function()
+    {
+        var total = 0;
+        this.additionaleLifeArray.forEach(function(additionalLife){
+            total += additionalLife.value;
+        });
+        return total;
     },
     createLifeBarInfos : function(mask){
         var lifeBarInfos = {};
