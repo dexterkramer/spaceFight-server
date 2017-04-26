@@ -1,6 +1,7 @@
 var ShipFactory = require('./ship.js');
 var lifeBarFactory = require("./lifeBar.js");
 var attackModifierFactory = require("./attackModifier.js");
+var squadEffectsFactory = require("./squadEffects.js");
 
 var oneSquad = function(name, fleat)
 {
@@ -17,6 +18,7 @@ var oneSquad = function(name, fleat)
     this.lifeBar = null;
     this.captain = null;
     this.currentDeployedIndex = null;
+    this.activeEffects = [];
 };
 
 oneSquad.prototype = {
@@ -25,6 +27,20 @@ oneSquad.prototype = {
         this.captain = captain;
         this.captain.setSquad(this);
         this.captain.init();
+    },
+    addActiveEffect : function(activeEffect)
+    {
+        this.activeEffects.push(activeEffect);
+    },
+    removeActiveEffect : function(activeEffect)
+    {
+        var index = this.activeEffects.findIndex(function(effect){
+            return effect == activeEffect;
+        });
+        if(index != -1)
+        {
+            this.activeEffects.splice(index, 1);
+        }
     },
     createSquadInfos : function(mask)
     {
@@ -70,10 +86,8 @@ oneSquad.prototype = {
     {
         var ref = this;
         order.effects.forEach(function(effect){
-            if(effect.type == "damage")
-            {
-                ref.attackModifiersArray.push(attackModifierFactory.createDamageModifier(effect.value, -1));
-            }
+            var effectObject = squadEffectsFactory.createSquadEffect(effect);
+            effectObject.applyEffect(ref);
         });
     },
     addShip : function(ship)
@@ -129,14 +143,14 @@ oneSquad.prototype = {
     applyDamages : function()
     {
         this.ships.forEach(function(ship){
-            ship.lifeBar.armor = ship.lifeBar.finalArmor;
+            ship.lifeBar.applyDammage();
         });
         
     },
     initFinalArmor : function()
     {
         this.ships.forEach(function(ship){
-            ship.lifeBar.finalArmor = ship.lifeBar.armor; 
+            ship.lifeBar.initFinalValues(); 
         });
     },
     getAvailableShips : function()
@@ -145,7 +159,6 @@ oneSquad.prototype = {
         this.ships.forEach(function(ship, index){
             if(ship.lifeBar.armor > 0)
             {
-                ship.lifeBar.tempArmor = ship.lifeBar.armor;
                 shipArray.push(ship);
             }
         });
@@ -281,7 +294,7 @@ oneSquad.prototype = {
                     if(typeof defendingShipArray[selectedEnnemyIndex] !== "undefined")
                     {
                         ship.attack(defendingShipArray[selectedEnnemyIndex], attackingModifierArrayTmp);
-                        if(defendingShipArray[selectedEnnemyIndex].lifeBar.tempArmor <= 0)
+                        if(defendingShipArray[selectedEnnemyIndex].lifeBar.finalArmor <= 0)
                         {
                             defendingShipArray.splice(selectedEnnemyIndex, 1);
                         }

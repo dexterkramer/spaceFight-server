@@ -6,7 +6,8 @@
             "effects" : [
                 {
                     "type" : "damage",
-                    "value" : 1.5
+                    "value" : 1.5,
+                    "valueType" : "relative"
                 }
             ]
         },
@@ -25,7 +26,8 @@
             "effects" : [
                 {
                     "type" : "damage",
-                    "value" : 1.5
+                    "value" : 1.5,
+                    "valueType" : "relative"
                 }
             ]
         },
@@ -34,7 +36,8 @@
             "effects" : [
                 {
                     "type" : "damage",
-                    "value" : 1.5
+                    "value" : 1.5,
+                    "valueType" : "relative"
                 }
             ]
         }

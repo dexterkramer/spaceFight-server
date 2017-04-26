@@ -4,7 +4,6 @@ var lifeBar = function(armor, shield, maxArmor)
     this.armor = armor;
     this.startShield = shield;
     this.shield = shield;
-    this.tempArmor = armor;
     this.maxArmor = maxArmor;
     this.finalArmor = armor;
     this.additionaleLifeArray = [];
@@ -21,7 +20,7 @@ lifeBar.prototype = {
     },
     setAdditionalLife : function(from, value)
     {
-        this.additionaleLifeArray.push({from : from, value : value, maxValue : value});
+        this.additionaleLifeArray.push({from : from, value : value, maxValue : value, finalValue : value});
     },
     removeAdditionalLife : function(from)
     {
@@ -33,22 +32,38 @@ lifeBar.prototype = {
             this.additionaleLifeArray.splice(index, 1);
         }
     },
+    applyDammage : function()
+    {
+        this.additionaleLifeArray.forEach(function(additionalLife){
+            additionalLife.value = additionalLife.finalValue;
+        });
+        this.armor = this.finalArmor;
+    },
+    initFinalValues : function()
+    {
+        this.finalArmor = this.armor;
+        this.additionaleLifeArray.forEach(function(additionalLife){
+            additionalLife.finalValue = additionalLife.value;
+        });
+    },
     shoot : function(firePower)
     {
         var firePowerLeft = firePower;
-        while(firePowerLeft > 0 && this.armor > 0)
+        while(firePowerLeft > 0 && this.finalArmor > 0)
         {
             this.additionaleLifeArray.forEach(function(additionalLife){
-                if(additionalLife.value > 0)
+                if(additionalLife.finalValue > 0)
                 {
-                    let previousValue = additionalLife.value;
-                    additionalLife.value = (previousValue - firePowerLeft > 0) ? previousValue - firePowerLeft : 0;
+                    let previousValue = additionalLife.finalValue;
+                    additionalLife.finalValue = (previousValue - firePowerLeft > 0) ? previousValue - firePowerLeft : 0;
                     firePowerLeft = firePowerLeft - previousValue;
                 }
             });
             if(firePowerLeft > 0)
             {
-                this.armor = (this.armor - firePowerLeft > 0) ? this.armor - firePowerLeft : 0;
+                let previousArmorValue = this.finalArmor;
+                this.finalArmor = (previousArmorValue - firePowerLeft > 0) ? previousArmorValue - firePowerLeft : 0;
+                firePowerLeft = firePowerLeft - previousArmorValue;
             }
         }
     },

@@ -11,7 +11,7 @@ captain.prototype = {
     {
         if(this.squad != null)
         {
-            
+            this.squad.buff(this.effects);
         }
     },
     setSquad : function(squad)

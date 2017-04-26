@@ -44,25 +44,12 @@ ship.prototype = {
     },
     attack : function(target, attackModifiers)
     {
-        var firePower = this.infos.firePower;
+        var firePower =  this.infos.firePower + this.getTotalAdditionalDamage();
         attackModifiers.forEach(function(attackModifier) {
             firePower = firePower * attackModifier.damageModifier;
         });
 
-        /*var firePower =  this.infos.firePower + this.getTotalAdditionalDamage();
-
-        target.lifeBar.shoot(firePower);*/
-
-        target.lifeBar.tempArmor -= firePower;
-        target.lifeBar.finalArmor -= firePower;
-        if(target.lifeBar.tempArmor < 0)
-        {
-            target.lifeBar.tempArmor = 0;
-        }
-        if(target.lifeBar.finalArmor < 0)
-        {
-            target.lifeBar.finalArmor = 0;
-        }
+        target.lifeBar.shoot(firePower);
     },
     getTotalAdditionalDamage : function()
     {
