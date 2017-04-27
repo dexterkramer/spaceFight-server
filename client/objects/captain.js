@@ -8,5 +8,8 @@ var captain = function(game, player, name, effects)
 }
 
 captain.prototype = {
-
+    destroy : function()
+    {
+        
+    }
 };

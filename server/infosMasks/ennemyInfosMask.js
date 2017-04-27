@@ -11,6 +11,10 @@ var ennemyInfosMask = {
                 turns : true,
                 damageModifier : true
             },
+            captain : {
+                name : true,
+                effects : true
+            },
             ships : {
                 infos : true,
                 lifeBar : {

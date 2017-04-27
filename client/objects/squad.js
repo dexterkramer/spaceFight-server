@@ -117,6 +117,26 @@ oneSquad.prototype = {
         toCleanIndexes.forEach(function(indexToClean){
             this.ships.splice(indexToClean, 1);
         });
+
+        if(squadJson.captain != null)
+        {
+            if(this.captain == null)
+            {
+                this.captain = createCaptain(this.game, this.fleat.player, squadJson.captain);
+            }
+            else 
+            {
+
+            }
+        }
+        else
+        {
+            if(this.captain != null)
+            {
+                this.captain.destroy();
+                this.captain = null;
+            }
+        }
     },
     applyMove : function()
     {

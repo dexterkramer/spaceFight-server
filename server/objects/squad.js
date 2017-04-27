@@ -62,6 +62,14 @@ oneSquad.prototype = {
         {
             squadInfos.movesAllowed = this.movesAllowed;
         }
+        if(mask.captain)
+        {
+            squadInfos.captain = null;
+            if(this.captain != null)
+            {
+                squadInfos.captain = this.captain.createCaptainInfos(mask.captain);
+            }
+        }
         if(mask.attackModifiersArray)
         {
             squadInfos.attackModifiersArray = [];

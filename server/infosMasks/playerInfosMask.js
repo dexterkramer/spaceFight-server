@@ -24,6 +24,10 @@ var playerInfosMask = {
                 shield : true,
                 maxArmor : true,
                 finalArmor : true
+            },
+            captain : {
+                name : true,
+                effects : true
             }
         },
         captains : {
@@ -40,6 +44,7 @@ var playerInfosMask = {
                 turns : true,
                 damageModifier : true
             },
+            captain : true,
             ships : {
                 infos : true,
                 lifeBar : {
