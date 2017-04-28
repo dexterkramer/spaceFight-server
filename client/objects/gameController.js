@@ -140,21 +140,23 @@ gameController.prototype = {
                         newCard.toDestroy = false;
                         player.cards.push(newCard);
                         newCard.currentCardIndex = card.currentCardIndex;
-                       
                     }
                 }
             });
             var toCleanArray = [];
-            player.cards.forEach(function(c, index){
+            player.cards.forEach(function(c){
                 if(c.toDestroy)
                 {
-                    toCleanArray.push(index);
+                    toCleanArray.push(c);
                 }
             });
-
-            toCleanArray.forEach(function(indexToRemove){
-                player.cards[indexToRemove].destroy();
-                player.cards.splice(indexToRemove, 1);
+            toCleanArray.forEach(function(toCleanItem){
+                var index = player.cards.indexOf(toCleanItem);
+                if(index != -1)
+                {
+                    player.cards[index].destroy();
+                    player.cards.splice(index, 1);
+                }
             });
 
             player.cards.forEach(function(card, index){

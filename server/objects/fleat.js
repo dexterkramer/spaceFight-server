@@ -22,9 +22,14 @@ oneFleat.prototype = {
     },
     undeploySquad : function(squad)
     {
-        this.deployedSquad.splice(this.deployedSquad.findIndex(function(elem){
+        var index = this.deployedSquad.findIndex(function(elem){
             return elem == squad;
-        }),1);
+        });
+        if(index != -1)
+        {
+            this.deployedSquad[index].case.squad = null;
+            this.deployedSquad.splice(index,1);
+        }
     },
     deploySquad : function(squad)
     {

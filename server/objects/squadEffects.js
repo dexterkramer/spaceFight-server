@@ -20,6 +20,24 @@ increaseLifeEffect.prototype = {
         this.squad.addActiveEffect(this);
         return true;
     },
+    createEffectInfos : function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "lifePoint";
+            effectInfos.valueType = "absolute";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
+    },
     removeEffect : function()
     {
         if(!this.isApplyed)
@@ -54,6 +72,24 @@ increasePercentLifeEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
+    },
+    createEffectInfos: function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "lifePoint";
+            effectInfos.valueType = "relative";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
     },
     removeEffect : function()
     {
@@ -90,6 +126,24 @@ increaseDamageEffect.prototype = {
         this.squad.addActiveEffect(this);
         return true;
     },
+    createEffectInfos: function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "damage";
+            effectInfos.valueType = "absolute";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
+    },
     removeEffect : function()
     {
         if(!this.isApplyed)
@@ -124,6 +178,24 @@ increasePercentDamageEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
+    },
+    createEffectInfos: function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "damage";
+            effectInfos.valueType = "relative";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
     },
     removeEffect : function()
     {

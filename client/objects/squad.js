@@ -117,16 +117,23 @@ oneSquad.prototype = {
         toCleanIndexes.forEach(function(indexToClean){
             this.ships.splice(indexToClean, 1);
         });
-
         if(squadJson.captain != null)
         {
             if(this.captain == null)
             {
                 this.captain = createCaptain(this.game, this.fleat.player, squadJson.captain);
+                this.captain.setSquad(this);
+                this.captain.drawCaptain();
             }
             else 
             {
-
+                if(this.captain.currentCaptainIndex != squadJson.captain.currentCaptainIndex )
+                {
+                    this.captain.destroy();
+                    this.captain = createCaptain(this.game, this.fleat.player, squadJson.captain);
+                    this.captain.setSquad(this);
+                    this.captain.drawCaptain();
+                }
             }
         }
         else

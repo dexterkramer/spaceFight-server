@@ -77,15 +77,15 @@ Game.prototype = {
                 {
                     if(this.caseTable[caseIndex].squad != null)
                     {
-                        if(this.caseTable[caseIndex].squad.fleat.player == card.player)
+                        if(this.caseTable[caseIndex].squad.fleat.player == player)
                         {
-                            this.caseTable[caseIndex].squad.buff(card.object);
+                            this.caseTable[caseIndex].squad.buff(card.object.effects);
                             card.destroy();
                             player.cards.splice(cardIndex, 1);
                         }
-                        else if(this.caseTable[caseIndex].squad.fleat.player != card.player)
+                        else if(this.caseTable[caseIndex].squad.fleat.player != player)
                         {
-                            this.caseTable[caseIndex].squad.buff(card.object);
+                            this.caseTable[caseIndex].squad.buff(card.object.effects);
                             card.destroy();
                             player.cards.splice(cardIndex, 1);
                         }
@@ -95,7 +95,7 @@ Game.prototype = {
                 {
                     if(this.caseTable[caseIndex].squad != null)
                     {
-                        if(this.caseTable[caseIndex].squad.fleat.player == card.player)
+                        if(this.caseTable[caseIndex].squad.fleat.player == player)
                         {
                             this.caseTable[caseIndex].squad.addCaptain(card.object);
                             card.destroy();

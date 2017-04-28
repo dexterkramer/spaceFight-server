@@ -119,6 +119,7 @@ function createPick(player)
 function createCaptain(game, player, captainJson)
 {
     var theCaptain = new captain(game, player, captainJson.name, captainJson.effects);
+    theCaptain.currentCaptainIndex = captainJson.currentCaptainIndex;
     return theCaptain;
 }
 

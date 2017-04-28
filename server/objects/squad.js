@@ -88,14 +88,30 @@ oneSquad.prototype = {
         {
             squadInfos.lifeBar = this.lifeBar.createLifeBarInfos(mask.lifeBar);
         }
+        if(squadInfos.effects)
+        {
+            squadInfos.activeEffects = this.getActiveEffectsInfos();
+        }
         return squadInfos;
     },
-    buff : function(order)
+    getActiveEffectsInfos : function()
+    {
+        var effectsInfos = [];
+        this.activeEffects.forEach(function(effect){
+            effectsInfos.push(effectsInfos.createEffectInfos());
+        });
+        return effectsInfos;
+    },
+    buff : function(effects)
     {
         var ref = this;
-        order.effects.forEach(function(effect){
+        effects.forEach(function(effect){
             var effectObject = squadEffectsFactory.createSquadEffect(effect);
-            effectObject.applyEffect(ref);
+            if(effectObject != null)
+            {
+                effectObject.applyEffect(ref);
+            }
+
         });
     },
     addShip : function(ship)

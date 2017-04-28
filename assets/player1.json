@@ -26,7 +26,7 @@
             "effects" : [
                 {
                     "type" : "damage",
-                    "value" : 1.5,
+                    "value" : 0.5,
                     "valueType" : "relative"
                 }
             ]
@@ -36,7 +36,7 @@
             "effects" : [
                 {
                     "type" : "damage",
-                    "value" : 1.5,
+                    "value" : 0.5,
                     "valueType" : "relative"
                 }
             ]
@@ -53,7 +53,7 @@
                 },
                 {
                     "type" : "damage",
-                    "value" : 1.5,
+                    "value" : 0.5,
                     "valueType" : "relative"
                 },
                 {
@@ -74,7 +74,7 @@
                 },
                 {
                     "type" : "damage",
-                    "value" : 1.5,
+                    "value" : 0.5,
                     "valueType" : "relative"
                 },
                 {
@@ -95,7 +95,7 @@
                 },
                 {
                     "type" : "damage",
-                    "value" : 1.2,
+                    "value" : 0.2,
                     "valueType" : "relative"
                 },
                 {

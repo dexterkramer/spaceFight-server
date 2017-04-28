@@ -17,6 +17,7 @@ var onePlayer = function(name, number, availableCasePositioning, availableCaseDe
     this.pick = [];
     this.conn = null;
     this.currentCardIndex = 0;
+    this.currentCaptainIndex = 0;
     this.loose = false;
 };
 

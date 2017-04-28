@@ -24,6 +24,12 @@ var ennemyInfosMask = {
                     finalArmor : true
                 }
             },
+            activeEffects : {
+                type : true,
+                valueType : true,
+                value : true,
+                isApplyed : true
+            },
             lifeBar : {
                 armor : true,
                 shield : true,

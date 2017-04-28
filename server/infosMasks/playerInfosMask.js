@@ -38,13 +38,22 @@ var playerInfosMask = {
             case : {
                 number : true
             },
+            activeEffects : {
+                type : true,
+                valueType : true,
+                value : true,
+                isApplyed : true
+            },  
             movesAllowed : true,
             attackModifiersArray : {
                 type : true,
                 turns : true,
                 damageModifier : true
             },
-            captain : true,
+            captain : {
+                name : true,
+                effects : true
+            },
             ships : {
                 infos : true,
                 lifeBar : {
