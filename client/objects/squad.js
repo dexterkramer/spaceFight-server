@@ -108,14 +108,18 @@ oneSquad.prototype = {
                 ship.toClean = false;
             }
         });
-        var toCleanIndexes = [];
+        var toCleanShip = [];
         this.ships.forEach(function(ship, index){
             if(ship.toClean)
-                toCleanIndexes.push(index);
+                toCleanShip.push(ship);
         });
 
-        toCleanIndexes.forEach(function(indexToClean){
-            this.ships.splice(indexToClean, 1);
+        toCleanShip.forEach(function(ship){
+            var index = this.ships.indexOf(ship);
+            if(index != -1)
+            {
+                this.ships.splice(index, 1);
+            }
         });
         if(squadJson.captain != null)
         {
@@ -421,5 +425,19 @@ oneSquad.prototype = {
         toRemove.forEach(function(indexToRemove){
             ref.attackModifiersArray.splice(indexToRemove, 1);
         });
-    }
+    },
+    addActiveEffect : function(activeEffect)
+    {
+        this.activeEffects.push(activeEffect);
+    },
+    removeActiveEffect : function(activeEffect)
+    {
+        var index = this.activeEffects.findIndex(function(effect){
+            return effect == activeEffect;
+        });
+        if(index != -1)
+        {
+            this.activeEffects.splice(index, 1);
+        }
+    },
 };

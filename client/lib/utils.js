@@ -131,3 +131,31 @@ function createCaptains (game, player, captainsJson)
     });
     return captainsArray;
 }
+
+function createSquadEffect(effectJson)
+{
+    var squadEffect = null;
+    if(effectJson.type == "lifePoint")
+    {
+        if(effectJson.valueType == "absolute")
+        {
+            squadEffect = new increaseLifeEffect(effectJson.value);
+        }
+        else if(effectJson.valueType == "relative")
+        {
+            squadEffect = new increasePercentLifeEffect(effectJson.value);
+        }
+    }
+    else if(effectJson.type == "damage")
+    {
+        if(effectJson.valueType == "absolute")
+        {
+            squadEffect = new increaseDamageEffect(effectJson.value);
+        }
+        else if(effectJson.valueType == "relative")
+        {
+            squadEffect = new increasePercentDamageEffect(effectJson.value);
+        }
+    } 
+    return squadEffect;
+}

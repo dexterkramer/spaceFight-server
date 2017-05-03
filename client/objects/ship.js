@@ -3,6 +3,7 @@ var ship = function(infos, currentShipIndex)
     this.infos = infos.infos;
     this.lifeBarInfos = infos.lifeBar;
     this.currentShipIndex = infos.currentShipIndex;
+    this.additionalFirePowerArray = [];
     this.createLifeBar();
 };
 
@@ -14,6 +15,20 @@ ship.prototype = {
         this.currentShipIndex = infos.currentShipIndex;
         this.lifeBar = null;
         this.createLifeBar();
+    },
+    setAdditionalDamage : function(from, value)
+    {
+        this.additionalFirePowerArray.push({from : from, value : value});
+    },
+    removeAdditionalDamage : function(from)
+    {
+        var index = this.additionalFirePowerArray.findIndex(function(additionalFirePower){
+            return additionalFirePower.from == from;
+        });
+        if(index != -1)
+        {
+            this.additionalFirePowerArray.splice(index, 1);
+        }
     },
     createLifeBar : function()
     {

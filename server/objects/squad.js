@@ -19,6 +19,7 @@ var oneSquad = function(name, fleat)
     this.captain = null;
     this.currentDeployedIndex = null;
     this.activeEffects = [];
+    this.currentEffectIndex = 0;
 };
 
 oneSquad.prototype = {
@@ -30,6 +31,8 @@ oneSquad.prototype = {
     },
     addActiveEffect : function(activeEffect)
     {
+        activeEffect.currentEffectIndex = this.currentEffectIndex;
+        this.currentEffectIndex += 1;
         this.activeEffects.push(activeEffect);
     },
     removeActiveEffect : function(activeEffect)
@@ -88,7 +91,7 @@ oneSquad.prototype = {
         {
             squadInfos.lifeBar = this.lifeBar.createLifeBarInfos(mask.lifeBar);
         }
-        if(squadInfos.effects)
+        if(mask.activeEffects)
         {
             squadInfos.activeEffects = this.getActiveEffectsInfos();
         }
@@ -98,7 +101,7 @@ oneSquad.prototype = {
     {
         var effectsInfos = [];
         this.activeEffects.forEach(function(effect){
-            effectsInfos.push(effectsInfos.createEffectInfos());
+            effectsInfos.push(effect.createEffectInfos());
         });
         return effectsInfos;
     },
