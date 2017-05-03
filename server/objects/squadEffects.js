@@ -1,11 +1,8 @@
 var increaseLifeEffect = function(value)
 {
     this.value = value;
-    this.maxValue = value;
-    this.bufferValue = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increaseLifeEffect.prototype = {
@@ -23,14 +20,6 @@ increaseLifeEffect.prototype = {
         this.squad.addActiveEffect(this);
         return true;
     },
-    bufferDamage : function(value)
-    {
-        this.bufferValue = (this.bufferValue - value > 0) ? this.bufferValue - value : 0;
-    },
-    applyDamage : function()
-    {
-        this.value = this.bufferValue;
-    },
     createEffectInfos : function(mask)
     {   
         var effectInfos = {};
@@ -47,7 +36,6 @@ increaseLifeEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
-        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()
@@ -67,11 +55,8 @@ increaseLifeEffect.prototype = {
 var increasePercentLifeEffect = function(value)
 {
     this.value = value;
-    this.maxValue = value;
-    this.bufferValue = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increasePercentLifeEffect.prototype = {
@@ -87,14 +72,6 @@ increasePercentLifeEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
-    },
-    bufferDamage : function(value)
-    {
-        this.bufferValue -= value;
-    },
-    applyDamage : function()
-    {
-        this.value = this.bufferValue;
     },
     createEffectInfos: function(mask)
     {   
@@ -112,7 +89,6 @@ increasePercentLifeEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
-        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()
@@ -134,7 +110,6 @@ var increaseDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increaseDamageEffect.prototype = {
@@ -167,7 +142,6 @@ increaseDamageEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
-        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()
@@ -189,7 +163,6 @@ var increasePercentDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increasePercentDamageEffect.prototype = {
@@ -222,7 +195,6 @@ increasePercentDamageEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
-        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()

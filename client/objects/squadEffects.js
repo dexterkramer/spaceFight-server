@@ -1,11 +1,8 @@
 var increaseLifeEffect = function(value)
 {
     this.value = value;
-    this.maxValue = value;
-    this.bufferValue = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increaseLifeEffect.prototype = {
@@ -23,13 +20,23 @@ increaseLifeEffect.prototype = {
         this.squad.addActiveEffect(this);
         return true;
     },
-    bufferDamage : function(value)
-    {
-        this.bufferValue = (this.bufferValue - value > 0) ? this.bufferValue - value : 0;
-    },
-    applyDamage : function()
-    {
-        this.value = this.bufferValue;
+    createEffectInfos : function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "lifePoint";
+            effectInfos.valueType = "absolute";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
     },
     removeEffect : function()
     {
@@ -48,11 +55,8 @@ increaseLifeEffect.prototype = {
 var increasePercentLifeEffect = function(value)
 {
     this.value = value;
-    this.maxValue = value;
-    this.bufferValue = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increasePercentLifeEffect.prototype = {
@@ -69,13 +73,23 @@ increasePercentLifeEffect.prototype = {
         this.squad.addActiveEffect(this);
         return true;
     },
-    bufferDamage : function(value)
-    {
-        this.bufferValue -= value;
-    },
-    applyDamage : function()
-    {
-        this.value = this.bufferValue;
+    createEffectInfos: function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "lifePoint";
+            effectInfos.valueType = "relative";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
     },
     removeEffect : function()
     {
@@ -96,7 +110,6 @@ var increaseDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increaseDamageEffect.prototype = {
@@ -112,6 +125,24 @@ increaseDamageEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
+    },
+    createEffectInfos: function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "damage";
+            effectInfos.valueType = "absolute";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
     },
     removeEffect : function()
     {
@@ -132,7 +163,6 @@ var increasePercentDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
-    this.currentEffectIndex = null;
 }
 
 increasePercentDamageEffect.prototype = {
@@ -148,6 +178,24 @@ increasePercentDamageEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
+    },
+    createEffectInfos: function(mask)
+    {   
+        var effectInfos = {};
+        if(mask.type)
+        {
+            effectInfos.type = "damage";
+            effectInfos.valueType = "relative";
+        }
+        if(mask.value)
+        {
+            effectInfos.value = this.value;
+        }
+        if(mask.isApplyed)
+        {
+            effectInfos.isApplyed = this.isApplyed;
+        }
+        return effectInfos;
     },
     removeEffect : function()
     {

@@ -29,12 +29,12 @@ lifeBar.prototype = {
     },
     setAdditionalLife : function(from, value)
     {
-        this.additionaleLifeArray.push(from);
+        this.additionaleLifeArray.push({from : from, value : value, maxValue : value, finalValue : value});
     },
     removeAdditionalLife : function(from)
     {
         var index = this.additionaleLifeArray.findIndex(function(additionalLife){
-            return additionalLife == from;
+            return additionalLife.from == from;
         });
         if(index != -1)
         {

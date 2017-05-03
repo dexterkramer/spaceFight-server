@@ -16,14 +16,14 @@ ship.prototype = {
         this.lifeBar = null;
         this.createLifeBar();
     },
-    setAdditionalDamage : function(from)
+    setAdditionalDamage : function(from, value)
     {
-        this.additionalFirePowerArray.push(from);
+        this.additionalFirePowerArray.push({from : from, value : value});
     },
     removeAdditionalDamage : function(from)
     {
         var index = this.additionalFirePowerArray.findIndex(function(additionalFirePower){
-            return additionalFirePower == from;
+            return additionalFirePower.from == from;
         });
         if(index != -1)
         {
