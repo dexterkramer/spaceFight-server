@@ -3,6 +3,7 @@ var increaseLifeEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
 }
 
 increaseLifeEffect.prototype = {
@@ -36,6 +37,7 @@ increaseLifeEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
+        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()
@@ -57,6 +59,7 @@ var increasePercentLifeEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
 }
 
 increasePercentLifeEffect.prototype = {
@@ -89,6 +92,7 @@ increasePercentLifeEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
+        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()
@@ -110,6 +114,7 @@ var increaseDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
 }
 
 increaseDamageEffect.prototype = {
@@ -142,6 +147,7 @@ increaseDamageEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
+        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()
@@ -163,6 +169,7 @@ var increasePercentDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
 }
 
 increasePercentDamageEffect.prototype = {
@@ -195,6 +202,7 @@ increasePercentDamageEffect.prototype = {
         {
             effectInfos.isApplyed = this.isApplyed;
         }
+        effectInfos.currentEffectIndex = this.currentEffectIndex;
         return effectInfos;
     },
     removeEffect : function()

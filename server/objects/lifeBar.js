@@ -93,6 +93,16 @@ lifeBar.prototype = {
         {
             lifeBarInfos.finalArmor = this.finalArmor;
         }
+        lifeBarInfos.additionaleLifeArray = [];
+        this.additionaleLifeArray.forEach(function(additionaleLife){
+            let additionalLifeInfos = {};
+            additionalLifeInfos.from = {};
+            additionalLifeInfos.from.currentEffectIndex = additionaleLife.from.currentEffectIndex;
+            additionalLifeInfos.value = additionaleLife.value;
+            additionalLifeInfos.maxValue = additionaleLife.maxValue;
+            additionalLifeInfos.finalValue = additionaleLife.finalValue;
+            lifeBarInfos.additionaleLifeArray.push(additionalLifeInfos);
+        });
         return lifeBarInfos;
     }
 };
