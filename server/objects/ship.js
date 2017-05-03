@@ -14,14 +14,14 @@ ship.prototype = {
     {
         this.lifeBar = lifeBarFactory.create(this.infos.armor, this.infos.shield, this.infos.maxArmor);
     },
-    setAdditionalDamage : function(from, value)
+    setAdditionalDamage : function(from)
     {
-        this.additionalFirePowerArray.push({from : from, value : value});
+        this.additionalFirePowerArray.push(from);
     },
     removeAdditionalDamage : function(from)
     {
         var index = this.additionalFirePowerArray.findIndex(function(additionalFirePower){
-            return additionalFirePower.from == from;
+            return additionalFirePower == from;
         });
         if(index != -1)
         {

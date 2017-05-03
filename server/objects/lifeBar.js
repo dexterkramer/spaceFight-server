@@ -20,12 +20,12 @@ lifeBar.prototype = {
     },
     setAdditionalLife : function(from, value)
     {
-        this.additionaleLifeArray.push({from : from, value : value, maxValue : value, finalValue : value});
+        this.additionaleLifeArray.push(from);
     },
     removeAdditionalLife : function(from)
     {
         var index = this.additionaleLifeArray.findIndex(function(additionalLife){
-            return additionalLife.from == from;
+            return additionalLife == from;
         });
         if(index != -1)
         {
@@ -35,7 +35,7 @@ lifeBar.prototype = {
     applyDammage : function()
     {
         this.additionaleLifeArray.forEach(function(additionalLife){
-            additionalLife.value = additionalLife.finalValue;
+            additionalLife.applyDamage();
         });
         this.armor = this.finalArmor;
     },
@@ -52,10 +52,10 @@ lifeBar.prototype = {
         while(firePowerLeft > 0 && this.finalArmor > 0)
         {
             this.additionaleLifeArray.forEach(function(additionalLife){
-                if(additionalLife.finalValue > 0)
+                if(additionalLife.bufferValue > 0)
                 {
-                    let previousValue = additionalLife.finalValue;
-                    additionalLife.finalValue = (previousValue - firePowerLeft > 0) ? previousValue - firePowerLeft : 0;
+                    let previousValue = additionalLife.bufferValue;
+                    additionalLife.bufferDamage(previousValue);
                     firePowerLeft = firePowerLeft - previousValue;
                 }
             });

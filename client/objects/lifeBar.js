@@ -8,6 +8,7 @@ var lifeBar = function(armor, shield, maxArmor)
     this.tempArmor = armor;
     this.maxArmor = maxArmor;
     this.finalArmor = armor;
+    this.additionaleLifeArray = [];
 }
 
 lifeBar.prototype = {
@@ -25,6 +26,20 @@ lifeBar.prototype = {
         this.shield = infos.shield;
         this.maxArmor = infos.maxArmor;
         this.finalArmor = infos.finalArmor;
+    },
+    setAdditionalLife : function(from, value)
+    {
+        this.additionaleLifeArray.push(from);
+    },
+    removeAdditionalLife : function(from)
+    {
+        var index = this.additionaleLifeArray.findIndex(function(additionalLife){
+            return additionalLife == from;
+        });
+        if(index != -1)
+        {
+            this.additionaleLifeArray.splice(index, 1);
+        }
     },
     draw : function()
     {
@@ -45,12 +60,28 @@ lifeBar.prototype = {
         lifeBar.lineTo(lifeBarWith, 0);
         lifeBar.anchor.set(0, 0);
         var style = { font: "9px Arial",/* fill: "#ff0044", wordWrap: false, wordWrapWidth: lifeBar.width, /*align: "center", backgroundColor: "#ffff00"*/ };
-        var text = this.game.add.text(lifeBarX, lifeBar.y - (lifeBarHeight / 2) - 3, this.armor + "/" + this.maxArmor , style);
+        var text = this.game.add.text(lifeBarX, lifeBar.y - (lifeBarHeight / 2) - 3, (this.armor + this.getTotalAdditionalLife()) + "/" + (this.maxArmor + this.getTotalMaxAdditionalLife()), style);
         text.anchor.set(0 , 0);
         text.x = lifeBarX + ((lifeBarWith) / 2) - (text.width / 2);
         lifeBar.textObject = text;
         this.phaserObject = lifeBar;
         this.textObject = text;
+    },
+    getTotalAdditionalLife : function()
+    {
+        var total = 0;
+        this.additionaleLifeArray.forEach(function(additionalLife){
+            total += additionalLife.value;
+        });
+        return total;
+    },
+    getTotalMaxAdditionalLife : function()
+    {
+        var total = 0;
+        this.additionaleLifeArray.forEach(function(additionalLife){
+            total += additionalLife.maxValue;
+        });
+        return total;
     },
     getLifeBarWith : function()
     {
