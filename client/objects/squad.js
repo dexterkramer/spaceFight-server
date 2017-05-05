@@ -16,6 +16,7 @@ var oneSquad = function(name, fleat)
     this.currentDeployedIndex = null;
     this.currentShipIndex = null;
     this.captain = null;
+    this.activeEffects = [];
 };
 
 oneSquad.prototype = {
@@ -148,6 +149,41 @@ oneSquad.prototype = {
                 this.captain = null;
             }
         }
+        var ref = this;
+        ref.activeEffects.forEach(function(effect){
+            effect.toClean = true;
+        });
+        if(squadJson.activeEffects.length > 0)
+        {
+            squadJson.activeEffects.forEach(function(effectJson){
+                var indexEffect = ref.activeEffects.findIndex(function(effect){
+                        return effect.currentEffectIndex == effectJson.currentEffectIndex;
+                });
+                if(indexEffect != -1)
+                {
+                    ref.activeEffects[indexEffect].refreshDatas(effectJson);
+                    ref.activeEffects[indexEffect].toClean = false;
+                }
+                else
+                {
+                    let newEffect = createSquadEffect(effectJson);
+                    newEffect.toClean = false;
+                    newEffect.applyEffect(ref);
+                }
+            });
+        }
+        var toCleanEffectArray = [];
+        ref.activeEffects.forEach(function(effect){
+            if(effect.toClean)
+                toCleanEffectArray.push(effect);
+        });
+        toCleanEffectArray.forEach(function(effect){
+            var indexToClean = ref.activeEffects.indexOf(effect);
+            if(indexToClean != -1)
+            {
+                ref.activeEffects.splice(indexToClean, 1);
+            }
+        });
     },
     applyMove : function()
     {

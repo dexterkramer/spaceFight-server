@@ -3,6 +3,8 @@ var increaseLifeEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
+    this.toClean = false;
 }
 
 increaseLifeEffect.prototype = {
@@ -13,12 +15,16 @@ increaseLifeEffect.prototype = {
         this.isApplyed = true;
         var ref = this;
         this.squad = squad;
-        this.squad.ships.forEach(function(ship){
+        /*this.squad.ships.forEach(function(ship){
             // for now, ref.squad.ships.length will always be 1
             ship.lifeBar.setAdditionalLife( ref, ((ref.squad.ships.length > 0) ? (ref.value / ref.squad.ships.length) : 0) );
-        });
+        });*/
         this.squad.addActiveEffect(this);
         return true;
+    },
+    refreshDatas : function(effectJson)
+    {
+        this.value = effectJson.value;
     },
     removeEffect : function()
     {
@@ -39,6 +45,8 @@ var increasePercentLifeEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
+    this.toClean = false;
 }
 
 increasePercentLifeEffect.prototype = {
@@ -54,6 +62,10 @@ increasePercentLifeEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
+    },
+    refreshDatas : function(effectJson)
+    {
+        this.value = effectJson.value;
     },
     removeEffect : function()
     {
@@ -74,6 +86,8 @@ var increaseDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
+    this.toClean = false;
 }
 
 increaseDamageEffect.prototype = {
@@ -89,6 +103,10 @@ increaseDamageEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
+    },
+    refreshDatas : function(effectJson)
+    {
+        this.value = effectJson.value;
     },
     removeEffect : function()
     {
@@ -109,6 +127,8 @@ var increasePercentDamageEffect = function(value)
     this.value = value;
     this.squad = null;
     this.isApplyed = false;
+    this.currentEffectIndex = null;
+    this.toClean = false;
 }
 
 increasePercentDamageEffect.prototype = {
@@ -124,6 +144,10 @@ increasePercentDamageEffect.prototype = {
         });
         this.squad.addActiveEffect(this);
         return true;
+    },
+    refreshDatas : function(effectJson)
+    {
+        this.value = effectJson.value;
     },
     removeEffect : function()
     {

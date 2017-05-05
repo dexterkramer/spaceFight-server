@@ -140,10 +140,12 @@ function createSquadEffect(effectJson)
         if(effectJson.valueType == "absolute")
         {
             squadEffect = new increaseLifeEffect(effectJson.value);
+            squadEffect.currentEffectIndex = effectJson.currentEffectIndex;
         }
         else if(effectJson.valueType == "relative")
         {
             squadEffect = new increasePercentLifeEffect(effectJson.value);
+            squadEffect.currentEffectIndex = effectJson.currentEffectIndex;
         }
     }
     else if(effectJson.type == "damage")
@@ -151,10 +153,12 @@ function createSquadEffect(effectJson)
         if(effectJson.valueType == "absolute")
         {
             squadEffect = new increaseDamageEffect(effectJson.value);
+            squadEffect.currentEffectIndex = effectJson.currentEffectIndex;
         }
         else if(effectJson.valueType == "relative")
         {
             squadEffect = new increasePercentDamageEffect(effectJson.value);
+            squadEffect.currentEffectIndex = effectJson.currentEffectIndex;
         }
     } 
     return squadEffect;
